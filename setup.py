@@ -8,7 +8,7 @@ install_requires = [
     'pyramid_debugtoolbar',
     'pyramid_beaker',
     'pyramid_jinja2',
-
+    'psycopg2',
 ]
 dependency_links = [
 

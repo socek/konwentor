@@ -1,8 +1,9 @@
 def make_settings(settings, paths):
     settings['includes'] = [
         'pyramid_debugtoolbar',
-        'pyramid_beaker', ]
-    settings['jinja2.directories'] = 'konwentor:templates'
+        'pyramid_beaker',
+        'pyramid_jinja2']
+    settings['jinja2.directories'] = 'konwentor.application:templates'
     settings['authentication_debug'] = False
     settings['session.type'] = 'file'
     settings['session.key'] = 'needtochangethis'
@@ -15,17 +16,7 @@ def make_settings(settings, paths):
     paths['data'] = 'data'
     paths['frontend'] = ['%(data)s', 'frontend.ini']
     paths['logging:config'] = '%(frontend)s'
-    # ----------------------------------------
-    # This is example postgresql configuration
-    # ----------------------------------------
-    # settings['db:url'] = (
-    #     '%(db:type)s://%(db:login)s:%(db:password)s@%(db:host)s:%(db:port)s'
-    #     '/%(db:db)s')
-    # settings['db:type'] = 'postgresql'
-    # settings['db:login'] = 'develop'
-    # settings['db:password'] = 'develop'
-    # settings['db:host'] = 'localhost'
-    # settings['db:port'] = '5432'
-    # settings['db:db'] = 'konwentor_develop'
+    paths['static'] = ['%(project_path)s', 'static']
+
     paths['sqlite_db'] = ["%(data)s", 'database.db']
     settings['db:url'] = 'sqlite:///%(sqlite_db)s' % paths

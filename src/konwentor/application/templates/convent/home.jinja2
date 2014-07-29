@@ -1,0 +1,9 @@
+{% extends "main.jinja2" %}
+{% block body %}
+    <h1>Konwenty</h1>
+    <ul>
+        {%- for convent in convents %}
+            <li>{{convent.name}}</li>
+        {%- endfor %}
+    </ul>
+{% endblock %}
