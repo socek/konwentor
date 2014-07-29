@@ -8,10 +8,10 @@ install_requires = [
     'pyramid_debugtoolbar',
     'pyramid_beaker',
     'pyramid_jinja2',
-    
+
 ]
 dependency_links = [
-    
+
 ]
 
 if __name__ == '__main__':
@@ -22,8 +22,10 @@ if __name__ == '__main__':
           install_requires=install_requires,
           dependency_links=dependency_links,
           include_package_data=True,
-          entry_points="""\
-          [paste.app_factory]
-		main = konwentor.application.init:main
-          """,
+          entry_points=(
+              '\n'.join([
+                        '[paste.app_factory]',
+                        'main = konwentor.application.init:main',
+                        ''])
+          ),
           )
