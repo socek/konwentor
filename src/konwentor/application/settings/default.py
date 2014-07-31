@@ -1,8 +1,4 @@
 def make_settings(settings, paths):
-    settings['includes'] = [
-        'pyramid_debugtoolbar',
-        'pyramid_beaker',
-        'pyramid_jinja2']
     settings['jinja2.directories'] = 'konwentor.application:templates'
     settings['authentication_debug'] = False
     settings['session.type'] = 'file'
