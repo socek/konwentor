@@ -5,7 +5,7 @@ from hatak.db import Base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from .db_tables import users_2_permissions, get_one_or_create
+from .db_tables import users_2_permissions
 
 
 class User(Base):
@@ -18,9 +18,8 @@ class User(Base):
     permissions = relationship("Permission", secondary=users_2_permissions)
 
     def add_permission(self, db, group, name):
-        permission = get_one_or_create(
+        permission = Permission.get_one_or_create(
             db,
-            Permission,
             name=name,
             group=group)[0]
         self.permissions.append(permission)
@@ -54,3 +53,18 @@ class Permission(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     group = Column(String)
+
+
+class NotLoggedUser(object):
+
+    def has_permission(self, group, name):
+        return False
+
+    def add_permission(self, *args, **kwargs):
+        raise NotImplementedError()
+
+    def set_password(self, *args, **kwargs):
+        raise NotImplementedError()
+
+    def validate_password(self, *args, **kwargs):
+        raise NotImplementedError()

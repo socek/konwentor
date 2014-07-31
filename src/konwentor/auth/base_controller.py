@@ -1,0 +1,25 @@
+from pyramid.httpexceptions import HTTPForbidden
+from hatak.controller import DatabaseController
+
+from .models import User, NotLoggedUser
+
+
+class AuthController(DatabaseController):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.before.append(self.validate_auth)
+
+    def validate_auth(self):
+        self.user = self.get_user()
+        permissions = getattr(self, 'permissions', [])
+        for group, name in permissions:
+            if not self.user.has_permission(group, name):
+                raise HTTPForbidden()
+
+    def get_user(self):
+        user_id = self.session.get('user_id', None)
+        if user_id:
+            return self.db.query(User).filter_by(id=user_id).one()
+        else:
+            return NotLoggedUser()

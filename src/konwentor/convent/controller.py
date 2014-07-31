@@ -1,9 +1,9 @@
-from hatak.controller import DatabaseController
+from konwentor.auth.base_controller import AuthController
 
 from .models import Convent
 
 
-class ConventHome(DatabaseController):
+class ConventHome(AuthController):
 
     renderer = 'convent/home.jinja2'
 
