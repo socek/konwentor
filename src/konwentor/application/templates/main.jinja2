@@ -14,8 +14,14 @@
     <!-- Bootstrap Core CSS -->
     <link href="{{static('/css/bootstrap.min.css')}}" rel="stylesheet">
 
+    <!-- MetisMenu CSS -->
+    <link href="{{static('/css/plugins/metisMenu/metisMenu.min.css')}}" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="{{static('/css/plugins/timeline.css')}}" rel="stylesheet">
+
     <!-- Custom CSS -->
-    <link href="{{static('/css/sb-admin.css')}}" rel="stylesheet">
+    <link href="{{static('/css/sb-admin-2.css')}}" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
     <link href="{{static('/css/plugins/morris.css')}}" rel="stylesheet">
@@ -35,8 +41,7 @@
     <div id="wrapper">
 
         <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -47,53 +52,55 @@
                 <a class="navbar-brand" href="{{route('convent:home')}}">Konwentor</a>
             </div>
             <!-- Top Menu Items -->
-            <ul class="nav navbar-right top-nav">
+            <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.name}} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                            <a href="#">
+                                <div>{{user.name}}</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
+                    <!-- /.dropdown-user -->
                 </li>
+                <!-- /.dropdown -->
             </ul>
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="{{route('convent:home')}}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
-                </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a class="active" href="{{route('convent:home')}}">
+                                <i class="fa fa-dashboard fa-fw"></i> Dashboard
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
             </div>
-            <!-- /.navbar-collapse -->
         </nav>
 
         <div id="page-wrapper">
-
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            {% block page_head -%}
-                                Dashboard <small>Statistics Overview</small>
-                            {%- endblock %}
-                        </h1>
-                    </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{% block page_head -%}
+                        Dashboard
+                    {%- endblock %}</h1>
                 </div>
-                <!-- /.row -->
-
-                {% block body %}{% endblock %}
-
+                <!-- /.col-lg-12 -->
             </div>
-            <!-- /.container-fluid -->
+
+            {% block body %}{% endblock %}
 
         </div>
-        <!-- /#page-wrapper -->
-
     </div>
-    <!-- /#wrapper -->
 
     <!-- jQuery Version 1.11.0 -->
     <script src="{{static('/js/jquery-1.11.0.js')}}"></script>
@@ -101,10 +108,16 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="{{static('/js/bootstrap.min.js')}}"></script>
 
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="{{static('/js/plugins/metisMenu/metisMenu.min.js')}}"></script>
+
     <!-- Morris Charts JavaScript -->
     <script src="{{static('/js/plugins/morris/raphael.min.js')}}"></script>
     <script src="{{static('/js/plugins/morris/morris.min.js')}}"></script>
     <script src="{{static('/js/plugins/morris/morris-data.js')}}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{{static('/js/sb-admin-2.js')}}"></script>
 </body>
 </html>
 

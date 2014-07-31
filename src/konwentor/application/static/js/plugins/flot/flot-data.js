@@ -1,6 +1,4 @@
-// Flot Charts sample data for SB Admin template
-
-// Flot Line Chart with Tooltips
+//Flot Line Chart
 $(document).ready(function() {
     console.log("document ready");
     var offset = 0;
@@ -51,7 +49,7 @@ $(document).ready(function() {
     }
 });
 
-// Flot Pie Chart with Tooltips
+//Flot Pie Chart
 $(function() {
 
     var data = [{
@@ -90,7 +88,7 @@ $(function() {
 
 });
 
-// Flot Line Charts - Multiple Axes - With Data
+//Flot Multiple Axes Line Chart
 $(function() {
     var oilprices = [
         [1167692400000, 61.05],
@@ -1056,7 +1054,7 @@ $(function() {
     }
 
     function doPlot(position) {
-        $.plot($("#flot-multiple-axes-chart"), [{
+        $.plot($("#flot-line-chart-multi"), [{
             data: oilprices,
             label: "Oil price ($)"
         }, {
@@ -1101,11 +1099,11 @@ $(function() {
     });
 });
 
-// Flot Chart Dynamic Chart
+//Flot Moving Line Chart
 
 $(function() {
 
-    var container = $("#flot-moving-line-chart");
+    var container = $("#flot-line-chart-moving");
 
     // Determine how many data points to keep based on the placeholder's initial size;
     // this gives us a nice high-res plot while avoiding more than one point per pixel.
@@ -1201,7 +1199,7 @@ $(function() {
 
 });
 
-// Flot Chart Bar Graph
+//Flot Bar Chart
 
 $(function() {
 
