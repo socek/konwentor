@@ -57,6 +57,8 @@ class Permission(Base):
 
 class NotLoggedUser(object):
 
+    name = 'FakeUser'
+
     def has_permission(self, group, name):
         return False
 

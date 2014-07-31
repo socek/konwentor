@@ -23,3 +23,8 @@ class AuthController(DatabaseController):
             return self.db.query(User).filter_by(id=user_id).one()
         else:
             return NotLoggedUser()
+
+    def generate_default_data(self):
+        data = super().generate_default_data()
+        data['user'] = self.user
+        return data

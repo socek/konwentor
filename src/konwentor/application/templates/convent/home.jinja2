@@ -1,9 +1,15 @@
 {% extends "main.jinja2" %}
+{% block page_head -%}
+    Konwenty
+{%- endblock %}
 {% block body %}
-    <h1>Konwenty</h1>
-    <ul>
-        {%- for convent in convents %}
-            <li>{{convent.name}}</li>
-        {%- endfor %}
-    </ul>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul>
+                {%- for convent in convents %}
+                    <li>{{convent.name}}</li>
+                {%- endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}
