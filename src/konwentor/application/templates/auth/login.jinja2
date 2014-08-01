@@ -1,4 +1,6 @@
 {% extends "head.jinja2" %}
+{% import 'formskit.jinja2' as FK with context -%}
+
 {% block body %}
     <div class="container">
         <div class="row">
@@ -14,7 +16,7 @@
                         <h3 class="panel-title">Proszę się zalogować</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="post">
+                        {{FK.StartForm(form)}}
                             <fieldset>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
@@ -25,7 +27,7 @@
                                 <!-- Change this to a button or input when using this as a form -->
                                 <button class="btn btn-lg btn-success btn-block">Zaloguj</button>
                             </fieldset>
-                        </form>
+                        {{FK.StopForm()}}
                     </div>
                 </div>
             </div>

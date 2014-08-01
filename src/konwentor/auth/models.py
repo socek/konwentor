@@ -46,6 +46,9 @@ class User(Base):
         hashed_pass.update((password + self.password[:40]).encode('utf8'))
         return self.password[40:] == hashed_pass.hexdigest()
 
+    def is_logged(self):
+        return True
+
 
 class Permission(Base):
     __tablename__ = 'permissions'
@@ -70,3 +73,6 @@ class NotLoggedUser(object):
 
     def validate_password(self, *args, **kwargs):
         raise NotImplementedError()
+
+    def is_logged(self):
+        return False
