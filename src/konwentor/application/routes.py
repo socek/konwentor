@@ -1,4 +1,5 @@
 from hatak.route import Route
+from pyramid.exceptions import Forbidden
 
 
 def make_routes(app):
@@ -7,3 +8,4 @@ def make_routes(app):
     route.add('convent.controller.ConventHome', 'convent:home', '/')
 
     route.add('auth.controller.LoginController', 'auth:login', '/login')
+    route.add_view('auth.controller.ForbiddenController', context=Forbidden)

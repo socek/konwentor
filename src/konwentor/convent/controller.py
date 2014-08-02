@@ -6,6 +6,7 @@ from .models import Convent
 class ConventHome(AuthController):
 
     renderer = 'convent/home.jinja2'
+    permissions = [('base', 'view'), ]
 
     def make(self):
         self.data['convents'] = self.get_convents()

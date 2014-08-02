@@ -18,10 +18,10 @@ class User(Base):
     permissions = relationship("Permission", secondary=users_2_permissions)
 
     def add_permission(self, db, group, name):
-        permission = Permission.get_one_or_create(
+        permission = Permission.get_or_create(
             db,
             name=name,
-            group=group)[0]
+            group=group)
         self.permissions.append(permission)
 
     def has_permission(self, group, name):
