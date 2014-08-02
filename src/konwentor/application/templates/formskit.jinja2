@@ -13,6 +13,14 @@
     </form>
 {%- endmacro -%}
 
+{%- macro FormError(form) -%}
+    {% if form.error %}
+        <div class="label label-danger">
+            {{form.message}}
+        </div>
+    {% endif %}
+{%- endmacro -%}
+
 {%- macro Text(form, name, disabled=False, class='') -%}
     <div class="form-group">
         <label>{{form.get_label(name)}}:</label>
@@ -21,10 +29,34 @@
             class="form-control"
             value="{{form.get_value(name)|default('', True)}}"
             name="{{name}}"
-            class="{{class}}"
             id="{{form.name}}_{{name}}"
             {%- if disabled %} disabled=disabled {% endif -%}
             >
+    </div>
+{%- endmacro -%}
+
+{%- macro LoginText(form, name, placeholder, type, autofocus=False) -%}
+    <div class="form-group">
+        {%- if form.get_error(name) %} <div class="label label-danger">{{form.get_message(name)}}</div>{%- endif -%}
+        <input
+            class="form-control"
+            placeholder="{{placeholder}}"
+            name="{{name}}"
+            type="{{type}}"
+            value="{{form.get_value(name)|default('', True)}}"
+            {%- if autofocus %} autofocus{% endif -%}
+            >
+    </div>
+{%- endmacro -%}
+
+{%- macro LoginPassword(form, name, placeholder) -%}
+    <div class="form-group">
+        {%- if form.get_error(name) %} <div class="label label-danger">{{form.get_message(name)}}</div>{%- endif -%}
+        <input
+            class="form-control"
+            placeholder="{{placeholder}}"
+            name="{{name}}"
+            type="password">
     </div>
 {%- endmacro -%}
 
@@ -112,7 +144,11 @@
 {%- endmacro -%}
 
 {%- macro SubmitButton(form, label) -%}
-    <button type="submit" class="btn btn-default">{{label}}</button>
+    <button type="submit" class="btn btn-lg btn-success">{{label}}</button>
+{%- endmacro -%}
+
+{%- macro LoginButton(form, label) -%}
+    <button type="submit" class="btn btn-lg btn-success btn-block">{{label}}</button>
 {%- endmacro -%}
 
 {%- macro File(form, name) -%}

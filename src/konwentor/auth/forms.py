@@ -1,7 +1,7 @@
 from formskit import Field
 from formskit.formvalidators import FormValidator
-from formskit.validators import NotEmpty
 
+from konwentor.forms.validators import NotEmpty
 from konwentor.application.forms import PostForm
 
 from .models import User
@@ -37,7 +37,7 @@ class LoginForm(PostForm):
         if self.user.validate_password(data['password'][0]):
             return True
         else:
-            self.message = "email or/and password is incorrect"
+            self.message = "Email i/lub hasło są nieprawidłowe."
             return False
 
     def submit(self, data):
