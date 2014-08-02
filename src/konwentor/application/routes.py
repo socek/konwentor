@@ -8,4 +8,5 @@ def make_routes(app):
     route.add('convent.controller.ConventHome', 'convent:home', '/')
 
     route.add('auth.controller.LoginController', 'auth:login', '/login')
+    route.add('auth.controller.LogoutController', 'auth:logout', '/logout')
     route.add_view('auth.controller.ForbiddenController', context=Forbidden)

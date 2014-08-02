@@ -23,3 +23,12 @@ class ForbiddenController(AuthController):
     def make(self):
         if not self.user.is_logged():
             self.redirect('auth:login')
+
+
+class LogoutController(AuthController):
+
+    permissions = [('base', 'view'), ]
+
+    def make(self):
+        self.redirect('auth:login')
+        self.session.clear()
