@@ -8,12 +8,12 @@ class LoginController(AuthController):
 
     def make(self):
         if self.user.is_logged():
-            self.redirect('convent:home')
+            self.redirect('convent:list')
             return
 
         self.data['form'] = LoginForm(self.request)
         if self.data['form']() is True:
-            self.redirect('convent:home')
+            self.redirect('convent:list')
 
 
 class ForbiddenController(AuthController):

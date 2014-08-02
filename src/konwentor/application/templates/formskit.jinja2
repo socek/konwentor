@@ -14,19 +14,17 @@
 {%- endmacro -%}
 
 {%- macro Text(form, name, disabled=False, class='') -%}
-    <div class="control-group{%- if form.get_error(name) %} error{%- endif -%}">
-        <label class="control-label" for="{{form.name}}_{{name}}">{{form.get_label(name)}}:</label>
+    <div class="form-group">
+        <label>{{form.get_label(name)}}:</label>
         {%- if form.get_error(name) %} <div class="label label-danger">{{form.get_message(name)}}</div>{%- endif -%}
-        <div class="controls">
-            <input
-                type="text"
-                value="{{form.get_value(name)|default('', True)}}"
-                name="{{name}}"
-                class="{{class}}"
-                id="{{form.name}}_{{name}}"
-                {%- if disabled %} disabled=disabled {% endif -%}
-                />
-        </div>
+        <input
+            class="form-control"
+            value="{{form.get_value(name)|default('', True)}}"
+            name="{{name}}"
+            class="{{class}}"
+            id="{{form.name}}_{{name}}"
+            {%- if disabled %} disabled=disabled {% endif -%}
+            >
     </div>
 {%- endmacro -%}
 
@@ -113,16 +111,8 @@
     </ul>
 {%- endmacro -%}
 
-{%- macro SubmitButton(form, name) -%}
-    <div class="control-group">
-        <div class="controls">
-            <button
-                class="btn btn-small btn-primary"
-                type="submit">
-                    {{form.get_label(name)}}
-            </button>
-        </div>
-    </div>
+{%- macro SubmitButton(form, label) -%}
+    <button type="submit" class="btn btn-default">{{label}}</button>
 {%- endmacro -%}
 
 {%- macro File(form, name) -%}
