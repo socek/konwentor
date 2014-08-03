@@ -14,15 +14,15 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Proszę się zalogować</h3>
                     </div>
-                    {{form.error()|safe}}
+                    {{form.error()}}
                     <div class="panel-body">
-                        {{form.begin()|safe}}
+                        {{form.begin()}}
                             <fieldset>
-                                {{form.text('email')|safe}}
-                                {{form.password('password')|safe}}
-                                {{form.submit('Zaloguj')|safe}}
+                                {{form.text('email')}}
+                                {{form.password('password')}}
+                                {{form.submit('Zaloguj')}}
                             </fieldset>
-                        {{form.end()|safe}}
+                        {{form.end()}}
                     </div>
                 </div>
             </div>

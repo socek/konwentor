@@ -1,6 +1,6 @@
 from .base_controller import AuthController
 from .forms import LoginForm
-from .helpers import LoginFormHelper
+from .helpers import LoginFormWidget
 
 
 class LoginController(AuthController):
@@ -12,10 +12,12 @@ class LoginController(AuthController):
             self.redirect('convent:list')
             return
 
-        form = LoginForm(self.request)
-        self.add_helper('form', LoginFormHelper, form)
-        if form() is True:
+        self.form = LoginForm(self.request)
+        if self.form() is True:
             self.redirect('convent:list')
+
+    def make_helpers(self):
+        self.add_helper('form', LoginFormWidget, self.form)
 
 
 class ForbiddenController(AuthController):
