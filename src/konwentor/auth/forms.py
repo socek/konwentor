@@ -28,8 +28,9 @@ class LoginForm(PostForm):
     def createForm(self):
         self.addField(
             Field('email', label='E-mail', validators=[NotEmpty()]))
-        self.addField(Field('password', label='Hasło', validators=[NotEmpty()]))
-        # self.addField(Field('redirect'))
+        self.addField(
+            Field('password', label='Hasło', validators=[NotEmpty()]))
+
         self.addFormValidator(EmailMustExists())
 
     def overalValidation(self, data):
