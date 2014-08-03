@@ -1,3 +1,6 @@
+from sqlalchemy.orm.exc import NoResultFound
+from pyramid.httpexceptions import HTTPNotFound
+
 from konwentor.auth.base_controller import AuthController
 from konwentor.application.helpers import FormWidget
 
@@ -37,17 +40,24 @@ class ConventDelete(AuthController):
     permissions = [('convent', 'delete'), ]
 
     def make(self):
-        obj_id = self.matchdict['obj_id']
-        self.data['convent'] = (
-            self.db.query(Convent).filter_by(id=obj_id).one())
+        self.get_convent()
 
         self.form = ConventDeleteForm(self.request)
         form_data = {
-            'obj_id': obj_id,
+            'obj_id': self.matchdict['obj_id'],
         }
 
         if self.form(form_data) is True:
             self.redirect('convent:list')
+
+    def get_convent(self):
+        try:
+            self.data['convent'] = (
+                self.query(Convent)
+                .filter_by(id=self.matchdict['obj_id'])
+                .one())
+        except NoResultFound:
+            raise HTTPNotFound()
 
     def make_helpers(self):
         self.add_helper('form', FormWidget, self.form)
