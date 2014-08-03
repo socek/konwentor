@@ -37,8 +37,14 @@ class FormWidget(Jinja2Helper):
         data['autofocus'] = autofocus
         return self.render_for(input_type, data)
 
-    def submit(self, label=''):
-        return self.render_for('submit', {'label': label})
+    def hidden(self, name):
+        data = {}
+        data['name'] = name
+        data['value'] = self.form.get_value(name) or ''
+        return self.render_for('hidden', data)
+
+    def submit(self, label='', cls='btn-success'):
+        return self.render_for('submit', {'label': label, 'class': cls})
 
     def error(self):
         data = {}

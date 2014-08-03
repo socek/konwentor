@@ -7,7 +7,7 @@
         <div class="col-lg-12">
             <ul>
                 {%- for convent in convents %}
-                    <li>{{convent.name}}</li>
+                    <li>{{convent.name}} <a  href="{{route('convent:delete', obj_id=convent.id)}}" class="btn btn-xs btn-danger">[x]</a></li>
                 {%- endfor %}
             </ul>
         </div>

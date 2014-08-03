@@ -2,7 +2,7 @@ from konwentor.auth.base_controller import AuthController
 from konwentor.application.helpers import FormWidget
 
 from .models import Convent
-from .forms import ConventAddForm
+from .forms import ConventAddForm, ConventDeleteForm
 
 
 class ConventListController(AuthController):
@@ -26,6 +26,27 @@ class ConventAdd(AuthController):
         self.form = ConventAddForm(self.request)
 
         if self.form() is True:
+            self.redirect('convent:list')
+
+    def make_helpers(self):
+        self.add_helper('form', FormWidget, self.form)
+
+
+class ConventDelete(AuthController):
+    renderer = 'convent/delete.jinja2'
+    permissions = [('convent', 'delete'), ]
+
+    def make(self):
+        obj_id = self.matchdict['obj_id']
+        self.data['convent'] = (
+            self.db.query(Convent).filter_by(id=obj_id).one())
+
+        self.form = ConventDeleteForm(self.request)
+        form_data = {
+            'obj_id': obj_id,
+        }
+
+        if self.form(form_data) is True:
             self.redirect('convent:list')
 
     def make_helpers(self):
