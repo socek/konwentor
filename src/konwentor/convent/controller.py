@@ -1,4 +1,5 @@
 from konwentor.auth.base_controller import AuthController
+from konwentor.application.helpers import FormHelper
 
 from .models import Convent
 from .forms import ConventAddForm
@@ -22,6 +23,8 @@ class ConventAdd(AuthController):
     permissions = [('convent', 'add'), ]
 
     def make(self):
-        self.data['form'] = ConventAddForm(self.request)
-        if self.data['form']() is True:
+        form = ConventAddForm(self.request)
+        self.add_helper('form', FormHelper, form)
+
+        if form() is True:
             self.redirect('convent:list')

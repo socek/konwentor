@@ -1,5 +1,4 @@
 {% extends "main.jinja2" %}
-{% import 'formskit.jinja2' as FK with context -%}
 
 {% block page_head -%}
     Konwenty - Dodawanie
@@ -15,10 +14,10 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6">
-                            {{FK.StartForm(form)}}
-                                {{FK.Text(form, 'name')}}
-                                {{FK.SubmitButton(form, 'Dodaj')}}
-                            {{FK.StopForm()}}
+                            {{form.begin()|safe}}
+                                {{form.text('name')|safe}}
+                                {{form.submit('Dodaj')|safe}}
+                            {{form.end()|safe}}
                         </div>
                     </div>
                 </div>

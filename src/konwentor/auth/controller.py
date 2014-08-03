@@ -1,5 +1,6 @@
 from .base_controller import AuthController
 from .forms import LoginForm
+from .helpers import LoginFormHelper
 
 
 class LoginController(AuthController):
@@ -11,8 +12,9 @@ class LoginController(AuthController):
             self.redirect('convent:list')
             return
 
-        self.data['form'] = LoginForm(self.request)
-        if self.data['form']() is True:
+        form = LoginForm(self.request)
+        self.add_helper('form', LoginFormHelper, form)
+        if form() is True:
             self.redirect('convent:list')
 
 

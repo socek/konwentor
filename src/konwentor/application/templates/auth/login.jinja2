@@ -1,5 +1,4 @@
 {% extends "head.jinja2" %}
-{% import 'formskit.jinja2' as FK with context -%}
 
 {% block body %}
     <div class="container">
@@ -15,15 +14,15 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Proszę się zalogować</h3>
                     </div>
-                    {{FK.FormError(form)}}
+                    {{form.error()|safe}}
                     <div class="panel-body">
-                        {{FK.StartForm(form)}}
+                        {{form.begin()|safe}}
                             <fieldset>
-                                {{FK.LoginText(form, 'email', 'E-mail', 'email', True)}}
-                                {{FK.LoginPassword(form, 'password', 'Hasło',)}}
-                                {{FK.LoginButton(form, 'Zaloguj')}}
+                                {{form.text('email')|safe}}
+                                {{form.password('password')|safe}}
+                                {{form.submit('Zaloguj')|safe}}
                             </fieldset>
-                        {{FK.StopForm()}}
+                        {{form.end()|safe}}
                     </div>
                 </div>
             </div>
