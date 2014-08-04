@@ -12,6 +12,7 @@ class ConventListController(MenuController):
 
     renderer = 'convent/home.jinja2'
     permissions = [('base', 'view'), ]
+    menu_highlighted = 'convent:list'
 
     def make(self):
         self.data['convents'] = self.get_convents()
@@ -24,6 +25,7 @@ class ConventAdd(MenuController):
 
     renderer = 'convent/add.jinja2'
     permissions = [('convent', 'add'), ]
+    menu_highlighted = 'convent:list'
 
     def make(self):
         self.form = ConventAddForm(self.request)
@@ -39,6 +41,7 @@ class ConventAdd(MenuController):
 class ConventDelete(MenuController):
     renderer = 'convent/delete.jinja2'
     permissions = [('convent', 'delete'), ]
+    menu_highlighted = 'convent:list'
 
     def make(self):
         self.get_convent()

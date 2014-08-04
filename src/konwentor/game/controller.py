@@ -25,6 +25,7 @@ class GameAddController(MenuController):
 
     renderer = 'game/add.jinja2'
     permissions = [('game', 'add'), ]
+    menu_highlighted = 'game:list'
 
     def make(self):
         self.form = GameAddForm(self.request)
@@ -40,6 +41,7 @@ class GameAddController(MenuController):
 class GameDelete(MenuController):
     renderer = 'game/delete.jinja2'
     permissions = [('game', 'delete'), ]
+    menu_highlighted = 'game:list'
 
     def make(self):
         self.get_element()
