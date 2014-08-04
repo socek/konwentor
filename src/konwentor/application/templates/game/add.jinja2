@@ -1,0 +1,27 @@
+{% extends "main.jinja2" %}
+
+{% block page_head -%}
+    Gry - Dodawanie
+{%- endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Nowy gra
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {{form.begin()}}
+                                {{form.text('name')}}
+                                {{form.submit('Dodaj')}}
+                            {{form.end()}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

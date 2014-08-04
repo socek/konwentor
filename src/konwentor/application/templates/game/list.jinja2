@@ -1,13 +1,13 @@
 {% extends "main.jinja2" %}
 {% block page_head -%}
-    Gry
+    Gry - <small><a href="{{route('game:add')}}">Dodaj</a></small>
 {%- endblock %}
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
             <ul>
                 {%- for object in objects %}
-                    <li>{{object.name}}</li>
+                    <li>{{object.name}} <a  href="{{route('game:delete', obj_id=object.id)}}" class="btn btn-xs btn-danger">[x]</a></li>
                 {%- endfor %}
             </ul>
         </div>

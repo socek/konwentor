@@ -32,6 +32,7 @@ class ConventAdd(MenuController):
             self.redirect('convent:list')
 
     def make_helpers(self):
+        super().make_helpers()
         self.add_helper('form', FormWidget, self.form)
 
 
@@ -60,4 +61,5 @@ class ConventDelete(MenuController):
             raise HTTPNotFound()
 
     def make_helpers(self):
+        super().make_helpers()
         self.add_helper('form', FormWidget, self.form)

@@ -1,6 +1,11 @@
+from sqlalchemy.orm.exc import NoResultFound
+from pyramid.httpexceptions import HTTPNotFound
+
 from konwentor.menu.base_controller import MenuController
+from konwentor.forms.helpers import FormWidget
 
 from .models import Game
+from .forms import GameAddForm, GameDeleteForm
 
 
 class GameListController(MenuController):
@@ -14,3 +19,48 @@ class GameListController(MenuController):
 
     def get_games(self):
         return self.db.query(Game).all()
+
+
+class GameAddController(MenuController):
+
+    renderer = 'game/add.jinja2'
+    permissions = [('game', 'add'), ]
+
+    def make(self):
+        self.form = GameAddForm(self.request)
+
+        if self.form() is True:
+            self.redirect('game:list')
+
+    def make_helpers(self):
+        super().make_helpers()
+        self.add_helper('form', FormWidget, self.form)
+
+
+class GameDelete(MenuController):
+    renderer = 'game/delete.jinja2'
+    permissions = [('game', 'delete'), ]
+
+    def make(self):
+        self.get_element()
+
+        self.form = GameDeleteForm(self.request)
+        form_data = {
+            'obj_id': self.matchdict['obj_id'],
+        }
+
+        if self.form(form_data) is True:
+            self.redirect('game:list')
+
+    def get_element(self):
+        try:
+            self.data['element'] = (
+                self.query(Game)
+                .filter_by(id=self.matchdict['obj_id'])
+                .one())
+        except NoResultFound:
+            raise HTTPNotFound()
+
+    def make_helpers(self):
+        super().make_helpers()
+        self.add_helper('form', FormWidget, self.form)
