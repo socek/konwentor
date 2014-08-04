@@ -2,7 +2,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
 
 from konwentor.menu.base_controller import MenuController
-from konwentor.application.helpers import FormWidget
+from konwentor.forms.helpers import FormWidget
 
 from .models import Convent
 from .forms import ConventAddForm, ConventDeleteForm

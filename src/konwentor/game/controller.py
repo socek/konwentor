@@ -5,7 +5,7 @@ from .models import Game
 
 class GameListController(MenuController):
 
-    renderer = 'boardgame/game_list.jinja2'
+    renderer = 'game/list.jinja2'
     permissions = [('base', 'view'), ]
     menu_highlighted = 'game:list'
 

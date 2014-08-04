@@ -13,7 +13,13 @@ def make_routes(app):
         'convent:delete',
         '/convent/delete/{obj_id:\d+}')
 
-    route.add('boardgame.controller.GameListController', 'game:list', '/games')
+    route.add('game.controller.GameListController', 'game:list', '/games')
+    # route.add('game.controller.GameAdd', 'game:add', '/game/add')
+    # route.add(
+    #     'game.controller.GameDelete',
+    #     'game:delete',
+    #     '/game/delete/{obj_id:\d+}')
+
     route.add('auth.controller.LoginController', 'auth:login', '/login')
     route.add('auth.controller.LogoutController', 'auth:logout', '/logout')
     route.add_view('auth.controller.ForbiddenController', context=Forbidden)

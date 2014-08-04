@@ -1,13 +1,6 @@
 from hatak.db import Base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-
-
-class Game(Base):
-    __tablename__ = 'games'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
 
 
 class GameCopy(Base):
