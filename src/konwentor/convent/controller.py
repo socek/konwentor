@@ -1,14 +1,14 @@
 from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
 
-from konwentor.auth.base_controller import AuthController
+from konwentor.menu.base_controller import MenuController
 from konwentor.application.helpers import FormWidget
 
 from .models import Convent
 from .forms import ConventAddForm, ConventDeleteForm
 
 
-class ConventListController(AuthController):
+class ConventListController(MenuController):
 
     renderer = 'convent/home.jinja2'
     permissions = [('base', 'view'), ]
@@ -20,7 +20,7 @@ class ConventListController(AuthController):
         return self.db.query(Convent).all()
 
 
-class ConventAdd(AuthController):
+class ConventAdd(MenuController):
 
     renderer = 'convent/add.jinja2'
     permissions = [('convent', 'add'), ]
@@ -35,7 +35,7 @@ class ConventAdd(AuthController):
         self.add_helper('form', FormWidget, self.form)
 
 
-class ConventDelete(AuthController):
+class ConventDelete(MenuController):
     renderer = 'convent/delete.jinja2'
     permissions = [('convent', 'delete'), ]
 

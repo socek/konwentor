@@ -1,0 +1,15 @@
+{% extends "main.jinja2" %}
+{% block page_head -%}
+    Gry
+{%- endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <ul>
+                {%- for object in objects %}
+                    <li>{{object.name}}</li>
+                {%- endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
