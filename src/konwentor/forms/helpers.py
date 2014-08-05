@@ -25,6 +25,9 @@ class FormWidget(Jinja2Helper):
     def password(self, name, disabled=False, autofocus=False):
         return self._input('password', name, disabled, autofocus)
 
+    def select(self, name, disabled=False, autofocus=False):
+        return self._input('select', name, disabled, autofocus)
+
     def _input(self, input_type, name, disabled=False, autofocus=False):
         data = {}
         data['name'] = name
@@ -35,6 +38,7 @@ class FormWidget(Jinja2Helper):
         data['value'] = self.form.get_value(name) or ''
         data['disabled'] = disabled
         data['autofocus'] = autofocus
+        data['field'] = self.form.field_patterns[name]
         return self.render_for(input_type, data)
 
     def hidden(self, name):

@@ -2,11 +2,26 @@
     <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
             {% for object in menu %}
-                <li>
-                    <a {%- if object.is_highlited() %} class="active"{% endif %} href="{{object.get_url()}}">
-                        <i class="fa {{object.get_icon()}} fa-fw"></i> {{object.name}}
-                    </a>
-                </li>
+                {% if object.is_visible() -%}
+                    <li>
+                        <a {%- if object.is_highlited() %} class="active"{% endif %} href="{{object.get_url()}}">
+                            <i class="fa {{object.get_icon()}} fa-fw"></i> {{object.name}}
+                        </a>
+                        {% if object.childs -%}
+                            <ul class="nav nav-second-level collapse in">
+                                {% for child in object.childs %}
+                                    {% if child.is_visible() -%}
+                                        <li>
+                                            <a {%- if child.is_highlited() %} class="active"{% endif %} href="{{child.get_url()}}">
+                                                <i class="fa {{child.get_icon()}} fa-fw"></i> {{child.name}}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif -%}
+                    </li>
+                {% endif -%}
             {% endfor %}
         </ul>
     </div>
