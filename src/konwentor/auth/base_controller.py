@@ -25,4 +25,5 @@ class AuthController(DatabaseController):
     def generate_default_data(self):
         data = super().generate_default_data()
         data['user'] = self.user
+        self.user.assign_request(self.request)
         return data

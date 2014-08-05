@@ -30,6 +30,10 @@ class User(Base):
                 return True
         return False
 
+    def has_access_to_route(self, route):
+        ctrl = self.registry['route'].routes[route]
+        return self.has_access_to_controller(ctrl)
+
     def has_access_to_controller(self, ctrl):
         permissions = getattr(ctrl, 'permissions', [])
         for group, name in permissions:
