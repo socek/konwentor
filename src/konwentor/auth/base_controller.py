@@ -12,10 +12,8 @@ class AuthController(DatabaseController):
 
     def validate_auth(self):
         self.user = self.get_user()
-        permissions = getattr(self, 'permissions', [])
-        for group, name in permissions:
-            if not self.user.has_permission(group, name):
-                raise HTTPForbidden()
+        if not self.user.has_access_to_controller(self):
+            raise HTTPForbidden()
 
     def get_user(self):
         user_id = self.session.get('user_id', None)

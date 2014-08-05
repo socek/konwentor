@@ -30,6 +30,13 @@ class User(Base):
                 return True
         return False
 
+    def has_access_to_controller(self, ctrl):
+        permissions = getattr(ctrl, 'permissions', [])
+        for group, name in permissions:
+            if not self.has_permission(group, name):
+                return False
+        return True
+
     def set_password(self, password):
         hashed_password = password
 
@@ -76,3 +83,6 @@ class NotLoggedUser(object):
 
     def is_logged(self):
         return False
+
+    def has_access_to_controller(self, ctrl):
+        return getattr(ctrl, 'permissions', []) == []
