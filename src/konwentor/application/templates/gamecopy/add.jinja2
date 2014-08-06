@@ -15,8 +15,10 @@
                     <div class="row">
                         <div class="col-lg-6">
                             {{form.begin()}}
-                                {{form.text('name')}}
+                                {{form.select('game_id')}}
                                 {{form.select('user_id')}}
+                                {{form.select('convent_id')}}
+                                {{form.text('count')}}
                                 {{form.submit('Dodaj')}}
                             {{form.end()}}
                         </div>

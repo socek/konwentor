@@ -69,7 +69,7 @@ class Permission(Base):
     group = Column(String)
 
 
-class NotLoggedUser(object):
+class NotLoggedUser(User):
 
     name = 'FakeUser'
 

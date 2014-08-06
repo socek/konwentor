@@ -12,7 +12,11 @@ class GameCopyAddController(MenuController):
 
     def make(self):
         self.form = GameCopyAddForm(self.request)
-        self.form(initial_data={'user_id': [self.user.id]})
+        initial_data = {
+            'count': '1',
+            'user_id': [str(self.user.id)],
+        }
+        self.form(initial_data=initial_data)
 
         # if self.form() is True:
         #     self.redirect('game:list')
