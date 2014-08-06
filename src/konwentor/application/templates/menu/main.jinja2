@@ -6,9 +6,10 @@
                     <li>
                         <a {%- if object.is_highlited() %} class="active"{% endif %} href="{{object.get_url()}}">
                             <i class="fa {{object.get_icon()}} fa-fw"></i> {{object.name}}
+                            {%- if object.childs %}<span class="fa arrow"></span>{% endif -%}
                         </a>
                         {% if object.childs -%}
-                            <ul class="nav nav-second-level collapse in">
+                            <ul class="nav nav-second-level">
                                 {% for child in object.childs %}
                                     {% if child.is_visible() -%}
                                         <li>
