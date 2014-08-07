@@ -1,10 +1,10 @@
 from pyramid.httpexceptions import HTTPForbidden
-from hatak.controller import DatabaseController
+from hatak.controller import Controller
 
 from .models import User, NotLoggedUser
 
 
-class AuthController(DatabaseController):
+class AuthController(Controller):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
