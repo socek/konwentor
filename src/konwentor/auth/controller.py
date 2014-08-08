@@ -1,9 +1,10 @@
-from .base_controller import AuthController
+from hatak.controller import Controller
+
 from .forms import LoginForm
 from .helpers import LoginFormWidget
 
 
-class LoginController(AuthController):
+class LoginController(Controller):
 
     renderer = 'auth/login.jinja2'
 
@@ -20,7 +21,7 @@ class LoginController(AuthController):
         self.add_helper('form', LoginFormWidget, self.form)
 
 
-class ForbiddenController(AuthController):
+class ForbiddenController(Controller):
 
     renderer = 'auth/forbidden.jinja2'
 
@@ -29,7 +30,7 @@ class ForbiddenController(AuthController):
             self.redirect('auth:login')
 
 
-class LogoutController(AuthController):
+class LogoutController(Controller):
 
     permissions = [('base', 'view'), ]
 

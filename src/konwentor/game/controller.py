@@ -1,14 +1,14 @@
 from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
+from hatak.controller import Controller
 
-from konwentor.menu.base_controller import MenuController
 from konwentor.forms.helpers import FormWidget
 
 from .models import Game
 from .forms import GameAddForm, GameDeleteForm
 
 
-class GameListController(MenuController):
+class GameListController(Controller):
 
     renderer = 'game/list.jinja2'
     permissions = [('base', 'view'), ]
@@ -21,7 +21,7 @@ class GameListController(MenuController):
         return self.db.query(Game).all()
 
 
-class GameAddController(MenuController):
+class GameAddController(Controller):
 
     renderer = 'game/add.jinja2'
     permissions = [('game', 'add'), ]
@@ -38,7 +38,7 @@ class GameAddController(MenuController):
         self.add_helper('form', FormWidget, self.form)
 
 
-class GameDelete(MenuController):
+class GameDelete(Controller):
     renderer = 'game/delete.jinja2'
     permissions = [('game', 'delete'), ]
     menu_highlighted = 'game:list'

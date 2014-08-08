@@ -1,10 +1,11 @@
-from konwentor.menu.base_controller import MenuController
+from hatak.controller import Controller
+
 from konwentor.forms.helpers import FormWidget
 
 from .forms import GameCopyAddForm
 
 
-class GameCopyAddController(MenuController):
+class GameCopyAddController(Controller):
 
     renderer = 'gamecopy/add.jinja2'
     permissions = [('gamecopy', 'add'), ]
@@ -19,6 +20,8 @@ class GameCopyAddController(MenuController):
         self.form(initial_data=initial_data)
 
         # if self.form() is True:
+        #     pass
+            # self.add_flashmsg('DONE!', 'danger')
         #     self.redirect('game:list')
 
     def make_helpers(self):

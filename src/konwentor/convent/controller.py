@@ -1,14 +1,14 @@
 from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
 
-from konwentor.menu.base_controller import MenuController
+from hatak.controller import Controller
 from konwentor.forms.helpers import FormWidget
 
 from .models import Convent
 from .forms import ConventAddForm, ConventDeleteForm
 
 
-class ConventListController(MenuController):
+class ConventListController(Controller):
 
     renderer = 'convent/home.jinja2'
     permissions = [('base', 'view'), ]
@@ -21,7 +21,7 @@ class ConventListController(MenuController):
         return self.db.query(Convent).all()
 
 
-class ConventAdd(MenuController):
+class ConventAdd(Controller):
 
     renderer = 'convent/add.jinja2'
     permissions = [('convent', 'add'), ]
@@ -38,7 +38,7 @@ class ConventAdd(MenuController):
         self.add_helper('form', FormWidget, self.form)
 
 
-class ConventDelete(MenuController):
+class ConventDelete(Controller):
     renderer = 'convent/delete.jinja2'
     permissions = [('convent', 'delete'), ]
     menu_highlighted = 'convent:list'
