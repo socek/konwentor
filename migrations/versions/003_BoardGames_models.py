@@ -29,8 +29,8 @@ game_copies = Table(
     Column('owner_id', Integer, ForeignKey('users.id'), nullable=False),
 )
 
-game_copies_2_convents = Table(
-    'game_copies_2_convents', meta,
+game_entities = Table(
+    'game_entities', meta,
     Column('id', Integer, primary_key=True),
     Column('gamecopy_id', Integer,
            ForeignKey('game_copies.id'), nullable=False),
@@ -43,11 +43,11 @@ def upgrade(migrate_engine):
     meta.bind = migrate_engine
     games.create()
     game_copies.create()
-    game_copies_2_convents.create()
+    game_entities.create()
 
 
 def downgrade(migrate_engine):
     meta.bind = migrate_engine
-    game_copies_2_convents.drop()
+    game_entities.drop()
     game_copies.drop()
     games.drop()

@@ -6,7 +6,7 @@ from konwentor.auth.models import User
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
 
-from .models import GameCopy, GameCopyOnConvent
+from .models import GameCopy, GameEntity
 
 
 class GameCopyAddForm(PostForm):
@@ -61,10 +61,10 @@ class GameCopyAddForm(PostForm):
         count = data['count'][0]
 
         gamecopy = self.create_gamecopy(game, user)
-        gameonconvent = self.create_gameonconvent(convent, gamecopy)
-        gameonconvent.count += int(count)
+        gameentity = self.create_gameentity(convent, gamecopy)
+        gameentity.count += int(count)
 
-        self.db.add(gameonconvent)
+        self.db.add(gameentity)
         try:
             self.db.commit()
         finally:
@@ -78,17 +78,17 @@ class GameCopyAddForm(PostForm):
         self.db.add(gamecopy)
         return gamecopy
 
-    def create_gameonconvent(self, convent, gamecopy):
+    def create_gameentity(self, convent, gamecopy):
         if gamecopy.id is None:
-            gameonconvent = GameCopyOnConvent(
+            gameentity = GameEntity(
                 convent=convent,
             )
-            gameonconvent.gamecopy = gamecopy
+            gameentity.gamecopy = gamecopy
         else:
-            gameonconvent = GameCopyOnConvent.get_or_create(
+            gameentity = GameEntity.get_or_create(
                 self.db,
                 convent=convent,
                 gamecopy=gamecopy,
             )
-        self.db.add(gameonconvent)
-        return gameonconvent
+        self.db.add(gameentity)
+        return gameentity

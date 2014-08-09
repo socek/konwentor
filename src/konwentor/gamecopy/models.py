@@ -14,13 +14,13 @@ class GameCopy(Base):
     owner = relationship("User", backref='games')
 
 
-class GameCopyOnConvent(Base):
-    __tablename__ = 'game_copies_2_convents'
+class GameEntity(Base):
+    __tablename__ = 'game_entities'
 
     id = Column(Integer, primary_key=True)
     count = Column(Integer, nullable=False, default=0)
     gamecopy_id = Column(Integer, ForeignKey('game_copies.id'), nullable=False)
     convent_id = Column(Integer, ForeignKey('convents.id'), nullable=False)
 
-    gamecopy = relationship("GameCopy", backref='on_convent')
-    convent = relationship("Convent", backref="game_copies")
+    gamecopy = relationship("GameCopy", backref='entities')
+    convent = relationship("Convent", backref='entities')

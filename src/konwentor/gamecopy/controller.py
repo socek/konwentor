@@ -5,7 +5,7 @@ from konwentor.game.models import Game
 from konwentor.auth.models import User
 
 from .forms import GameCopyAddForm
-from .models import GameCopyOnConvent, GameCopy
+from .models import GameEntity, GameCopy
 
 
 class GameCopyControllerBase(Controller):
@@ -64,9 +64,9 @@ class GameCopyListController(GameCopyControllerBase):
     def get_games(self, convent):
         return (
             self.query(
-                GameCopyOnConvent.count,
+                GameEntity.count,
                 Game.name,
                 User.name.label('author_name'))
             .join(GameCopy).join(Game).join(User)
-            .filter(GameCopyOnConvent.convent_id == convent.id)
+            .filter(GameEntity.convent_id == convent.id)
             .all())

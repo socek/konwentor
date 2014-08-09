@@ -2,7 +2,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
 
 from hatak.controller import Controller
-from konwentor.forms.helpers import FormWidget
 
 from .models import Convent
 from .forms import ConventAddForm, ConventDeleteForm
@@ -33,10 +32,6 @@ class ConventAdd(Controller):
 
         if form() is True:
             self.redirect('convent:list')
-
-    def make_helpers(self):
-        super().make_helpers()
-        self.add_helper('form', FormWidget, self.form)
 
 
 class ConventDelete(Controller):
