@@ -24,5 +24,5 @@ class GameDeleteForm(PostForm):
 
     def submit(self, data):
         element = self.db.query(Game).filter_by(id=data['obj_id'][0]).one()
-        self.db.delete(element)
+        element.remove(self.db)
         self.db.commit()
