@@ -9,7 +9,7 @@ install_requires = [
     'pyramid_beaker',
     'pyramid_jinja2',
     'psycopg2',
-    'formskit==0.4.0',
+    'formskit==0.4.1',
 ]
 dependency_links = [
 

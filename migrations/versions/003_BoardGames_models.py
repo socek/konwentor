@@ -35,7 +35,7 @@ game_copies_2_convents = Table(
     Column('gamecopy_id', Integer,
            ForeignKey('game_copies.id'), nullable=False),
     Column('convent_id', Integer, ForeignKey('convents.id'), nullable=False),
-    Column('count', Integer, nullable=False, default=1)
+    Column('count', Integer, nullable=False, default=0)
 )
 
 

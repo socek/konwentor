@@ -60,18 +60,35 @@ class GameCopyAddForm(PostForm):
         convent = self.get_object(Convent, data['convent_id'][0])
         count = data['count'][0]
 
-        gamecopy = GameCopy(
-            game=game,
-            owner=user)
-        self.db.add(gamecopy)
-
-        gameonconvent = GameCopyOnConvent(
-            convent=convent,
-            count=count)
-        gameonconvent.gamecopy = gamecopy
+        gamecopy = self.create_gamecopy(game, user)
+        gameonconvent = self.create_gameonconvent(convent, gamecopy)
+        gameonconvent.count += int(count)
 
         self.db.add(gameonconvent)
         try:
             self.db.commit()
         finally:
             self.db.rollback()
+
+    def create_gamecopy(self, game, user):
+        gamecopy = GameCopy.get_or_create(
+            self.db,
+            game=game,
+            owner=user)
+        self.db.add(gamecopy)
+        return gamecopy
+
+    def create_gameonconvent(self, convent, gamecopy):
+        if gamecopy.id is None:
+            gameonconvent = GameCopyOnConvent(
+                convent=convent,
+            )
+            gameonconvent.gamecopy = gamecopy
+        else:
+            gameonconvent = GameCopyOnConvent.get_or_create(
+                self.db,
+                convent=convent,
+                gamecopy=gamecopy,
+            )
+        self.db.add(gameonconvent)
+        return gameonconvent

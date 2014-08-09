@@ -5,7 +5,7 @@ from konwentor.game.models import Game
 from konwentor.auth.models import User
 
 from .forms import GameCopyAddForm
-from .models import GameCopyOnConvent
+from .models import GameCopyOnConvent, GameCopy
 
 
 class GameCopyAddController(Controller):
@@ -25,7 +25,8 @@ class GameCopyAddController(Controller):
         if form(initial_data=initial_data):
             self.add_flashmsg('Added game.', 'info')
             self.session['last_convent_id'] = form.get_value('convent_id')
-            form(initial_data=initial_data)
+            form.fields = {}
+            form._gatherFormsData(initial_data)
 
 
 class GameCopyListController(Controller):
@@ -47,6 +48,10 @@ class GameCopyListController(Controller):
 
     def get_games(self, convent):
         return (
-            self.query(Game.name, User.name, GameCopyOnConvent.count)
+            self.query(
+                GameCopyOnConvent.count,
+                Game.name,
+                User.name.label('author_name'))
+            .join(GameCopy).join(Game).join(User)
             .filter(GameCopyOnConvent.convent_id == convent.id)
             .all())

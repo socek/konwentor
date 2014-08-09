@@ -18,7 +18,7 @@ class GameCopyOnConvent(Base):
     __tablename__ = 'game_copies_2_convents'
 
     id = Column(Integer, primary_key=True)
-    count = Column(Integer, nullable=False, default=1)
+    count = Column(Integer, nullable=False, default=0)
     gamecopy_id = Column(Integer, ForeignKey('game_copies.id'), nullable=False)
     convent_id = Column(Integer, ForeignKey('convents.id'), nullable=False)
 
