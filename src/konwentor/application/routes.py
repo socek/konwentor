@@ -12,6 +12,10 @@ def make_routes(app):
         'convent.controller.ConventDelete',
         'convent:delete',
         '/convent/delete/{obj_id:\d+}')
+    route.add(
+        'convent.controller.ChooseConventController',
+        'convent:choose',
+        '/convent/choose/{obj_id:\d+}')
 
     route.add('game.controller.GameListController', 'game:list', '/games')
     route.add('game.controller.GameAddController', 'game:add', '/game/add')

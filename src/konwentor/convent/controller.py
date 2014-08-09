@@ -10,12 +10,13 @@ from .forms import ConventAddForm, ConventDeleteForm
 
 class ConventListController(Controller):
 
-    renderer = 'convent/home.jinja2'
+    renderer = 'convent/list.jinja2'
     permissions = [('base', 'view'), ]
     menu_highlighted = 'convent:list'
 
     def make(self):
         self.data['convents'] = self.get_convents()
+        self.data['choosed_id'] = self.session.get('convent_id', None)
 
     def get_convents(self):
         return self.db.query(Convent).all()
@@ -28,9 +29,9 @@ class ConventAdd(Controller):
     menu_highlighted = 'convent:list'
 
     def make(self):
-        self.form = ConventAddForm(self.request)
+        form = self.add_form(ConventAddForm)
 
-        if self.form() is True:
+        if form() is True:
             self.redirect('convent:list')
 
     def make_helpers(self):
@@ -44,17 +45,17 @@ class ConventDelete(Controller):
     menu_highlighted = 'convent:list'
 
     def make(self):
-        self.get_convent()
+        self.verify_convent_id()
 
-        self.form = ConventDeleteForm(self.request)
-        form_data = {
+        form = self.add_form(ConventDeleteForm)
+        data = {
             'obj_id': self.matchdict['obj_id'],
         }
 
-        if self.form(form_data) is True:
+        if form(data) is True:
             self.redirect('convent:list')
 
-    def get_convent(self):
+    def verify_convent_id(self):
         try:
             self.data['convent'] = (
                 self.query(Convent)
@@ -63,6 +64,11 @@ class ConventDelete(Controller):
         except NoResultFound:
             raise HTTPNotFound()
 
-    def make_helpers(self):
-        super().make_helpers()
-        self.add_helper('form', FormWidget, self.form)
+
+class ChooseConventController(ConventDelete):
+    permissions = [('base', 'view'), ]
+
+    def make(self):
+        self.verify_convent_id()
+        self.session['convent_id'] = int(self.matchdict['obj_id'])
+        self.redirect('convent:list')
