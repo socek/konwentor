@@ -23,3 +23,4 @@ class MenuWidget(Jinja2Helper):
 
         submenu = self.add_menu('Na konwencie', None, 'star')
         submenu.add_child('Dodaj grę', 'gamecopy:add', 'magic')
+        submenu.add_child('Lista gier', 'gamecopy:list', 'magic')

@@ -23,6 +23,10 @@ def make_routes(app):
     route.add(
         'gamecopy.controller.GameCopyAddController',
         'gamecopy:add', '/gamecopy/add')
+    route.add(
+        'gamecopy.controller.GameCopyListController',
+        'gamecopy:list',
+        '/gamecopy')
 
     route.add('auth.controller.LoginController', 'auth:login', '/login')
     route.add('auth.controller.LogoutController', 'auth:logout', '/logout')

@@ -13,4 +13,10 @@ class MenuPlugin(Plugin):
 class MenuControllerPlugin(ControllerPlugin):
 
     def make_helpers(self):
-        self.add_helper('menu', MenuWidget, self.controller.menu_highlighted)
+        try:
+            self.add_helper(
+                'menu', MenuWidget, self.controller.menu_highlighted)
+        except AttributeError:
+            # if no menu_highlighted is avalible, it means no menu will be
+            # needed
+            pass
