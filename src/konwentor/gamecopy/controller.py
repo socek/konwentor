@@ -1,7 +1,5 @@
 from hatak.controller import Controller
 
-from konwentor.forms.helpers import FormWidget
-
 from .forms import GameCopyAddForm
 
 
@@ -12,18 +10,11 @@ class GameCopyAddController(Controller):
     menu_highlighted = 'gamecopy:add'
 
     def make(self):
-        self.form = GameCopyAddForm(self.request)
+        form = self.add_form(GameCopyAddForm)
         initial_data = {
             'count': '1',
             'user_id': [str(self.user.id)],
         }
-        self.form(initial_data=initial_data)
-
-        # if self.form() is True:
-        #     pass
-            # self.add_flashmsg('DONE!', 'danger')
-        #     self.redirect('game:list')
-
-    def make_helpers(self):
-        super().make_helpers()
-        self.add_helper('form', FormWidget, self.form)
+        if form(initial_data=initial_data):
+            self.add_flashmsg('Added game.', 'info')
+            form()
