@@ -10,6 +10,7 @@ install_requires = [
     'pyramid_jinja2',
     'psycopg2',
     'formskit==0.4.1',
+    'uwsgi',
 ]
 dependency_links = [
 
