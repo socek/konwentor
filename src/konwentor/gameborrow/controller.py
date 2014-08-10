@@ -18,10 +18,10 @@ class GameBorrowAddController(Controller):
     menu_highlighted = ''
 
     def make(self):
-        game_entity = self.get_game_entity()
+        self.data['game_entity'] = self.get_game_entity()
         form = self.add_form(GameBorrowAddForm)
 
-        if form({'game_entity_id': [game_entity.id]}):
+        if form({'game_entity_id': [self.data['game_entity'].id]}):
             self.add_flashmsg('Gra została wypożyczona.', 'success')
             self.redirect('gamecopy:list')
 
