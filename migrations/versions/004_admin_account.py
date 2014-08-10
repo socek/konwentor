@@ -29,6 +29,7 @@ def upgrade(migrate_engine):
     conn.execute(permission.insert().values(group='game', name='add'))
     conn.execute(permission.insert().values(group='game', name='delete'))
     conn.execute(permission.insert().values(group='gamecopy', name='add'))
+    conn.execute(permission.insert().values(group='gameborrow', name='add'))
 
     inc = (
         user.insert()

@@ -1,3 +1,5 @@
+from hatak.unpackrequest import unpack
+
 from formskit import Form
 
 
@@ -5,9 +7,7 @@ class PostForm(Form):
 
     def __init__(self, request):
         self.request = request
-        self.registry = request.registry
-        self.db = self.registry['db']
-        self.session = request.session
+        unpack(self, self.request)
         super().__init__()
 
     def __call__(self, initial_data={}):

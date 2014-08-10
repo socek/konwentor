@@ -32,6 +32,19 @@ def make_routes(app):
         'gamecopy:list',
         '/gamecopy')
 
+    route.add(
+        'gameborrow.controller.GameBorrowListController',
+        'gameborrow:list',
+        '/game/borrows')
+    route.add(
+        'gameborrow.controller.GameBorrowAddController',
+        'gameborrow:add',
+        '/game/borrows/add/{obj_id:\d+}')
+    route.add(
+        'gameborrow.controller.GameBorrowReturnController',
+        'gameborrow:return',
+        '/game/borrows/return/{obj_id:\d+}')
+
     route.add('auth.controller.LoginController', 'auth:login', '/login')
     route.add('auth.controller.LogoutController', 'auth:logout', '/logout')
     route.add_view('auth.controller.ForbiddenController', context=Forbidden)
