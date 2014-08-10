@@ -3,6 +3,7 @@ from formskit import Field
 from konwentor.application.forms import PostForm
 from konwentor.forms.validators import NotEmpty
 
+from konwentor.gamecopy.models import GameEntity
 from .models import GameBorrow
 
 
@@ -60,6 +61,14 @@ class GameBorrowAddForm(PostForm):
         ]
         return objects
 
+    def overalValidation(self, data):
+        entity = self.get_entity(data['game_entity_id'][0])
+        if entity.is_avalible():
+            return True
+        else:
+            self.message = 'Ta gra nie ma już wolnych kopii.'
+            return False
+
     def submit(self, data):
         element = GameBorrow()
         element.game_entity_id = data['game_entity_id'][0]
@@ -72,3 +81,9 @@ class GameBorrowAddForm(PostForm):
 
         self.db.add(element)
         self.db.commit()
+
+    def get_entity(self, entity_id):
+        return (
+            self.db.query(GameEntity)
+            .filter_by(id=entity_id)
+            .one())

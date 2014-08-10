@@ -24,3 +24,14 @@ class GameEntity(Base):
 
     gamecopy = relationship("GameCopy", backref='entities')
     convent = relationship("Convent", backref='entities')
+
+    def active_borrows(self):
+        for borrow in self.borrows:
+            if borrow.is_borrowed:
+                yield borrow
+
+    def active_borrows_len(self):
+        return len(list(self.active_borrows()))
+
+    def is_avalible(self):
+        return self.count > self.active_borrows_len()

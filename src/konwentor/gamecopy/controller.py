@@ -64,8 +64,7 @@ class GameCopyListController(GameCopyControllerBase):
     def get_games(self, convent):
         return (
             self.query(
-                GameEntity.id,
-                GameEntity.count,
+                GameEntity,
                 Game.name,
                 User.name.label('author_name'))
             .join(GameCopy).join(Game).join(User)

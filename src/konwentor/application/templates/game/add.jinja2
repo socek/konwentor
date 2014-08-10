@@ -15,6 +15,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             {{form.begin()}}
+                                {{form.error()}}
                                 {{form.text('name')}}
                                 {{form.submit('Dodaj')}}
                             {{form.end()}}

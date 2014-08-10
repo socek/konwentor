@@ -66,6 +66,7 @@ class GameBorrowReturnController(Controller):
 
         borrow.is_borrowed = False
         borrow.return_timestamp = datetime.utcnow()
+        self.db.commit()
         self.redirect('gameborrow:list')
 
     def get_borrow(self):
