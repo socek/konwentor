@@ -1,4 +1,6 @@
 {% extends "main.jinja2" %}
+{% from "table.jinja2" import table %}
+{% from "modal.jinja2" import modal %}
 
 {% block page_head -%}
     Gry na konwencie
@@ -16,58 +18,43 @@
     </tr>
 {%- endmacro %}
 
-{% macro tableinit(header) -%}
-    <thead>
-        {{header()}}
-    </thead>
-
-    <tfoot>
-        {{header()}}
-    </tfoot>
+{% macro title() -%}
+    Lista wypożyczonych gier - <strong>{{convent.name}}</strong>
 {%- endmacro %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Lista wypożyczonych gier - <strong>{{convent.name}}</strong>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table id="games_on_convent_table" class="table table-striped table-bordered table-hover">
-                            {{tableinit(header)}}
-
-                            <tbody>
-                                {% for borrow in borrows %}
-                                    <tr>
-                                        <td>{{borrow.gameentity.gamecopy.game.name}}</td>
-                                        <td>{{borrow.gameentity.gamecopy.owner.name}}</td>
-                                        <td>{{borrow.name}}</td>
-                                        <td>{{borrow.surname}}</td>
-                                        <td>{{borrow.borrowed_timestamp.strftime ("%Y-%m-%d %H:%M:%S")}}</td>
-                                        <td>{{borrow.document_number}} ({{borrow.document_type}})</td>
-                                        <td>
-                                            {% if user.has_access_to_route('gameborrow:return') -%}
-                                                <a href="{{route('gameborrow:return', obj_id=borrow.id)}}" class="btn btn-xs btn-warning">Zwrócono</a>
-                                            {%- endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% call(borrow) table(title, header, borrows, "borrows_table") %}
+        <tr>
+            <td>{{borrow.gameentity.gamecopy.game.name}}</td>
+            <td>{{borrow.gameentity.gamecopy.owner.name}}</td>
+            <td>{{borrow.name}}</td>
+            <td>{{borrow.surname}}</td>
+            <td>{{borrow.borrowed_timestamp.strftime ("%Y-%m-%d %H:%M:%S")}}</td>
+            <td>{{borrow.document_number}} ({{borrow.document_type}})</td>
+            <td>
+                {% if user.has_access_to_route('gameborrow:return') -%}
+                    {% macro  title() %}Sprawdź dane!{% endmacro %}
+                    {% macro  btn() %}<a href="{{route('gameborrow:return', obj_id=borrow.id)}}" class="btn btn-success">Zgadza się!</a>{% endmacro %}
+                    {% call modal("return_modal_" ~ borrow.id, "btn-xs btn-warning", "Zwrócono", title, btn) %}
+                        <ul>
+                            <li><strong>Gra</strong>: {{borrow.gameentity.gamecopy.game.name}}</li>
+                            <li><strong>Właściciel</strong>: {{borrow.gameentity.gamecopy.owner.name}}</li>
+                            <li><strong>Wypożyczający</strong>: {{borrow.name}} {{borrow.surname}}</li>
+                            <li><strong>Dokument</strong>: {{borrow.document_number}} ({{borrow.document_type}})</li>
+                        </ul>
+                    {% endcall %}
+                {%- endif %}
+            </td>
+        </tr>
+    {% endcall %}
 {% endblock %}
+
 {% block js %}
     <script src="{{static('/js/plugins/dataTables/jquery.dataTables.js')}}"></script>
     <script src="{{static('/js/plugins/dataTables/dataTables.bootstrap.js')}}"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        $('#games_on_convent_table').dataTable({
+        $('#borrows_table').dataTable({
             "paging":   false,
         });
     });

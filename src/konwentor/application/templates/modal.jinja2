@@ -1,0 +1,20 @@
+{% macro modal(id, btn_class="btn-default", btn_label, title, success_btn) -%}
+    <button data-target="#{{id}}" data-toggle="modal" class="btn {{btn_class}}">{{btn_label}}</button>
+    <div aria-hidden="true" aria-labelledby="{{id}}_label" role="dialog" tabindex="-1" id="{{id}}" class="modal fade" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 id="{{id}}_label" class="modal-title">{{title()}}</h4>
+                </div>
+                <div class="modal-body">
+                    {{caller()}}
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default" type="button">Zamknij</button>
+                    {{success_btn()}}
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
