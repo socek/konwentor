@@ -28,14 +28,10 @@ class GameAddController(Controller):
     menu_highlighted = 'game:list'
 
     def make(self):
-        self.form = GameAddForm(self.request)
+        form = self.add_form(GameAddForm)
 
-        if self.form() is True:
+        if form() is True:
             self.redirect('game:list')
-
-    def make_helpers(self):
-        super().make_helpers()
-        self.add_helper('form', FormWidget, self.form)
 
 
 class GameDelete(Controller):
@@ -46,12 +42,12 @@ class GameDelete(Controller):
     def make(self):
         self.get_element()
 
-        self.form = GameDeleteForm(self.request)
+        form = self.add_form(GameDeleteForm)
         form_data = {
             'obj_id': self.matchdict['obj_id'],
         }
 
-        if self.form(form_data) is True:
+        if form(form_data) is True:
             self.redirect('game:list')
 
     def get_element(self):
@@ -62,7 +58,3 @@ class GameDelete(Controller):
                 .one())
         except NoResultFound:
             raise HTTPNotFound()
-
-    def make_helpers(self):
-        super().make_helpers()
-        self.add_helper('form', FormWidget, self.form)
