@@ -25,3 +25,4 @@ class MenuWidget(Jinja2Helper):
         submenu.add_child('Dodaj grę', 'gamecopy:add', 'magic')
         submenu.add_child('Lista gier', 'gamecopy:list', 'magic')
         submenu.add_child('Lista wypożyczeń', 'gameborrow:list', 'magic')
+        submenu.add_child('Statystyki', 'statistics:all', 'magic')

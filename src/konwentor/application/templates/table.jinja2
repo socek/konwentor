@@ -26,3 +26,19 @@
         </div>
     </div>
 {%- endmacro %}
+
+{% macro mainjs() %}
+    <script src="{{static('/js/plugins/dataTables/jquery.dataTables.js')}}"></script>
+    <script src="{{static('/js/plugins/dataTables/dataTables.bootstrap.js')}}"></script>
+{% endmacro %}
+
+{% macro jsinit(id, bFilter="true") %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#{{id}}').dataTable({
+                "paging":   false,
+                "bFilter": {{bFilter}}
+            });
+        });
+    </script>
+{% endmacro %}

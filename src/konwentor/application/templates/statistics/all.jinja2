@@ -1,0 +1,19 @@
+{% extends "main.jinja2" %}
+{% from "table.jinja2" import jsinit, mainjs with context%}
+{% from "statistics/main_table.jinja2" import main_table %}
+{% from "statistics/games_table.jinja2" import games_table %}
+
+{% block page_head -%}
+    Statystyki
+{%- endblock %}
+
+{% block content %}
+    {{main_table(statistics, 'statistics_table')}}
+    {{games_table(games, 'games_table')}}
+{% endblock %}
+
+{% block js %}
+    {{mainjs()}}
+    {{jsinit('statistics_table', "false")}}
+    {{jsinit('games_table', "false")}}
+{% endblock %}
