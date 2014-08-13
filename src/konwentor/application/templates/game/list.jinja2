@@ -1,19 +1,56 @@
 {% extends "main.jinja2" %}
+{% from "table.jinja2" import table %}
+{% from "modal.jinja2" import modal %}
+
 {% block page_head -%}
     Gry {% if user.has_access_to_route('game:add') -%}
         - <small><a href="{{route('game:add')}}">Dodaj</a></small>
     {%- endif %}
 {%- endblock %}
+
+{% macro header() -%}
+    <tr>
+        <th>Nazwa</th>
+        <th>Akcje</th>
+    </tr>
+{%- endmacro %}
+
+{% macro title() -%}
+    Wszystkie gry
+{%- endmacro %}
+
 {% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <ul>
-                {%- for object in objects %}
-                    <li>{{object.name}} {% if user.has_access_to_route('game:delete') -%}
-                        <a href="{{route('game:delete', obj_id=object.id)}}" class="btn btn-xs btn-danger">[x]</a>
-                    {%- endif %}</li>
-                {%- endfor %}
-            </ul>
-        </div>
-    </div>
+    {% call(game) table(title, header, objects, "games_table") %}
+        <tr>
+            <td>{{game.name}}</td>
+            <td>
+                {% if user.has_access_to_route('game:delete') -%}
+                    {% macro  title() %}Jesteś pewny, ze chcesz usunąc tę grę?{% endmacro %}
+                    {% macro  btn() %}
+                        {{forms[game.id].begin()}}
+                        {{forms[game.id].hidden('obj_id')}}
+                        {{forms[game.id].submit('Zgadza się!', 'btn-danger')}}
+                        {{forms[game.id].end()}}
+                    {% endmacro %}
+                    {% call modal("return_modal_" ~ game.id, "btn-xs btn-danger", "Usuń", title, btn) %}
+                        <ul>
+                            <li><strong>Gra</strong>: {{game.name}}</li>
+                        </ul>
+                    {% endcall %}
+                {%- endif %}
+            </td>
+        </tr>
+    {% endcall %}
+{% endblock %}
+
+{% block js %}
+    <script src="{{static('/js/plugins/dataTables/jquery.dataTables.js')}}"></script>
+    <script src="{{static('/js/plugins/dataTables/dataTables.bootstrap.js')}}"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#games_table').dataTable({
+            "paging":   false,
+        });
+    });
+    </script>
 {% endblock %}

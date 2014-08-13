@@ -10,7 +10,9 @@ class Game(Base):
 
     def remove(self, db):
         for copy in self.copies:
-            for on_convent in copy.on_convent:
-                db.delete(on_convent)
+            for entity in copy.entities:
+                for borrow in entity.borrows:
+                    db.delete(borrow)
+                db.delete(entity)
             db.delete(copy)
         db.delete(self)

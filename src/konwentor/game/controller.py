@@ -2,8 +2,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
 from hatak.controller import Controller
 
-from konwentor.forms.helpers import FormWidget
-
 from .models import Game
 from .forms import GameAddForm, GameDeleteForm
 
@@ -16,6 +14,17 @@ class GameListController(Controller):
 
     def make(self):
         self.data['objects'] = self.get_games()
+        self.data['forms'] = {}
+
+        for game in self.data['objects']:
+            name = 'form_%d' % (game.id)
+            form = self.add_form(GameDeleteForm, name=name)
+            self.data['forms'][game.id] = self.data[name]
+            form.action = self.request.route_path(
+                'game:delete', obj_id=game.id)
+            form({
+                'obj_id': [game.id, ],
+            })
 
     def get_games(self):
         return self.db.query(Game).all()
@@ -36,7 +45,7 @@ class GameAddController(Controller):
 
 class GameDelete(Controller):
     renderer = 'game/delete.jinja2'
-    permissions = [('game', 'delete'), ]
+    permissions = [('game', 'delete2'), ]
     menu_highlighted = 'game:list'
 
     def make(self):
