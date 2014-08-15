@@ -29,3 +29,9 @@ class GameBorrow(Base):
     document_number = Column(String)
 
     gameentity = relationship("GameEntity", backref='borrows')
+
+    def get_return_timestamp_or_empty_string(self):
+        try:
+            return self.return_timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        except AttributeError:
+            return ''
