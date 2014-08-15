@@ -4,6 +4,7 @@ from konwentor.game.models import Game
 from konwentor.gameborrow.models import GameBorrow
 from konwentor.gamecopy.controller import GameCopyControllerBase
 from konwentor.gamecopy.models import GameEntity, GameCopy
+from konwentor.auth.models import User
 
 
 class StatisticsController(GameCopyControllerBase):
@@ -17,19 +18,21 @@ class StatisticsController(GameCopyControllerBase):
             return
 
         self.data['convent'] = self.get_convent()
-        self.data['borrows'] = self.get_borrows(self.data['convent'])
+        self.data['borrows'] = self.get_borrows()
         self.data['statistics'] = []
-
-        self.add_all_borrows()
-        self.add_all_people()
 
         self.add_top_games()
         self.add_top_people()
 
-    def get_borrows(self, convent):
+        self.add_all_borrows()
+        self.add_all_people()
+        self.add_all_games()
+        self.add_all_copies()
+
+    def get_borrows(self):
         return (
             self.db.query(GameBorrow)
-            .filter(GameEntity.convent == convent)
+            .filter(GameEntity.convent == self.data['convent'])
             .all())
 
     def add_all_borrows(self):
@@ -42,11 +45,13 @@ class StatisticsController(GameCopyControllerBase):
         peoples = (
             self.query(GameBorrow.document_type, GameBorrow.document_number)
             .group_by(GameBorrow.document_type, GameBorrow.document_number)
+            .join(GameEntity)
+            .filter(GameEntity.convent == self.data['convent'])
         )
         self.data['statistics'].append({
             'name': 'Ilość różnych osób',
             'value': peoples.count(),
-            })
+        })
 
     def add_top_games(self):
         self.data['games'] = (
@@ -59,6 +64,7 @@ class StatisticsController(GameCopyControllerBase):
             .join(Game)
             .group_by(Game.id)
             .order_by(desc('borrows'))
+            .filter(GameEntity.convent == self.data['convent'])
             .all())
 
     def add_top_people(self):
@@ -69,7 +75,31 @@ class StatisticsController(GameCopyControllerBase):
                 GameBorrow.document_type,
                 GameBorrow.document_number,
                 func.count(GameBorrow.id).label('borrows'),)
+            .join(GameEntity)
             .group_by(GameBorrow.document_type, GameBorrow.document_number)
             .order_by(desc('borrows'))
+            .filter(GameEntity.convent == self.data['convent'])
             .all()
         )
+
+    def add_all_games(self):
+        games = (
+            self.query(func.sum(Game.id))
+            .join(GameCopy)
+            .join(GameEntity)
+            .filter(GameEntity.convent == self.data['convent'])
+            .scalar())
+        self.data['statistics'].append({
+            'name': 'Różnych gier',
+            'value': games,
+        })
+
+    def add_all_copies(self):
+        copies = (
+            self.query(func.sum(GameEntity.count))
+            .filter(GameEntity.convent == self.data['convent'])
+            .scalar())
+        self.data['statistics'].append({
+            'name': 'Sztuk gier',
+            'value': copies,
+        })
