@@ -16,7 +16,26 @@
 
 {% block js %}
     {{mainjs()}}
-    {{jsinit('statistics_table', "false")}}
-    {{jsinit('games_table', "false")}}
-    {{jsinit('people_table', "false", "false")}}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#statistics_table').dataTable({
+            "paging":   false,
+            'bFilter': false
+        });
+    });
+    $(document).ready(function() {
+        $('#games_table').dataTable({
+            "paging":   false,
+            'bFilter': false,
+            'order': [[ 1, "desc"]]
+        });
+    });
+    $(document).ready(function() {
+        $('#people_table').dataTable({
+            "paging":   false,
+            'bFilter': false,
+            'order': [[ 4, "desc"]]
+        });
+    });
+    </script>
 {% endblock %}

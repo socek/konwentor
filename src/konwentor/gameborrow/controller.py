@@ -46,12 +46,20 @@ class GameBorrowListController(GameCopyControllerBase):
 
         self.data['convent'] = self.get_convent()
         self.data['borrows'] = self.get_borrows(self.data['convent'])
+        self.data['logs'] = self.generate_log(self.data['convent'])
 
     def get_borrows(self, convent):
         return (
             self.db.query(GameBorrow)
             .filter(GameEntity.convent == convent)
             .filter(GameBorrow.is_borrowed.is_(True))
+            .all())
+
+    def generate_log(self, convent):
+        return (
+            self.db.query(GameBorrow)
+            .filter(GameEntity.convent == convent)
+            .filter(GameBorrow.is_borrowed.is_(False))
             .all())
 
 

@@ -16,7 +16,7 @@
 
                             <tbody>
                                 {% for obj in objects %}
-                                    {{caller(obj)}}
+                                    {{caller(obj, loop.revindex)}}
                                 {% endfor %}
                             </tbody>
                         </table>

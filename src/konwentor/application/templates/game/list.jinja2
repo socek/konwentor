@@ -20,7 +20,7 @@
 {%- endmacro %}
 
 {% block content %}
-    {% call(game) table(title, header, objects, "games_table") %}
+    {% call(game, index) table(title, header, objects, "games_table") %}
         <tr>
             <td>{{game.name}}</td>
             <td>

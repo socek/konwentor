@@ -1,0 +1,45 @@
+{% from "table.jinja2" import table %}
+{% from "modal.jinja2" import modal %}
+
+{% macro header() -%}
+    <tr>
+        <th>Nazwa</th>
+        <th>Właściciel</th>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>Kiedy</th>
+        <th>Dokument</th>
+        <th>Akcje</th>
+    </tr>
+{%- endmacro %}
+
+{% macro title() -%}
+    Lista aktywni wypożyczonych gier - <strong>{{convent.name}}</strong>
+{%- endmacro %}
+
+{% macro active_table(borrows) %}
+    {% call(borrow, index) table(title, header, borrows, "borrows_table") %}
+        <tr>
+            <td>{{borrow.gameentity.gamecopy.game.name}}</td>
+            <td>{{borrow.gameentity.gamecopy.owner.name}}</td>
+            <td>{{borrow.name}}</td>
+            <td>{{borrow.surname}}</td>
+            <td>{{borrow.borrowed_timestamp.strftime ("%Y-%m-%d %H:%M:%S")}}</td>
+            <td>{{borrow.document_number}} ({{borrow.document_type}})</td>
+            <td>
+                {% if user.has_access_to_route('gameborrow:return') -%}
+                    {% macro  title() %}Sprawdź dane!{% endmacro %}
+                    {% macro  btn() %}<a href="{{route('gameborrow:return', obj_id=borrow.id)}}" class="btn btn-success">Zgadza się!</a>{% endmacro %}
+                    {% call modal("return_modal_" ~ borrow.id, "btn-xs btn-warning", "Zwrócono", title, btn) %}
+                        <ul>
+                            <li><strong>Gra</strong>: {{borrow.gameentity.gamecopy.game.name}}</li>
+                            <li><strong>Właściciel</strong>: {{borrow.gameentity.gamecopy.owner.name}}</li>
+                            <li><strong>Wypożyczający</strong>: {{borrow.name}} {{borrow.surname}}</li>
+                            <li><strong>Dokument</strong>: {{borrow.document_number}} ({{borrow.document_type}})</li>
+                        </ul>
+                    {% endcall %}
+                {%- endif %}
+            </td>
+        </tr>
+    {% endcall %}
+{% endmacro %}

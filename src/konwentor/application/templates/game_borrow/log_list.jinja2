@@ -1,0 +1,34 @@
+{% from "table.jinja2" import table %}
+{% from "modal.jinja2" import modal %}
+
+{% macro header() -%}
+    <tr>
+        <th>&nbsp;</th>
+        <th>Nazwa</th>
+        <th>Właściciel</th>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>Czas zabrania</th>
+        <th>Czas oddania</th>
+        <th>Dokument</th>
+    </tr>
+{%- endmacro %}
+
+{% macro title() -%}
+    Historia wypożyczeń - <strong>{{convent.name}}</strong>
+{%- endmacro %}
+
+{% macro log_table(borrows) %}
+    {% call(borrow, index) table(title, header, borrows, "logs_table") %}
+        <tr>
+            <td>{{index}}</td>
+            <td>{{borrow.gameentity.gamecopy.game.name}}</td>
+            <td>{{borrow.gameentity.gamecopy.owner.name}}</td>
+            <td>{{borrow.name}}</td>
+            <td>{{borrow.surname}}</td>
+            <td>{{borrow.borrowed_timestamp.strftime ("%Y-%m-%d %H:%M:%S")}}</td>
+            <td>{{borrow.return_timestamp.strftime ("%Y-%m-%d %H:%M:%S")}}</td>
+            <td>{{borrow.document_number}} ({{borrow.document_type}})</td>
+        </tr>
+    {% endcall %}
+{% endmacro %}
