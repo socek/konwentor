@@ -1,10 +1,9 @@
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, distinct
 
 from konwentor.game.models import Game
 from konwentor.gameborrow.models import GameBorrow
 from konwentor.gamecopy.controller import GameCopyControllerBase
 from konwentor.gamecopy.models import GameEntity, GameCopy
-from konwentor.auth.models import User
 
 
 class StatisticsController(GameCopyControllerBase):
@@ -84,7 +83,7 @@ class StatisticsController(GameCopyControllerBase):
 
     def add_all_games(self):
         games = (
-            self.query(func.sum(Game.id))
+            self.query(func.count(distinct(Game.id)))
             .join(GameCopy)
             .join(GameEntity)
             .filter(GameEntity.convent == self.data['convent'])
