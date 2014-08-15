@@ -2,6 +2,7 @@
 {% from "table.jinja2" import jsinit, mainjs with context%}
 {% from "statistics/main_table.jinja2" import main_table %}
 {% from "statistics/games_table.jinja2" import games_table %}
+{% from "statistics/people_table.jinja2" import people_table %}
 
 {% block page_head -%}
     Statystyki
@@ -10,10 +11,12 @@
 {% block content %}
     {{main_table(statistics, 'statistics_table')}}
     {{games_table(games, 'games_table')}}
+    {{people_table(peoples, 'people_table')}}
 {% endblock %}
 
 {% block js %}
     {{mainjs()}}
     {{jsinit('statistics_table', "false")}}
     {{jsinit('games_table', "false")}}
+    {{jsinit('people_table', "false", "false")}}
 {% endblock %}

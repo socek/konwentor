@@ -32,12 +32,15 @@
     <script src="{{static('/js/plugins/dataTables/dataTables.bootstrap.js')}}"></script>
 {% endmacro %}
 
-{% macro jsinit(id, bFilter="true") %}
+{% macro jsinit(id, bFilter="true", order=None) %}
     <script type="text/javascript">
         $(document).ready(function() {
             $('#{{id}}').dataTable({
                 "paging":   false,
                 "bFilter": {{bFilter}}
+                {%- if order %},
+                    "order": "{{order}}"
+                {% endif %}
             });
         });
     </script>

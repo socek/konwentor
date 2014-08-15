@@ -24,6 +24,7 @@ class StatisticsController(GameCopyControllerBase):
         self.add_all_people()
 
         self.add_top_games()
+        self.add_top_people()
 
     def get_borrows(self, convent):
         return (
@@ -59,3 +60,16 @@ class StatisticsController(GameCopyControllerBase):
             .group_by(Game.id)
             .order_by(desc('borrows'))
             .all())
+
+    def add_top_people(self):
+        self.data['peoples'] = (
+            self.query(
+                func.max(GameBorrow.name).label('name'),
+                func.min(GameBorrow.surname).label('surname'),
+                GameBorrow.document_type,
+                GameBorrow.document_number,
+                func.count(GameBorrow.id).label('borrows'),)
+            .group_by(GameBorrow.document_type, GameBorrow.document_number)
+            .order_by(desc('borrows'))
+            .all()
+        )
