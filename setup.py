@@ -11,6 +11,8 @@ install_requires = [
     'psycopg2',
     'formskit==0.4.1',
     'uwsgi',
+    'soktest',
+    'toster',
 ]
 dependency_links = [
 
@@ -28,6 +30,8 @@ if __name__ == '__main__':
               '\n'.join([
                         '[paste.app_factory]',
                         'main = konwentor.application.init:main',
+                        '[console_scripts]',
+                        'tests = konwentor.application.tests.runner:run',
                         ''])
           ),
           )

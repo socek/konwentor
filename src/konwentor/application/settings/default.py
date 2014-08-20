@@ -12,6 +12,7 @@ def make_settings(settings, paths):
     paths['data'] = 'data'
     paths['frontend'] = ['%(data)s', 'frontend.ini']
     paths['logging:config'] = '%(frontend)s'
+    paths['logging:tests'] = ['%(data)s', 'tests.log']
     paths['static'] = 'konwentor.application:static'
 
     paths['sqlite_db'] = ["%(data)s", 'database.db']
