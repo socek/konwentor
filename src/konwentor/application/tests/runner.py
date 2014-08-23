@@ -35,19 +35,31 @@ class TestApplication(object):
 
     @classmethod
     def connect_to_db(cls):
-        print('\nRecreating database...')
+        print('Recreating database...')
         database = TestDatabase(TestApplication.get_settings())
         database.recreate_database()
+
+        print('Migrations...')
         database.make_migration()
         engine, session = database.get_engine_and_session()
+
+        print('Creating fixtures...')
+        database.generate_fixtures(session)
 
         cls.cache['db'] = session
         cls.cache['db_engine'] = engine
 
-        database.generate_fixtures(session)
+    def _is_database_needed(self):
+        return (
+            self.runner.args.list is False
+            and self.runner.args.group in (None, 'sql')
+        )
 
     def __call__(self):
         self.runner = self.create_runner()
+        self.runner.create_parser()
+        if self._is_database_needed():
+            self.connect_to_db()
         self.runner()
 
     def create_runner(self):
