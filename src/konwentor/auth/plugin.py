@@ -16,7 +16,7 @@ class AuthPlugin(Plugin):
 
     def get_user(self, request):
         session = request.session
-        db = request.registry['db']
+        db = request.db
 
         user_id = session.get('user_id', None)
         if user_id:
