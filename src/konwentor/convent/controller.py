@@ -18,7 +18,7 @@ class ConventListController(Controller):
         self.data['choosed_id'] = self.session.get('convent_id', None)
 
     def get_convents(self):
-        return self.db.query(Convent).all()
+        return Convent.get_all(self.db)
 
 
 class ConventAdd(Controller):

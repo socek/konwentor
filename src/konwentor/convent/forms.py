@@ -12,9 +12,7 @@ class ConventAddForm(PostForm):
         self.addField(Field('name', label='Nazwa', validators=[NotEmpty()]))
 
     def submit(self, data):
-        convent = Convent(name=data['name'][0])
-        self.db.add(convent)
-        self.db.commit()
+        Convent.create(self.db, name=data['name'][0])
 
 
 class ConventDeleteForm(PostForm):
@@ -23,6 +21,4 @@ class ConventDeleteForm(PostForm):
         self.addField(Field('obj_id', validators=[NotEmpty()]))
 
     def submit(self, data):
-        convent = self.db.query(Convent).filter_by(id=data['obj_id'][0]).one()
-        self.db.delete(convent)
-        self.db.commit()
+        Convent.delete_by_id(self.db, int(data['obj_id'][0]))
