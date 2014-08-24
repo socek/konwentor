@@ -17,3 +17,6 @@ def make_settings(settings, paths):
 
     paths['sqlite_db'] = ["%(data)s", 'database.db']
     settings['db:url'] = 'sqlite:///%(sqlite_db)s' % paths
+
+    paths['alembic:versions'] = 'alembic'
+    paths['alembic:ini'] = ['%(data)s', 'alembic.ini']

@@ -14,6 +14,7 @@ install_requires = [
     'soktest',
     'toster',
     'coverage',
+    'alembic',
 ]
 dependency_links = [
 
@@ -32,7 +33,8 @@ if __name__ == '__main__':
                         '[paste.app_factory]',
                         'main = konwentor.application.init:main',
                         '[console_scripts]',
-                        'tests = konwentor.application.tests.runner:run',
+                        'hatak_tests = konwentor.application.tests.runner:run',
+                        'hatak_alembic = konwentor.application.alembic:run'
                         ''])
           ),
           )
