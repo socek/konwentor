@@ -5,6 +5,7 @@ from hatak.controller import Controller
 
 from .models import Convent
 from .forms import ConventAddForm, ConventDeleteForm
+from .helpers import ConventWidget
 
 
 class ConventListController(Controller):
@@ -14,8 +15,14 @@ class ConventListController(Controller):
     menu_highlighted = 'convent:list'
 
     def make(self):
-        self.data['convents'] = self.get_convents()
+        self.data['convents'] = self.get_convent_widgets()
         self.data['choosed_id'] = self.session.get('convent_id', None)
+
+    def get_convent_widgets(self):
+        return [
+            ConventWidget(self.request, convent)
+            for convent in self.get_convents()
+        ]
 
     def get_convents(self):
         return Convent.get_all(self.db)
@@ -65,5 +72,35 @@ class ChooseConventController(ConventDelete):
 
     def make(self):
         self.verify_convent_id()
-        self.session['convent_id'] = int(self.matchdict['obj_id'])
+        self.switch_convent()
         self.redirect('gamecopy:list')
+
+    def switch_convent(self):
+        self.session['convent_id'] = int(self.matchdict['obj_id'])
+
+
+class StartConventController(ChooseConventController):
+    permissions = [('convent', 'add'), ]
+
+    def make(self):
+        self.verify_convent_id()
+        self.switch_convent()
+        self.start_convent()
+        self.redirect('gamecopy:add')
+
+    def start_convent(self):
+        self.data['convent'].state = 'running'
+        self.db.commit()
+
+
+class EndConventController(ChooseConventController):
+    permissions = [('convent', 'add'), ]
+
+    def make(self):
+        self.verify_convent_id()
+        self.end_convent()
+        self.redirect('convent:list')
+
+    def end_convent(self):
+        self.data['convent'].state = 'ended'
+        self.db.commit()

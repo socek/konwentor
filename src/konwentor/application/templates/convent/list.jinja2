@@ -8,6 +8,7 @@
 {% macro header() -%}
     <tr>
         <th>Nazwa</th>
+        <th>Status</th>
         <th>Akcje</th>
     </tr>
 {%- endmacro %}
@@ -32,13 +33,13 @@
                                             {{convent.name}}
                                         </td>
                                         <td>
-                                            {% if user.has_access_to_route('convent:choose') -%}
-                                                <a href="{{route('convent:choose', obj_id=convent.id)}}" class="btn btn-xs btn-success">Wybierz</a>
-                                            {%- endif %}</li>
-
-                                            {% if user.has_access_to_route('convent:delete') -%}
-                                                <a href="{{route('convent:delete', obj_id=convent.id)}}" class="btn btn-xs btn-danger">USUŃ</a>
-                                            {%- endif %}</li>
+                                            {{convent.state}}
+                                        </td>
+                                        <td>
+                                            {{convent.switch()}}
+                                            {{convent.delete()}}
+                                            {{convent.start()}}
+                                            {{convent.end()}}
                                         </td>
                                 {%- endfor %}
                             </tbody>
