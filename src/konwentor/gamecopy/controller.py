@@ -1,8 +1,9 @@
 from hatak.controller import Controller
 
+from konwentor.auth.models import User
+from konwentor.convent.helpers import ConventWidget
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
-from konwentor.auth.models import User
 
 from .forms import GameCopyAddForm
 from .models import GameEntity, GameCopy
@@ -22,6 +23,10 @@ class GameCopyControllerBase(Controller):
             self.query(Convent)
             .filter_by(id=self.session['convent_id'])
             .one())
+
+    def make_helpers(self):
+        super().make_helpers()
+        self.add_helper('convent', ConventWidget, self.get_convent())
 
 
 class GameCopyAddController(GameCopyControllerBase):

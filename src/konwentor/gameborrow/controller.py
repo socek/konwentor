@@ -5,10 +5,10 @@ from pyramid.httpexceptions import HTTPNotFound
 
 from hatak.controller import Controller
 
-from konwentor.gamecopy.controller import GameCopyControllerBase
-from konwentor.gamecopy.models import GameEntity
 from .forms import GameBorrowAddForm
 from .models import GameBorrow
+from konwentor.gamecopy.controller import GameCopyControllerBase
+from konwentor.gamecopy.models import GameEntity
 
 
 class GameBorrowAddController(Controller):

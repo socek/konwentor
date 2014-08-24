@@ -7,6 +7,7 @@
 {%- endblock %}
 
 {% block content %}
+    {{ convent.edned_warning() }}
     {{ active_table(borrows) }}
     {{ log_table(logs) }}
 {% endblock %}

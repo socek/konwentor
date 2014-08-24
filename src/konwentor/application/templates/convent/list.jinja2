@@ -18,12 +18,8 @@
 {% block content %}
     {% call(convent, index) table(False, header, convents, "convents_table") %}
         <tr{%- if choosed_id == convent.id %} class="danger" {% endif -%}>
-            <td>
-                {{convent.name}}
-            </td>
-            <td>
-                {{convent.state}}
-            </td>
+            <td>{{convent.name}}</td>
+            <td>{{convent.state}}</td>
             <td>
                 {{convent.switch()}}
                 {{convent.delete()}}
