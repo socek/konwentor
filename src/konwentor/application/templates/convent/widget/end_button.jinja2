@@ -1,1 +1,10 @@
-<a href="{{url}}" class="btn btn-xs btn-warning">Zakończ</a>
+{% from "modal.jinja2" import modal %}
+
+{% macro  title() %}Jesteś pewien?{% endmacro %}
+
+{% macro  btn() %}<a href="{{url}}" class="btn btn-warning">Akceptuj</a>{% endmacro %}
+
+{% call modal("return_modal_" ~ convent.id, "btn-xs btn-warning", "Zakończ", title, btn) %}
+    Jeseś pewien, że chcesz zakończyć konwent "<strong>{{convent.name}}</strong>"?
+{% endcall %}
+

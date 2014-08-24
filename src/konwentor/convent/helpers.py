@@ -49,7 +49,8 @@ class ConventWidget(Jinja2HelperMany):
     def start(self):
         if self.convent.is_user_able_to_start(self.user):
             return self.render_for('start_button', {
-                'url': self.route('convent:start', obj_id=self.convent.id)
+                'url': self.route('convent:start', obj_id=self.convent.id),
+                'convent': self.convent,
             })
         else:
             return ''
@@ -57,7 +58,8 @@ class ConventWidget(Jinja2HelperMany):
     def end(self):
         if self.convent.is_user_able_to_end(self.user):
             return self.render_for('end_button', {
-                'url': self.route('convent:end', obj_id=self.convent.id)
+                'url': self.route('convent:end', obj_id=self.convent.id),
+                'convent': self.convent,
             })
         else:
             return ''
