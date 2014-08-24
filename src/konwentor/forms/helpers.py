@@ -1,7 +1,7 @@
-from hatak.plugins.jinja2 import Jinja2Helper
+from hatak.plugins.jinja2 import Jinja2HelperMany
 
 
-class FormWidget(Jinja2Helper):
+class FormWidget(Jinja2HelperMany):
 
     prefix = 'forms'
 
@@ -55,12 +55,3 @@ class FormWidget(Jinja2Helper):
         data['error'] = self.form.error
         data['message'] = self.form.message
         return self.render_for('error', data)
-
-    def get_template(self, name, prefix=None):
-        prefix = prefix or self.prefix
-        return '%s/%s.jinja2' % (prefix, name)
-
-    def render_for(self, name, data):
-        self.generate_data()
-        self.data.update(data)
-        return self.render(self.get_template(name))

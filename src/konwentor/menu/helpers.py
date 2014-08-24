@@ -1,9 +1,9 @@
-from hatak.plugins.jinja2 import Jinja2Helper
+from hatak.plugins.jinja2 import Jinja2HelperSingle
 
 from .models import MenuObject
 
 
-class MenuWidget(Jinja2Helper):
+class MenuWidget(Jinja2HelperSingle):
 
     template = 'menu/main.jinja2'
 

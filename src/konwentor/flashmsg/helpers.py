@@ -1,9 +1,9 @@
-from hatak.plugins.jinja2 import Jinja2Helper
+from hatak.plugins.jinja2 import Jinja2HelperSingle
 
 from .models import FlashMessage
 
 
-class FlashMessageWidget(Jinja2Helper):
+class FlashMessageWidget(Jinja2HelperSingle):
 
     template = 'flash_message/main.jinja2'
 
