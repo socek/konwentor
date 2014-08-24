@@ -13,6 +13,7 @@ install_requires = [
     'uwsgi',
     'soktest',
     'toster',
+    'coverage',
 ]
 dependency_links = [
 
