@@ -44,7 +44,7 @@ class SqlTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
-        self.request.registry['db'] = TestApplication.get_db()
+        self.request.db = TestApplication.get_db()
         unpack(self, self.request)
 
 
@@ -54,6 +54,6 @@ class SqlControllerTestCase(ControllerTestCase):
 
     def setUp(self):
         super().setUp()
-        self.request.registry['db'] = TestApplication.get_db()
+        self.request.db = TestApplication.get_db()
         unpack(self, self.request)
         unpack(self.controller, self.request)
