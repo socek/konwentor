@@ -30,7 +30,7 @@ class GameBorrow(Base):
 
     gameentity = relationship("GameEntity", backref='borrows')
 
-    def get_return_timestamp_or_empty_string(self):
+    def get_return_timestamp(self):
         try:
             return self.return_timestamp.strftime("%Y-%m-%d %H:%M:%S")
         except AttributeError:

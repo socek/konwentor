@@ -11,6 +11,7 @@ def create_manager():
         'convent.tests.test_database:ConventDatabaseTest',
         'statistics.tests.test_controller:StatisticsControllerTest',
         'statistics.tests.test_controller:StatisticsSqlsTest',
+        'gameborrow.tests.test_models:GameBorrowUnitTestCase',
     ]
 
     for case in cases:
