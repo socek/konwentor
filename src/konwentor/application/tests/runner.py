@@ -39,9 +39,10 @@ class TestApplication(object):
         database = TestDatabase(TestApplication.get_settings())
         database.recreate_database()
 
-        print('Migrations...')
-        database.make_migration()
         engine, session = database.get_engine_and_session()
+
+        print('Creating all tables...')
+        database.create_all(engine)
 
         print('Creating fixtures...')
         database.generate_fixtures(session)
