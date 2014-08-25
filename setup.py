@@ -2,7 +2,6 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'sqlalchemy-migrate',
     'hatak==0.1.2',
     'waitress',
     'pyramid_debugtoolbar',
