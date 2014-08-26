@@ -51,13 +51,10 @@ class GameCopyAddForm(PostForm):
             })
         return objects
 
-    def get_object(self, cls, _id):
-        return self.db.query(cls).filter_by(id=_id).one()
-
     def submit(self, data):
-        game = self.get_object(Game, data['game_id'][0])
-        user = self.get_object(User, data['user_id'][0])
-        convent = self.get_object(Convent, data['convent_id'][0])
+        game = Game.get_by_id(self.db, data['game_id'][0])
+        user = User.get_by_id(self.db, data['user_id'][0])
+        convent = Convent.get_by_id(self.db, data['convent_id'][0])
         count = data['count'][0]
 
         gamecopy = self.create_gamecopy(game, user)

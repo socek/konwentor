@@ -8,4 +8,5 @@ cases = [
     'konwentor.auth.tests.test_models:UserTestCase',
     'konwentor.auth.tests.test_models:NotLoggedUserTestCase',
     'konwentor.forms.tests.test_forms:PostFormTest',
+    'konwentor.gamecopy.tests.test_forms:GameCopyAddFormTest',
 ]
