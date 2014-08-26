@@ -1,7 +1,7 @@
 from hatak.tests.runner import TestRunner
 
 from .fixtures import Fixtures
-from .manager import cases
+from .cases import cases
 from konwentor.application.init import main
 
 

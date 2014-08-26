@@ -1,6 +1,6 @@
 from hatak.tests.cases import FormTestCase
 
-from konwentor.application.forms import PostForm
+from ..models import PostForm
 
 
 class PostFormTest(FormTestCase):

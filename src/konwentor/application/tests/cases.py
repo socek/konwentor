@@ -5,7 +5,7 @@ cases = [
     'konwentor.statistics.tests.test_controller:StatisticsControllerTest',
     'konwentor.statistics.tests.test_controller:StatisticsSqlsTest',
     'konwentor.gameborrow.tests.test_models:GameBorrowUnitTestCase',
-    'konwentor.application.tests.test_forms:PostFormTest',
     'konwentor.auth.tests.test_models:UserTestCase',
     'konwentor.auth.tests.test_models:NotLoggedUserTestCase',
+    'konwentor.forms.tests.test_forms:PostFormTest',
 ]

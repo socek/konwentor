@@ -1,7 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 from formskit import Field
 
-from konwentor.application.forms import PostForm
+from konwentor.forms.models import PostForm
 from konwentor.forms.validators import NotEmpty
 
 from .models import Game

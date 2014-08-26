@@ -2,7 +2,7 @@ from formskit import Field
 from formskit.formvalidators import FormValidator
 
 from konwentor.forms.validators import NotEmpty
-from konwentor.application.forms import PostForm
+from konwentor.forms.models import PostForm
 
 from .models import User
 

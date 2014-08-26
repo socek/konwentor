@@ -1,6 +1,6 @@
 from formskit import Field
 
-from konwentor.application.forms import PostForm
+from konwentor.forms.models import PostForm
 from konwentor.forms.validators import NotEmpty
 
 from konwentor.gamecopy.models import GameEntity
