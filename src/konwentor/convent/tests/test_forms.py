@@ -1,5 +1,6 @@
+from hatak.tests.cases import FormTestCase
+
 from konwentor.convent.forms import ConventAddForm, ConventDeleteForm
-from konwentor.application.tests.case import FormTestCase
 
 
 class ConventAddFormTest(FormTestCase):

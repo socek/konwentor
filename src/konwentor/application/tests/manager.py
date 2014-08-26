@@ -1,20 +1,11 @@
-from toster import TestManager
-
-
-def create_manager():
-    manager = TestManager()
-    prefix = 'konwentor.'
-
-    cases = [
-        'convent.tests.test_forms:ConventAddFormTest',
-        'convent.tests.test_forms:ConventDeleteFormTest',
-        'convent.tests.test_database:ConventDatabaseTest',
-        'statistics.tests.test_controller:StatisticsControllerTest',
-        'statistics.tests.test_controller:StatisticsSqlsTest',
-        'gameborrow.tests.test_models:GameBorrowUnitTestCase',
-    ]
-
-    for case in cases:
-        manager.add_testcase(prefix + case)
-
-    return manager
+cases = [
+    'konwentor.convent.tests.test_forms:ConventAddFormTest',
+    'konwentor.convent.tests.test_forms:ConventDeleteFormTest',
+    'konwentor.convent.tests.test_database:ConventDatabaseTest',
+    'konwentor.statistics.tests.test_controller:StatisticsControllerTest',
+    'konwentor.statistics.tests.test_controller:StatisticsSqlsTest',
+    'konwentor.gameborrow.tests.test_models:GameBorrowUnitTestCase',
+    'konwentor.application.tests.test_forms:PostFormTest',
+    'konwentor.auth.tests.test_models:UserTestCase',
+    'konwentor.auth.tests.test_models:NotLoggedUserTestCase',
+]

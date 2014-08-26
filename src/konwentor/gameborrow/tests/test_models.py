@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from konwentor.application.tests.case import TestCase
+from hatak.tests.cases import TestCase
+
 from ..models import GameBorrow
 
 

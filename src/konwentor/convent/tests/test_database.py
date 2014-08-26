@@ -1,4 +1,5 @@
-from konwentor.application.tests.case import ControllerTestCase
+from hatak.tests.cases import ControllerTestCase
+
 from ..controller import ConventListController
 
 

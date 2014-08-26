@@ -1,7 +1,8 @@
+from hatak.tests.cases import ControllerTestCase
+from hatak.tests.cases import SqlControllerTestCase
+
 from ..controller import StatisticsController
-from konwentor.application.tests.case import ControllerTestCase
-from konwentor.application.tests.case import SqlControllerTestCase
-from konwentor.application.tests.fixtures import fixtures
+from hatak.tests.fixtures import fixtures
 
 
 class StatisticsControllerTest(ControllerTestCase):
