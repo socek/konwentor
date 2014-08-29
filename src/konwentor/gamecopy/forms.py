@@ -61,7 +61,6 @@ class GameCopyAddForm(PostForm):
         gameentity = self.create_gameentity(convent, gamecopy)
         gameentity.count += int(count)
 
-        self.db.add(gameentity)
         try:
             self.db.commit()
         finally:
@@ -76,16 +75,10 @@ class GameCopyAddForm(PostForm):
         return gamecopy
 
     def create_gameentity(self, convent, gamecopy):
-        if gamecopy.id is None:
-            gameentity = GameEntity(
-                convent=convent,
-            )
-            gameentity.gamecopy = gamecopy
-        else:
-            gameentity = GameEntity.get_or_create(
-                self.db,
-                convent=convent,
-                gamecopy=gamecopy,
-            )
+        gameentity = GameEntity.get_or_create(
+            self.db,
+            convent=convent,
+            gamecopy=gamecopy,
+        )
         self.db.add(gameentity)
         return gameentity

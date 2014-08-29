@@ -9,4 +9,8 @@ cases = [
     'konwentor.auth.tests.test_models:NotLoggedUserTestCase',
     'konwentor.forms.tests.test_forms:PostFormTest',
     'konwentor.gamecopy.tests.test_forms:GameCopyAddFormTest',
+    'konwentor.gamecopy.tests.test_forms:GameCopyAddFormSqlTestCase',
+    'konwentor.gamecopy.tests.test_controller:GameCopyControllerBaseTests',
+    'konwentor.gamecopy.tests.test_controller:GameCopyControllerBaseSqlTests',
+    'konwentor.gamecopy.tests.test_controller:GameCopyListControllerTestCase',
 ]

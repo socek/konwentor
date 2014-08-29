@@ -1,8 +1,13 @@
-from mock import MagicMock
+from mock import MagicMock, create_autospec
 
-from hatak.tests.cases import FormTestCase
+from hatak.tests.cases import FormTestCase, SqlTestCase
+from hatak.tests.fixtures import fixtures
 
 from ..forms import GameCopyAddForm
+from ..models import GameCopy, GameEntity
+from konwentor.auth.models import User
+from konwentor.convent.models import Convent
+from konwentor.game.models import Game
 
 
 class GameCopyAddFormTest(FormTestCase):
@@ -30,8 +35,8 @@ class GameCopyAddFormTest(FormTestCase):
         self.query.return_value.all.assert_called_with()
 
     def test_submit(self):
+        """Submit should create gamecopy and gameentity (with count)."""
         self.add_mock('Game')
-        self.add_mock('User')
         self.add_mock('User')
         self.add_mock('Convent')
         self.add_mock_object(self.form, 'create_gamecopy', autospec=True)
@@ -65,6 +70,77 @@ class GameCopyAddFormTest(FormTestCase):
 
         self.assertEqual(gameentity.count, 5)
 
-        self.db.add.assert_called_once_with(gameentity)
         self.db.commit.assert_called_once_with()
         self.db.rollback.assert_called_once_with()
+
+    def test_create_gamecopy(self):
+        """create_gamecopy should get or create GameCopy object."""
+        self.add_mock('GameCopy')
+        game = create_autospec(Game())
+        user = create_autospec(User())
+
+        result = self.form.create_gamecopy(game, user)
+        self.assertEqual(
+            self.mocks['GameCopy'].get_or_create.return_value, result)
+        self.mocks['GameCopy'].get_or_create.assert_called_once_with(
+            self.db,
+            game=game,
+            owner=user)
+        self.db.add.assert_called_once_with(result)
+
+    def test_create_gameentity(self):
+        """create_gameentity should create GameEntity."""
+        self.add_mock('GameEntity')
+        convent = create_autospec(Convent())
+        gamecopy = create_autospec(GameCopy())
+
+        gameentity = self.form.create_gameentity(convent, gamecopy)
+        self.assertEqual(
+            self.mocks['GameEntity'].get_or_create.return_value, gameentity)
+        self.mocks['GameEntity'].get_or_create.assert_called_once_with(
+            self.db,
+            convent=convent,
+            gamecopy=gamecopy)
+        self.db.add.assert_called_once_with(gameentity)
+
+
+class GameCopyAddFormSqlTestCase(SqlTestCase):
+
+    prefix_from = GameCopyAddForm
+
+    def test_success(self):
+        """GameCopyAddForm is creating data."""
+        self.form = self.prefix_from(self.request)
+
+        game = fixtures['Game']['dynamic1']
+        user = fixtures['User']['dynamic1']
+        convent = fixtures['Convent']['dynamic1']
+
+        self.request.POST.dict_of_lists.return_value = {
+            self.form.form_name_value: [self.form.name, ],
+            'game_id': [str(game.id), ],
+            'user_id': [str(user.id), ],
+            'convent_id': [str(convent.id), ],
+            'count': ['5', ],
+        }
+
+        self.form()
+        self.db.flush()
+
+        entity = (
+            self.query(GameEntity)
+            .filter(GameEntity.convent == convent)
+            .one()
+        )
+        copy = entity.gamecopy
+
+        self.assertEqual(5, entity.count)
+        self.assertEqual(game, copy.game)
+        self.assertEqual(user, copy.owner)
+
+        try:
+            self.db.delete(copy)
+            self.db.delete(entity)
+            self.db.commit()
+        finally:
+            self.db.rollback()

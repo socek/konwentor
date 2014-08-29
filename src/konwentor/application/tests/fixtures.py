@@ -20,15 +20,21 @@ class Fixtures(Base):
         self._create(User, name='second')
         self._create(User, name='third')
 
+        self._create(User, name='dynamic1')
+
     def create_convents(self):
         self._create(Convent, name='first')
         self._create(Convent, name='second')
         self._create(Convent, name='third')
 
+        self._create(Convent, name='dynamic1')
+
     def create_games(self):
         self._create(Game, name='first')
         self._create(Game, name='second')
         self._create(Game, name='third')
+
+        self._create(Game, name='dynamic1')
 
     def create_copies(self):
         self._create_nameless(
@@ -70,6 +76,13 @@ class Fixtures(Base):
             GameEntity,
             gamecopy=self.fixtures['GameCopy'][2],
             convent=self.fixtures['Convent']['first'],
+            count=4,
+        )
+
+        self._create_nameless(
+            GameEntity,
+            gamecopy=self.fixtures['GameCopy'][2],
+            convent=self.fixtures['Convent']['second'],
             count=4,
         )
 
