@@ -13,7 +13,7 @@ from konwentor.gamecopy.models import GameEntity
 
 class GameBorrowAddController(Controller):
 
-    renderer = 'game_borrow/add.jinja2'
+    template = 'gameborrow:add.jinja2'
     permissions = [('gameborrow', 'add'), ]
     menu_highlighted = ''
 
@@ -36,7 +36,7 @@ class GameBorrowAddController(Controller):
 
 
 class GameBorrowListController(GameCopyControllerBase):
-    renderer = 'game_borrow/list.jinja2'
+    template = 'gameborrow:list.jinja2'
     permissions = [('base', 'view'), ]
     menu_highlighted = 'gameborrow:list'
 

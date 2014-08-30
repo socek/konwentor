@@ -5,7 +5,7 @@ from .models import MenuObject
 
 class MenuWidget(Jinja2HelperSingle):
 
-    template = 'menu/main.jinja2'
+    template = 'konwentor.menu:templates/main.jinja2'
 
     def __init__(self, request, highlighted):
         super().__init__(request)

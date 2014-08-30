@@ -1,8 +1,8 @@
 {% extends "main.jinja2" %}
 {% from "table.jinja2" import jsinit, mainjs with context%}
-{% from "statistics/main_table.jinja2" import main_table %}
-{% from "statistics/games_table.jinja2" import games_table %}
-{% from "statistics/people_table.jinja2" import people_table %}
+{% from "konwentor.statistics:templates/main_table.jinja2" import main_table %}
+{% from "konwentor.statistics:templates/games_table.jinja2" import games_table %}
+{% from "konwentor.statistics:templates/people_table.jinja2" import people_table %}
 
 {% block page_head -%}
     Statystyki

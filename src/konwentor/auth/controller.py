@@ -6,7 +6,7 @@ from .helpers import LoginFormWidget
 
 class LoginController(Controller):
 
-    renderer = 'auth/login.jinja2'
+    template = 'auth:login.jinja2'
 
     def make(self):
         if self.user.is_logged():
@@ -23,7 +23,7 @@ class LoginController(Controller):
 
 class ForbiddenController(Controller):
 
-    renderer = 'auth/forbidden.jinja2'
+    template = 'auth:forbidden.jinja2'
 
     def make(self):
         if not self.user.is_logged():

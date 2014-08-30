@@ -8,7 +8,7 @@ from konwentor.gamecopy.models import GameEntity, GameCopy
 
 class StatisticsController(GameCopyControllerBase):
 
-    renderer = 'statistics/all.jinja2'
+    template = 'statistics:all.jinja2'
     permissions = [('base', 'view'), ]
     menu_highlighted = 'statistics:all'
 

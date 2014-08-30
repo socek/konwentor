@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'hatak==0.1.2',
+    'hatak==0.1.3',
     'waitress',
     'pyramid_debugtoolbar',
     'pyramid_beaker',

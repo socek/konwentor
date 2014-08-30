@@ -14,7 +14,7 @@ def has_access_to_route(route):
 
 class ConventWidget(Jinja2HelperMany):
 
-    prefix = 'convent/widget'
+    prefix = 'konwentor.convent:templates/widget'
 
     STATES = {
         'not started': 'Nie ropoczęto',

@@ -3,7 +3,7 @@ from hatak.plugins.jinja2 import Jinja2HelperMany
 
 class FormWidget(Jinja2HelperMany):
 
-    prefix = 'forms'
+    prefix = 'konwentor.forms:templates'
 
     def __init__(self, request, form):
         super().__init__(request)

@@ -31,7 +31,7 @@ class GameCopyControllerBase(Controller):
 
 class GameCopyAddController(GameCopyControllerBase):
 
-    renderer = 'gamecopy/add.jinja2'
+    template = 'gamecopy:add.jinja2'
     permissions = [('gamecopy', 'add'), ]
     menu_highlighted = 'gamecopy:add'
 
@@ -55,7 +55,7 @@ class GameCopyAddController(GameCopyControllerBase):
 
 class GameCopyListController(GameCopyControllerBase):
 
-    renderer = 'gamecopy/list.jinja2'
+    template = 'gamecopy:list.jinja2'
     permissions = [('base', 'view'), ]
     menu_highlighted = 'gamecopy:list'
 

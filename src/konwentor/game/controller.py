@@ -8,7 +8,7 @@ from .forms import GameAddForm, GameDeleteForm
 
 class GameListController(Controller):
 
-    renderer = 'game/list.jinja2'
+    template = 'game:list.jinja2'
     permissions = [('base', 'view'), ]
     menu_highlighted = 'game:list'
 
@@ -32,7 +32,7 @@ class GameListController(Controller):
 
 class GameAddController(Controller):
 
-    renderer = 'game/add.jinja2'
+    template = 'game:add.jinja2'
     permissions = [('game', 'add'), ]
     menu_highlighted = 'game:list'
 
@@ -44,7 +44,7 @@ class GameAddController(Controller):
 
 
 class GameDelete(Controller):
-    renderer = 'game/delete.jinja2'
+    template = 'game:delete.jinja2'
     permissions = [('game', 'delete2'), ]
     menu_highlighted = 'game:list'
 

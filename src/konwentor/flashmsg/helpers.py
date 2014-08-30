@@ -5,7 +5,7 @@ from .models import FlashMessage
 
 class FlashMessageWidget(Jinja2HelperSingle):
 
-    template = 'flash_message/main.jinja2'
+    template = 'konwentor.flashmsg:templates/main.jinja2'
 
     def make(self):
         self.data['messages'] = []
