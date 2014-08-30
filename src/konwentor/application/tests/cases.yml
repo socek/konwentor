@@ -1,0 +1,43 @@
+konwentor:
+    convent:
+        tests:
+            test_forms:
+                - ConventAddFormTest
+                - ConventDeleteFormTest
+            test_database:
+                - ConventDatabaseTest
+            test_controller:
+                - ConventListControllerTests
+                - ConventListControllerSqlTests
+                - ConventAdd
+    statistics:
+        tests:
+            test_controller:
+                - StatisticsControllerTest
+                - StatisticsSqlsTest
+    gameborrow:
+        tests:
+            test_models:
+                - GameBorrowUnitTestCase
+    auth:
+        tests:
+            test_models:
+                - UserTestCase
+                - NotLoggedUserTestCase
+    forms:
+        tests:
+            test_forms:
+                - PostFormTest
+            test_helpers:
+                - FormWidgetTestCase
+            test_plugin:
+                - FormControllerPluginTest
+    gamecopy:
+        tests:
+            test_forms:
+                - GameCopyAddFormTest
+                - GameCopyAddFormSqlTestCase
+            test_controller:
+                - GameCopyControllerBaseTests
+                - GameCopyControllerBaseSqlTests
+                - GameCopyListControllerTestCase
