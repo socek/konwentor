@@ -1,8 +1,8 @@
 from hatak.tests.cases import ControllerTestCase
 from hatak.tests.cases import SqlControllerTestCase
+from hatak.tests.fixtures import fixtures
 
 from ..controller import StatisticsController
-from hatak.tests.fixtures import fixtures
 
 
 class StatisticsControllerTest(ControllerTestCase):

@@ -15,4 +15,7 @@ cases = [
     'konwentor.gamecopy.tests.test_controller:GameCopyListControllerTestCase',
     'konwentor.forms.tests.test_helpers:FormWidgetTestCase',
     'konwentor.forms.tests.test_plugin:FormControllerPluginTest',
+    'konwentor.convent.tests.test_controller:ConventListControllerTests',
+    'konwentor.convent.tests.test_controller:ConventListControllerSqlTests',
+    'konwentor.convent.tests.test_controller:ConventAdd',
 ]
