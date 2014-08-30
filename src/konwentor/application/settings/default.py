@@ -14,6 +14,7 @@ def make_settings(settings, paths):
     paths['logging:config'] = '%(frontend)s'
     paths['logging:tests'] = ['%(data)s', 'tests.log']
     paths['static'] = 'konwentor.application:static'
+    paths['routes'] = ['%(project_path)s', 'routes.yml']
 
     paths['sqlite_db'] = ["%(data)s", 'database.db']
     settings['db:url'] = 'sqlite:///%(sqlite_db)s' % paths

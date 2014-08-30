@@ -11,9 +11,9 @@ install_requires = [
     'formskit==0.4.1',
     'uwsgi',
     'soktest',
-    'toster',
     'coverage',
     'alembic',
+    'pyyaml',
 ]
 dependency_links = [
 

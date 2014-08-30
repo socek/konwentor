@@ -1,0 +1,87 @@
+convent:
+    controller:
+        -
+            controller: ConventListController
+            route: convent:list
+            url: /
+        -
+            controller: ConventAdd
+            route: convent:add
+            url: /convent/add
+        -
+            controller: ConventDelete
+            route: convent:delete
+            url: /convent/delete/{obj_id:\d+}
+        -
+            controller: ChooseConventController
+            route: convent:choose
+            url: /convent/choose/{obj_id:\d+}
+        -
+            controller: StartConventController
+            route: convent:start
+            url: /convent/start/{obj_id:\d+}
+        -
+            controller: EndConventController
+            route: convent:end
+            url: /convent/end/{obj_id:\d+}
+
+game:
+    controller:
+        -
+            controller: GameListController
+            route: game:list
+            url: /games
+
+        -
+            controller: GameAddController
+            route: game:add
+            url: /game/add
+        -
+            controller: GameDelete
+            route: game:delete
+            url: /game/delete/{obj_id:\d+}
+
+gamecopy:
+    controller:
+        -
+            controller: GameCopyAddController
+            route: gamecopy:add
+            url: /gamecopy/add
+        -
+            controller: GameCopyListController
+            route: gamecopy:list
+            url: /gamecopy
+
+gameborrow:
+    controller:
+        -
+            controller: GameBorrowListController
+            route: gameborrow:list
+            url: /game/borrows
+        -
+            controller: GameBorrowAddController
+            route: gameborrow:add
+            url: /game/borrows/add/{obj_id:\d+}
+        -
+            controller: GameBorrowReturnController
+            route: gameborrow:return
+            url: /game/borrows/return/{obj_id:\d+}
+
+auth:
+    controller:
+        -
+            controller: LoginController
+            route: auth:login
+            url: /login
+        -
+            controller: LogoutController
+            route: auth:logout
+            url: /logout
+
+statistics:
+    controller:
+        -
+            controller: StatisticsController
+            route: statistics:all
+            url: /statistics
+
