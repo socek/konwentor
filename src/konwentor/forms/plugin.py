@@ -12,9 +12,6 @@ class FormPlugin(Plugin):
 
 class FormControllerPlugin(ControllerPlugin):
 
-    def before_filter(self):
-        self.controller.add_form = self.add_form
-
     def add_controller_methods(self):
         self.add_method('add_form')
 
