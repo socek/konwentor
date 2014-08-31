@@ -64,7 +64,7 @@ class ConventWidget(Jinja2HelperMany):
         else:
             return ''
 
-    def edned_warning(self):
+    def ended_warning(self):
         if self.convent.state == 'ended':
             return self.render_for('ended_warning', {})
         else:

@@ -4,12 +4,21 @@ konwentor:
             test_forms:
                 - ConventAddFormTest
                 - ConventDeleteFormTest
-            test_database:
-                - ConventDatabaseTest
             test_controller:
                 - ConventListControllerTests
                 - ConventListControllerSqlTests
-                - ConventAdd
+                - ConventAddTests
+                - ConventDeleteTests
+                - SqlConventDeleteTests
+                - ChooseConventControllerTests
+                - StartConventControllerTests
+                - EndConventControllerTests
+                - ConventDatabaseTest
+            test_models:
+                - ConventTests
+            test_helpers:
+                - HasAccessToRouteTests
+                - ConventWidgetTests
     statistics:
         tests:
             test_controller:
