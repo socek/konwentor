@@ -1,0 +1,21 @@
+-extends "main.jinja2"
+
+-block page_head
+    Konwenty - Usuwanie
+
+-block content
+  %div.row
+    %div.col-lg-12
+      %div.panel.panel-default
+        %div.panel-heading
+          {{convent.name}}
+        %div.panel-body
+          %div.row
+            %div.col-lg-6
+              =form.begin()
+              =form.hidden('obj_id')
+              %a.btn.btn-lg.btn-warning href="{{route('convent:list')}}"
+                Anuluj
+              &nbsp;
+              =form.submit('Usuń', 'btn-danger')
+              =form.end()

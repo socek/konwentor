@@ -69,3 +69,9 @@ class ConventWidget(Jinja2HelperMany):
             return self.render_for('ended_warning', {})
         else:
             return ''
+
+    def row_class(self, choosed_id):
+        if choosed_id == self.convent.id:
+            return 'danger'
+        else:
+            return ''

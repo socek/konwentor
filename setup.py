@@ -14,6 +14,7 @@ install_requires = [
     'coverage',
     'alembic',
     'pyyaml',
+    'Hamlish-Jinja',
 ]
 dependency_links = [
 

@@ -10,7 +10,7 @@ from .helpers import ConventWidget
 
 class ConventListController(Controller):
 
-    template = 'convent:list.jinja2'
+    template = 'convent:list.haml'
     permissions = [('base', 'view'), ]
     menu_highlighted = 'convent:list'
 
@@ -30,7 +30,7 @@ class ConventListController(Controller):
 
 class ConventAdd(Controller):
 
-    template = 'convent:add.jinja2'
+    template = 'convent:add.haml'
     permissions = [('convent', 'add'), ]
     menu_highlighted = 'convent:list'
 
@@ -42,7 +42,7 @@ class ConventAdd(Controller):
 
 
 class ConventDelete(Controller):
-    template = 'convent:delete.jinja2'
+    template = 'convent:delete.haml'
     permissions = [('convent', 'delete'), ]
     menu_highlighted = 'convent:list'
 

@@ -1,0 +1,19 @@
+-extends "main.jinja2"
+
+-block page_head
+  Konwenty - Dodawanie
+
+-block content
+  %div.row
+    %div.col-lg-12
+      %div.panel.panel-default
+        %div.panel-heading
+          Nowy konwent
+        %div.panel-body
+          %div.row
+            %div.col-lg-6
+              =form.begin()
+              =form.error()
+              =form.text('name')
+              =form.submit('Dodaj')
+              =form.end()
