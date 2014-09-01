@@ -14,6 +14,7 @@ class Fixtures(Base):
         self.create_games()
         self.create_copies()
         self.create_entities()
+        self.create_borrows()
 
     def create_users(self):
         self._create(User, name='first')
@@ -86,7 +87,39 @@ class Fixtures(Base):
             count=4,
         )
 
-    # def create_borrows(self):
-    #     self._create_nameless(
-    #         GameBorrow,
-    #     )
+    def create_borrows(self):
+        self._create_nameless(
+            GameBorrow,
+            gameentity=self.fixtures['GameEntity'][0],
+            name='Franek',
+            surname='Kimono',
+            document_type='paszport',
+            document_number='123',
+        )
+
+        self._create_nameless(
+            GameBorrow,
+            gameentity=self.fixtures['GameEntity'][1],
+            name='Franek',
+            surname='Kimono',
+            document_type='paszport',
+            document_number='123',
+        )
+
+        self._create_nameless(
+            GameBorrow,
+            gameentity=self.fixtures['GameEntity'][0],
+            name='Ten',
+            surname='Drugi',
+            document_type='paszport',
+            document_number='1234',
+        )
+
+        self._create_nameless(
+            GameBorrow,
+            gameentity=self.fixtures['GameEntity'][3],
+            name='Franek',
+            surname='Kimono',
+            document_type='paszport',
+            document_number='123',
+        )
