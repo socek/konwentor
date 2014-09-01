@@ -50,3 +50,13 @@ konwentor:
                 - GameCopyControllerBaseTests
                 - GameCopyControllerBaseSqlTests
                 - GameCopyListControllerTestCase
+
+    menu:
+        tests:
+            test_helpers:
+                - MenuWidgetTests
+            test_models:
+                - MenuObjectTests
+            test_plugin:
+                - MenuPluginTests
+                - MenuControllerPluginTests
