@@ -33,6 +33,9 @@ konwentor:
             test_models:
                 - UserTestCase
                 - NotLoggedUserTestCase
+            test_plugin:
+                - AuthPluginTests
+                - AuthControllerPluginTests
     forms:
         tests:
             test_forms:

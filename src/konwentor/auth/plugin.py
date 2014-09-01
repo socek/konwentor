@@ -20,7 +20,7 @@ class AuthPlugin(Plugin):
 
         user_id = session.get('user_id', None)
         if user_id:
-            return db.query(User).filter_by(id=user_id).one()
+            return User.get_by_id(db, user_id)
         else:
             return NotLoggedUser()
 
