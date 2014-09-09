@@ -53,6 +53,10 @@ konwentor:
                 - GameCopyControllerBaseTests
                 - GameCopyControllerBaseSqlTests
                 - GameCopyListControllerTestCase
+                - GameCopyAddControllerTests
+                - GameCopyListControllerTests
+            test_models:
+                - GameEntityTests
 
     menu:
         tests:
