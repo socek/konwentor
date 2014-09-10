@@ -19,6 +19,20 @@ konwentor:
             test_helpers:
                 - HasAccessToRouteTests
                 - ConventWidgetTests
+    game:
+        tests:
+            test_models:
+                - GameTests
+            test_controller:
+                - GameListControllerTests
+                - GameListSqlControllerTests
+                - GameAddControllerTests
+                - GameDeleteControllerTests
+                - GameDeleteSqlControllerTests
+            test_forms:
+                - GameAddFormTest
+                - SqlGameAddFormTests
+                - SqlGameDeleteFormTests
     statistics:
         tests:
             test_controller:

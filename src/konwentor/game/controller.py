@@ -15,7 +15,12 @@ class GameListController(Controller):
     def make(self):
         self.data['objects'] = self.get_games()
         self.data['forms'] = {}
+        self.add_game_forms()
 
+    def get_games(self):
+        return self.db.query(Game).all()
+
+    def add_game_forms(self):
         for game in self.data['objects']:
             name = 'form_%d' % (game.id)
             form = self.add_form(GameDeleteForm, name=name)
@@ -25,9 +30,6 @@ class GameListController(Controller):
             form({
                 'obj_id': [game.id, ],
             })
-
-    def get_games(self):
-        return self.db.query(Game).all()
 
 
 class GameAddController(Controller):
