@@ -95,6 +95,7 @@ class Fixtures(Base):
             surname='Kimono',
             document_type='paszport',
             document_number='123',
+            is_borrowed=True,
         )
 
         self._create_nameless(
@@ -104,6 +105,7 @@ class Fixtures(Base):
             surname='Kimono',
             document_type='paszport',
             document_number='123',
+            is_borrowed=True
         )
 
         self._create_nameless(
@@ -113,6 +115,7 @@ class Fixtures(Base):
             surname='Drugi',
             document_type='paszport',
             document_number='1234',
+            is_borrowed=False
         )
 
         self._create_nameless(
@@ -122,4 +125,15 @@ class Fixtures(Base):
             surname='Kimono',
             document_type='paszport',
             document_number='123',
+            is_borrowed=True
+        )
+
+        self._create_nameless(
+            GameBorrow,
+            gameentity=self.fixtures['GameEntity'][3],
+            name='Franek',
+            surname='Kimono',
+            document_type='paszport',
+            document_number='123',
+            is_borrowed=False
         )

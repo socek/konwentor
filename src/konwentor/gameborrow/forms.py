@@ -33,7 +33,7 @@ class GameBorrowAddForm(PostForm):
             validators=[NotEmpty()]))
 
     def get_avalible_documents(self):
-        objects = [
+        return [
             {
                 'label': '(Wybierz)',
                 'value': '',
@@ -59,7 +59,6 @@ class GameBorrowAddForm(PostForm):
                 'value': 'inne',
             }
         ]
-        return objects
 
     def overalValidation(self, data):
         entity = self.get_entity(data['game_entity_id'][0])

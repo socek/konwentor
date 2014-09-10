@@ -42,6 +42,16 @@ konwentor:
         tests:
             test_models:
                 - GameBorrowUnitTestCase
+            test_controller:
+                - GameBorrowAddControllerTests
+                - SqlGameBorrowAddControllerTests
+                - GameBorrowListControllerTests
+                - SqlGameBorrowListControllerTests
+                - GameBorrowReturnControllerTests
+                - SqlGameBorrowReturnControllerTests
+            test_forms:
+                - GameBorrowAddFormTest
+                - SqlGameBorrowAddFormTest
     auth:
         tests:
             test_models:

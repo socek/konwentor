@@ -51,6 +51,7 @@ class GameBorrowListController(GameCopyControllerBase):
     def get_borrows(self, convent):
         return (
             self.db.query(GameBorrow)
+            .join(GameEntity)
             .filter(GameEntity.convent == convent)
             .filter(GameBorrow.is_borrowed.is_(True))
             .all())
@@ -58,6 +59,7 @@ class GameBorrowListController(GameCopyControllerBase):
     def generate_log(self, convent):
         return (
             self.db.query(GameBorrow)
+            .join(GameEntity)
             .filter(GameEntity.convent == convent)
             .filter(GameBorrow.is_borrowed.is_(False))
             .all())
@@ -69,13 +71,19 @@ class GameBorrowReturnController(Controller):
 
     def make(self):
         borrow = self.get_borrow()
-        if not borrow.is_borrowed:
-            raise HTTPNotFound()
 
+        if borrow.is_borrowed:
+            self.return_game(borrow)
+            self.add_flashmsg('Gra została oddana.', 'success')
+        else:
+            self.add_flashmsg('Gra została oddana wcześniej.', 'warning')
+
+        self.redirect('gameborrow:list')
+
+    def return_game(self, borrow):
         borrow.is_borrowed = False
         borrow.return_timestamp = datetime.utcnow()
         self.db.commit()
-        self.redirect('gameborrow:list')
 
     def get_borrow(self):
         try:
