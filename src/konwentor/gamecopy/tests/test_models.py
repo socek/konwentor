@@ -41,3 +41,11 @@ class GameEntityTests(ModelTestCase):
         self.model.count = 2
 
         self.assertEqual(False, self.model.is_avalible())
+
+    def test_move_to_box(self):
+        """move_to_box should set is_in_box state to True"""
+        self.model.is_in_box = False
+
+        self.model.move_to_box()
+
+        self.assertEqual(True, self.model.is_in_box)

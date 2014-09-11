@@ -1,3 +1,4 @@
+from sqlalchemy import and_
 from hatak.controller import Controller
 
 from konwentor.auth.models import User
@@ -75,3 +76,32 @@ class GameCopyListController(GameCopyControllerBase):
             .join(GameCopy).join(Game).join(User)
             .filter(GameEntity.convent_id == convent.id)
             .all())
+
+
+class GameCopyToBoxController(GameCopyControllerBase):
+
+    permissions = [('gamecopy', 'add'), ]
+
+    def make(self):
+        if not self.verify_convent():
+            return
+
+        self.move_to_box()
+        self.add_flashmsg('Game moved to box.', 'success')
+        self.redirect('gamecopy:list')
+
+    def move_to_box(self):
+        convent = self.get_convent()
+        entity = self.get_game_entity(convent)
+        entity.move_to_box()
+        self.db.commit()
+
+    def get_game_entity(self, convent):
+        return (
+            self.query(GameEntity)
+            .filter(and_(
+                GameEntity.convent_id == convent.id,
+                GameEntity.id == self.matchdict['obj_id'],
+            ))
+            .one()
+        )

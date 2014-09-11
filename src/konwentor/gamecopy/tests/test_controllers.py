@@ -1,8 +1,10 @@
+from sqlalchemy.orm.exc import NoResultFound
+
 from hatak.tests.cases import ControllerTestCase
 from hatak.tests.cases import SqlControllerTestCase
 from hatak.tests.fixtures import fixtures
 
-from ..controllers import GameCopyAddController
+from ..controllers import GameCopyAddController, GameCopyToBoxController
 from ..controllers import GameCopyControllerBase, GameCopyListController
 from konwentor.convent.helpers import ConventWidget
 from konwentor.gamecopy.forms import GameCopyAddForm
@@ -164,3 +166,79 @@ class GameCopyListControllerTests(ControllerTestCase):
         }, self.data)
         self.mocks['get_games'].assert_called_once_with(
             self.mocks['get_convent'].return_value)
+
+
+class GameCopyToBoxControllerTests(ControllerTestCase):
+    prefix_from = GameCopyToBoxController
+
+    def setUp(self):
+        super().setUp()
+        self.add_mock_object(self.controller, 'verify_convent')
+        self.add_mock_object(self.controller, 'redirect')
+        self.add_mock_object(self.controller, 'add_flashmsg')
+
+    def test_make_bad_convent_id(self):
+        """GameCopyToBoxController should verify convent and do nothing if it
+        fails"""
+        self.mocks['verify_convent'].return_value = False
+
+        self.controller.make()
+
+        self.mocks['verify_convent'].assert_called_once_with()
+        self.assertEqual(0, self.mocks['add_flashmsg'].call_count)
+        self.assertEqual(0, self.mocks['redirect'].call_count)
+
+    def test_make(self):
+        """GameCopyToBoxController should verify convent, move game copy to box
+        and redirect to gamecopy:list"""
+        self.add_mock_object(self.controller, 'move_to_box')
+        self.mocks['verify_convent'].return_value = True
+
+        self.controller.make()
+
+        self.mocks['verify_convent'].assert_called_once_with()
+
+        self.mocks['move_to_box'].assert_called_once_with()
+        self.mocks['add_flashmsg'].assert_called_once_with(
+            'Game moved to box.', 'success')
+        self.mocks['redirect'].assert_called_once_with('gamecopy:list')
+
+    def test_move_to_box(self):
+        """move_to_box should get entity, move it to box and commit to db."""
+        self.add_mock_object(self.controller, 'get_game_entity')
+        self.add_mock_object(self.controller, 'get_convent')
+
+        self.controller.move_to_box()
+
+        self.mocks['get_convent'].assert_called_once_with()
+        convent = self.mocks['get_convent'].return_value
+        self.mocks['get_game_entity'].assert_called_once_with(convent)
+        entity = self.mocks['get_game_entity'].return_value
+        entity.move_to_box.assert_called_once_with()
+        self.db.commit.assert_called_once_with()
+
+
+class SqlGameCopyToBoxControllerTests(SqlControllerTestCase):
+    prefix_from = GameCopyToBoxController
+
+    def test_get_game_entity(self):
+        """get_game_entity should return return GameEntity which id is provided
+        by matchdict and convent do match."""
+        entity = fixtures['GameEntity'][0]
+        convent = entity.convent
+        self.matchdict['obj_id'] = entity.id
+
+        result = self.controller.get_game_entity(convent)
+
+        self.assertEqual(entity, result)
+
+    def test_game_entity_when_convent_does_not_match(self):
+        """get_game_entity should raises () when convent does not match"""
+        entity = fixtures['GameEntity'][0]
+        convent = fixtures['Convent']['second']
+        self.matchdict['obj_id'] = entity.id
+
+        self.assertRaises(
+            NoResultFound,
+            self.controller.get_game_entity,
+            convent)

@@ -79,6 +79,8 @@ konwentor:
                 - GameCopyListControllerTestCase
                 - GameCopyAddControllerTests
                 - GameCopyListControllerTests
+                - GameCopyToBoxControllerTests
+                - SqlGameCopyToBoxControllerTests
             test_models:
                 - GameEntityTests
 

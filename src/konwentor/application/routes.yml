@@ -51,6 +51,10 @@ gamecopy:
             controller: GameCopyListController
             route: gamecopy:list
             url: /gamecopy
+        -
+            controller: GameCopyToBoxController
+            route: gamecopy:movetobox
+            url: /gamecopy/movetobox
 
 gameborrow:
     controllers:
