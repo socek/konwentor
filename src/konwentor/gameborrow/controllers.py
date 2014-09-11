@@ -7,7 +7,7 @@ from hatak.controller import Controller
 
 from .forms import GameBorrowAddForm
 from .models import GameBorrow
-from konwentor.gamecopy.controller import GameCopyControllerBase
+from konwentor.gamecopy.controllers import GameCopyControllerBase
 from konwentor.gamecopy.models import GameEntity
 
 

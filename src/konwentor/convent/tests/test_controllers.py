@@ -4,10 +4,11 @@ from hatak.tests.fixtures import fixtures
 from pyramid.httpexceptions import HTTPNotFound
 
 from ..forms import ConventAddForm, ConventDeleteForm
-from konwentor.convent.controller import ConventDelete, ChooseConventController
-from konwentor.convent.controller import ConventListController, ConventAdd
-from konwentor.convent.controller import EndConventController
-from konwentor.convent.controller import StartConventController
+from konwentor.convent.controllers import ConventDelete
+from konwentor.convent.controllers import ChooseConventController
+from konwentor.convent.controllers import ConventListController, ConventAdd
+from konwentor.convent.controllers import EndConventController
+from konwentor.convent.controllers import StartConventController
 
 
 class ConventListControllerTests(ControllerTestCase):

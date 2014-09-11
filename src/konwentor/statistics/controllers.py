@@ -2,7 +2,7 @@ from sqlalchemy import func, desc, distinct
 
 from konwentor.game.models import Game
 from konwentor.gameborrow.models import GameBorrow
-from konwentor.gamecopy.controller import GameCopyControllerBase
+from konwentor.gamecopy.controllers import GameCopyControllerBase
 from konwentor.gamecopy.models import GameEntity, GameCopy
 
 

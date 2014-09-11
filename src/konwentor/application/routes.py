@@ -7,4 +7,4 @@ def make_routes(app):
     route = Route(app, 'konwentor.')
     route.read_yaml(app.settings['routes'])
 
-    route.add_view('auth.controller.ForbiddenController', context=Forbidden)
+    route.add_view('auth.controllers.ForbiddenController', context=Forbidden)

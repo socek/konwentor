@@ -2,8 +2,8 @@ from hatak.tests.cases import ControllerTestCase
 from hatak.tests.cases import SqlControllerTestCase
 from hatak.tests.fixtures import fixtures
 
-from ..controller import GameCopyAddController
-from ..controller import GameCopyControllerBase, GameCopyListController
+from ..controllers import GameCopyAddController
+from ..controllers import GameCopyControllerBase, GameCopyListController
 from konwentor.convent.helpers import ConventWidget
 from konwentor.gamecopy.forms import GameCopyAddForm
 

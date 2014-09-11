@@ -1,5 +1,5 @@
 convent:
-    controller:
+    controllers:
         -
             controller: ConventListController
             route: convent:list
@@ -26,7 +26,7 @@ convent:
             url: /convent/end/{obj_id:\d+}
 
 game:
-    controller:
+    controllers:
         -
             controller: GameListController
             route: game:list
@@ -42,7 +42,7 @@ game:
             url: /game/delete/{obj_id:\d+}
 
 gamecopy:
-    controller:
+    controllers:
         -
             controller: GameCopyAddController
             route: gamecopy:add
@@ -53,7 +53,7 @@ gamecopy:
             url: /gamecopy
 
 gameborrow:
-    controller:
+    controllers:
         -
             controller: GameBorrowListController
             route: gameborrow:list
@@ -68,7 +68,7 @@ gameborrow:
             url: /game/borrows/return/{obj_id:\d+}
 
 auth:
-    controller:
+    controllers:
         -
             controller: LoginController
             route: auth:login
@@ -79,7 +79,7 @@ auth:
             url: /logout
 
 statistics:
-    controller:
+    controllers:
         -
             controller: StatisticsController
             route: statistics:all

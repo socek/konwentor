@@ -2,8 +2,8 @@ from hatak.tests.cases import ControllerTestCase, SqlControllerTestCase
 from hatak.tests.fixtures import fixtures
 from pyramid.httpexceptions import HTTPNotFound
 
-from ..controller import GameBorrowAddController, GameBorrowListController
-from ..controller import GameBorrowReturnController
+from ..controllers import GameBorrowAddController, GameBorrowListController
+from ..controllers import GameBorrowReturnController
 
 
 class GameBorrowAddControllerTests(ControllerTestCase):

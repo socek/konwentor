@@ -5,7 +5,7 @@ from mock import MagicMock
 from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy.orm.exc import NoResultFound
 
-from ..controller import GameListController, GameAddController, GameDelete
+from ..controllers import GameListController, GameAddController, GameDelete
 from ..forms import GameDeleteForm, GameAddForm
 
 

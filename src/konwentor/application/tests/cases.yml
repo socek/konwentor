@@ -4,7 +4,7 @@ konwentor:
             test_forms:
                 - ConventAddFormTest
                 - ConventDeleteFormTest
-            test_controller:
+            test_controllers:
                 - ConventListControllerTests
                 - ConventListControllerSqlTests
                 - ConventAddTests
@@ -23,7 +23,7 @@ konwentor:
         tests:
             test_models:
                 - GameTests
-            test_controller:
+            test_controllers:
                 - GameListControllerTests
                 - GameListSqlControllerTests
                 - GameAddControllerTests
@@ -35,14 +35,14 @@ konwentor:
                 - SqlGameDeleteFormTests
     statistics:
         tests:
-            test_controller:
+            test_controllers:
                 - StatisticsControllerTest
                 - StatisticsSqlsTest
     gameborrow:
         tests:
             test_models:
                 - GameBorrowUnitTestCase
-            test_controller:
+            test_controllers:
                 - GameBorrowAddControllerTests
                 - SqlGameBorrowAddControllerTests
                 - GameBorrowListControllerTests
@@ -73,7 +73,7 @@ konwentor:
             test_forms:
                 - GameCopyAddFormTest
                 - GameCopyAddFormSqlTestCase
-            test_controller:
+            test_controllers:
                 - GameCopyControllerBaseTests
                 - GameCopyControllerBaseSqlTests
                 - GameCopyListControllerTestCase
