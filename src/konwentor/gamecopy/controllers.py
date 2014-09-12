@@ -8,6 +8,7 @@ from konwentor.game.models import Game
 
 from .forms import GameCopyAddForm
 from .models import GameEntity, GameCopy
+from .helpers import GameEntityWidget
 
 
 class GameCopyControllerBase(Controller):
@@ -56,7 +57,7 @@ class GameCopyAddController(GameCopyControllerBase):
 
 class GameCopyListController(GameCopyControllerBase):
 
-    template = 'gamecopy:list.jinja2'
+    template = 'gamecopy:list.haml'
     permissions = [('base', 'view'), ]
     menu_highlighted = 'gamecopy:list'
 
@@ -65,7 +66,10 @@ class GameCopyListController(GameCopyControllerBase):
             return
 
         self.data['convent'] = self.get_convent()
-        self.data['games'] = self.get_games(self.data['convent'])
+        self.data['games'] = [
+            GameEntityWidget(self.request, obj) for obj
+            in self.get_games(self.data['convent'])
+        ]
 
     def get_games(self, convent):
         return (
@@ -87,7 +91,7 @@ class GameCopyToBoxController(GameCopyControllerBase):
             return
 
         self.move_to_box()
-        self.add_flashmsg('Game moved to box.', 'success')
+        self.add_flashmsg('Gra została schowana.', 'success')
         self.redirect('gamecopy:list')
 
     def move_to_box(self):

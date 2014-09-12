@@ -1,0 +1,27 @@
+-from "modal.jinja2" import modal
+
+-macro  title()
+  Jesteś pewien, że chcesz odłożyć tą grę do pudełka?
+
+-macro  btn()
+  %a.btn.btn-danger href="{{url}}"
+    Akceptuj
+
+-call modal("return_modal_" ~ game.id, "btn-xs btn-warning", "Odłóż do pudełka", title, btn)
+  %div
+    %strong
+      Nazwa gry:
+    =game.name
+  %div
+    %strong
+      Ilośc kopii:
+    =game.count
+  %div
+    %strong
+      Właściciel:
+    =game.author_name
+
+  %div
+    Jesteś pewien, że chcesz umieścić tę grę w pudełku? Powinieneś to zrobić tylko
+    po zakońćzeniu konwentu! Do tego pamiętaj, aby w tej chwili schować wszystkie
+    kopie od danego właściciela.

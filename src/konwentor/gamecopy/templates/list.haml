@@ -1,0 +1,42 @@
+-extends "main.jinja2"
+-from "table.jinja2" import table
+
+-block page_head
+  Gry na konwencie
+
+-macro header()
+  %tr
+    %th << Nazwa
+    %th << Właściciel
+    %th << Ilość kopii
+    %th << Wypożyczono
+    %th << Akcje
+
+
+-macro color_tr(entity)
+  -if not entity.is_avalible()
+    class="danger"
+  -elif entity.active_borrows_len() == 0
+    class="info"
+
+-block content
+  =convent.ended_warning()
+  -call(game, index) table(False, header, games, "games_on_convent_table")
+    %tr class="{{game.get_list_class()}}"
+      %td -> =game.name
+      %td -> =game.author_name
+      %td -> =game.count
+      %td -> =game.active_borrows_len
+      %td
+        =game.borrow()
+        =game.move_to_box()
+
+-block js
+  %script src="{{static('/js/plugins/dataTables/jquery.dataTables.js')}}"
+  %script src="{{static('/js/plugins/dataTables/dataTables.bootstrap.js')}}"
+  %script type="text/javascript"
+    $(document).ready(function() {
+        $('#games_on_convent_table').dataTable({
+            "paging":   false,
+        });
+    });

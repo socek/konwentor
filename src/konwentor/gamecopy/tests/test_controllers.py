@@ -1,3 +1,4 @@
+from mock import MagicMock
 from sqlalchemy.orm.exc import NoResultFound
 
 from hatak.tests.cases import ControllerTestCase
@@ -154,18 +155,23 @@ class GameCopyListControllerTests(ControllerTestCase):
         self.assertEqual({}, self.data)
 
     def test_normal(self):
+        game = MagicMock()
         self.add_mock_object(self.controller, 'get_convent')
-        self.add_mock_object(self.controller, 'get_games')
+        self.add_mock_object(self.controller, 'get_games', return_value=[game])
+        self.add_mock('GameEntityWidget')
 
         self.controller.make()
 
         self.mocks['verify_convent'].assert_called_once_with()
         self.assertEqual({
             'convent': self.mocks['get_convent'].return_value,
-            'games': self.mocks['get_games'].return_value,
+            'games': [self.mocks['GameEntityWidget'].return_value],
         }, self.data)
         self.mocks['get_games'].assert_called_once_with(
             self.mocks['get_convent'].return_value)
+        self.mocks['GameEntityWidget'].assert_called_once_with(
+            self.request,
+            game)
 
 
 class GameCopyToBoxControllerTests(ControllerTestCase):
@@ -200,7 +206,7 @@ class GameCopyToBoxControllerTests(ControllerTestCase):
 
         self.mocks['move_to_box'].assert_called_once_with()
         self.mocks['add_flashmsg'].assert_called_once_with(
-            'Game moved to box.', 'success')
+            'Gra została schowana.', 'success')
         self.mocks['redirect'].assert_called_once_with('gamecopy:list')
 
     def test_move_to_box(self):

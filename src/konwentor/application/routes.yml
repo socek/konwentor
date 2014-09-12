@@ -54,7 +54,7 @@ gamecopy:
         -
             controller: GameCopyToBoxController
             route: gamecopy:movetobox
-            url: /gamecopy/movetobox
+            url: /gamecopy/movetobox/{obj_id:\d+}
 
 gameborrow:
     controllers:
