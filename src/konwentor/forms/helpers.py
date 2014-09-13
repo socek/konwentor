@@ -9,11 +9,12 @@ class FormWidget(Jinja2HelperMany):
         super().__init__(request)
         self.form = form
 
-    def begin(self, id_=None):
+    def begin(self, id_=None, style=None):
         data = {}
         data['action'] = getattr(self.form, 'action', None)
         data['id'] = id_
         data['name'] = self.form.name
+        data['style'] = style
         return self.render_for('begin', data)
 
     def end(self):
@@ -47,8 +48,12 @@ class FormWidget(Jinja2HelperMany):
         data['value'] = self.form.get_value(name) or ''
         return self.render_for('hidden', data)
 
-    def submit(self, label='', cls='btn-success'):
-        return self.render_for('submit', {'label': label, 'class': cls})
+    def submit(self, label='', cls='btn-success', base_cls='btn btn-lg'):
+        return self.render_for(
+            'submit', {
+                'label': label,
+                'class': cls,
+                'base_class': base_cls})
 
     def error(self):
         data = {}

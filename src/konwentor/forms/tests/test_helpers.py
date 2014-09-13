@@ -24,7 +24,7 @@ class FormWidgetTestCase(TestCase):
 
     def test_begin(self):
         """begin should render <form> tag"""
-        result = self.widget.begin('fake_id')
+        result = self.widget.begin('fake_id', 'mystyle')
 
         self.assert_render_for(
             result,
@@ -33,6 +33,7 @@ class FormWidgetTestCase(TestCase):
                 'action': self.form.action,
                 'id': 'fake_id',
                 'name': self.form.name,
+                'style': 'mystyle',
             },)
 
     def test_end(self):
@@ -61,7 +62,7 @@ class FormWidgetTestCase(TestCase):
 
     def test_submit(self):
         """submit should render <input type="submit"> tag"""
-        result = self.widget.submit('mylabel', 'myclass')
+        result = self.widget.submit('mylabel', 'myclass', 'baseclass')
 
         self.assert_render_for(
             result,
@@ -69,6 +70,7 @@ class FormWidgetTestCase(TestCase):
             {
                 'label': 'mylabel',
                 'class': 'myclass',
+                'base_class': 'baseclass'
             },)
 
     def test_error(self):

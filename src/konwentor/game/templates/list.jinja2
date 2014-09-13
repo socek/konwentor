@@ -27,9 +27,9 @@
                 {% if user.has_access_to_route('game:delete') -%}
                     {% macro  title() %}Jesteś pewny, ze chcesz usunąc tę grę?{% endmacro %}
                     {% macro  btn() %}
-                        {{forms[game.id].begin()}}
+                        {{forms[game.id].begin(style='display: inline;')}}
                         {{forms[game.id].hidden('obj_id')}}
-                        {{forms[game.id].submit('Zgadza się!', 'btn-danger')}}
+                        {{forms[game.id].submit('Zgadza się!', 'btn-danger', 'btn')}}
                         {{forms[game.id].end()}}
                     {% endmacro %}
                     {% call modal("return_modal_" ~ game.id, "btn-xs btn-danger", "Usuń", title, btn) %}
