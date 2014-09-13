@@ -58,7 +58,8 @@ class ConventListControllerSqlTests(SqlControllerTestCase):
         for convent in convents:
             self.assertTrue(convent in fixtures['Convent'].values())
 
-        self.assertEqual(len(fixtures['Convent']), len(convents))
+        # -1 in len(fixtures['Convent']) means the 1 convent which is inactive
+        self.assertEqual(len(fixtures['Convent']) - 1, len(convents))
 
 
 class ConventAddTests(ControllerTestCase):
@@ -180,6 +181,18 @@ class SqlConventDeleteTests(SqlControllerTestCase):
             self.controller.verify_convent_id,
         )
 
+    def test_verify_convent_id_on_not_active_convent(self):
+        """verify_convent_id should raise HTTPNotFound when inpute id of not
+        active convent."""
+        self.controller.matchdict = {
+            'obj_id': fixtures['Convent']['inactive'].id,
+        }
+
+        self.assertRaises(
+            HTTPNotFound,
+            self.controller.verify_convent_id,
+        )
+
 
 class ChooseConventControllerTests(ControllerTestCase):
     prefix_from = ChooseConventController
@@ -240,16 +253,3 @@ class EndConventControllerTests(ControllerTestCase):
         self.assertEqual('ended', self.data['convent'].state)
         self.db.commit.assert_called_once_with()
         self.mocks['redirect'].assert_called_once_with('convent:list')
-
-
-class ConventDatabaseTest(ControllerTestCase):
-
-    prefix_from = ConventListController
-
-    def test_all(self):
-        self.add_mock('Convent')
-        result = self.controller.get_convents()
-        self.assertEqual(
-            self.mocks['Convent'].get_all.return_value,
-            result)
-        self.mocks['Convent'].get_all.assert_called_once_with(self.db)

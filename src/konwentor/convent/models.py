@@ -1,5 +1,5 @@
 from hatak.db import Base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 
 
 class Convent(Base):
@@ -15,6 +15,7 @@ class Convent(Base):
     name = Column(String)
     _state = Column(
         'state', String(11), default=STATES[0], nullable=False)
+    is_active = Column(Boolean, nullable=False, default=True)
 
     def _get_state(self):
         return self._state

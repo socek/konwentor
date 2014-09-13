@@ -25,7 +25,7 @@ class ConventListController(Controller):
         ]
 
     def get_convents(self):
-        return Convent.get_all(self.db)
+        return self.query(Convent).filter_by(is_active=True).all()
 
 
 class ConventAdd(Controller):
@@ -61,7 +61,7 @@ class ConventDelete(Controller):
         try:
             self.data['convent'] = (
                 self.query(Convent)
-                .filter_by(id=self.matchdict['obj_id'])
+                .filter_by(id=self.matchdict['obj_id'], is_active=True)
                 .one())
         except NoResultFound:
             raise HTTPNotFound()

@@ -13,7 +13,6 @@ konwentor:
                 - ChooseConventControllerTests
                 - StartConventControllerTests
                 - EndConventControllerTests
-                - ConventDatabaseTest
             test_models:
                 - ConventTests
             test_helpers:

@@ -21,4 +21,6 @@ class ConventDeleteForm(PostForm):
         self.addField(Field('obj_id', validators=[NotEmpty()]))
 
     def submit(self, data):
-        Convent.delete_by_id(self.db, int(data['obj_id'][0]))
+        convent = Convent.get_by_id(self.db, int(data['obj_id'][0]))
+        convent.is_active = False
+        self.db.commit()

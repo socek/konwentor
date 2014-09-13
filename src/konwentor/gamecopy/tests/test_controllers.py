@@ -5,6 +5,7 @@ from hatak.tests.cases import ControllerTestCase
 from hatak.tests.cases import SqlControllerTestCase
 from hatak.tests.fixtures import fixtures
 
+from ..controllers import EndController
 from ..controllers import GameCopyAddController, GameCopyToBoxController
 from ..controllers import GameCopyControllerBase, GameCopyListController
 from konwentor.convent.helpers import ConventWidget
@@ -61,6 +62,21 @@ class GameCopyControllerBaseSqlTests(SqlControllerTestCase):
         result = self.controller.get_convent()
 
         self.assertEqual(convent, result)
+
+    def test_get_convent_on_inactive_convent(self):
+        """get_convent should raise NoResultFound when convent is inactive"""
+        self.add_mock_object(self.controller, 'add_flashmsg')
+        self.add_mock_object(self.controller, 'redirect')
+
+        convent = fixtures['Convent']['inactive']
+        self.controller.session = {
+            'convent_id': convent.id,
+        }
+
+        self.assertRaises(EndController, self.controller.get_convent)
+        self.mocks['add_flashmsg'].assert_called_once_with(
+            'Proszę wybrać konwent.', 'danger')
+        self.mocks['redirect'].assert_called_once_with('convent:list')
 
 
 class GameCopyListControllerTestCase(SqlControllerTestCase):

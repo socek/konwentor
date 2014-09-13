@@ -29,6 +29,7 @@ class Fixtures(Base):
         self._create(Convent, name='third')
 
         self._create(Convent, name='dynamic1')
+        self._create(Convent, name='inactive', is_active=False)
 
     def create_games(self):
         self._create(Game, name='first')

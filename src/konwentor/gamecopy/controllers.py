@@ -1,5 +1,6 @@
+from hatak.controller import Controller, EndController
 from sqlalchemy import and_
-from hatak.controller import Controller
+from sqlalchemy.orm.exc import NoResultFound
 
 from konwentor.auth.models import User
 from konwentor.convent.helpers import ConventWidget
@@ -21,10 +22,15 @@ class GameCopyControllerBase(Controller):
         return True
 
     def get_convent(self):
-        return (
-            self.query(Convent)
-            .filter_by(id=self.session['convent_id'])
-            .one())
+        try:
+            return (
+                self.query(Convent)
+                .filter_by(id=self.session['convent_id'], is_active=True)
+                .one())
+        except NoResultFound:
+            self.add_flashmsg('Proszę wybrać konwent.', 'danger')
+            self.redirect('convent:list')
+            raise EndController()
 
     def make_helpers(self):
         super().make_helpers()
