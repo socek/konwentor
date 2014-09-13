@@ -1,4 +1,4 @@
-from sqlalchemy import func, desc, distinct
+from sqlalchemy import func, desc, distinct, and_
 
 from konwentor.game.models import Game
 from konwentor.gameborrow.models import GameBorrow
@@ -86,7 +86,11 @@ class StatisticsController(GameCopyControllerBase):
             self.query(func.count(distinct(Game.id)))
             .join(GameCopy)
             .join(GameEntity)
-            .filter(GameEntity.convent == self.data['convent'])
+            .filter(
+                and_(
+                    GameEntity.convent == self.data['convent'],
+                    Game.is_active.is_(True),
+                ))
             .scalar())
         self.data['statistics'].append({
             'name': 'Różnych gier',

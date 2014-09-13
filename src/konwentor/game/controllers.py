@@ -18,7 +18,7 @@ class GameListController(Controller):
         self.add_game_forms()
 
     def get_games(self):
-        return self.db.query(Game).all()
+        return self.db.query(Game).filter_by(is_active=True).all()
 
     def add_game_forms(self):
         for game in self.data['objects']:
@@ -47,7 +47,7 @@ class GameAddController(Controller):
 
 class GameDelete(Controller):
     template = 'game:delete.jinja2'
-    permissions = [('game', 'delete2'), ]
+    permissions = [('game', 'delete'), ]
     menu_highlighted = 'game:list'
 
     def make(self):

@@ -16,8 +16,10 @@ class GameCopyAddFormTest(FormTestCase):
 
     def test_get_objects(self):
         """get_objects should return list of dicts"""
+        self.query.return_value.filter_by.call_count = 0
         example_model = MagicMock()
-        self.query.return_value.all.return_value = [example_model]
+        self.query.return_value.filter_by.return_value.all.return_value = [
+            example_model]
 
         data = self.form.get_objects(self)
 
@@ -32,7 +34,8 @@ class GameCopyAddFormTest(FormTestCase):
         }, data[1])
 
         self.query.assert_called_with(self)
-        self.query.return_value.all.assert_called_with()
+        self.query.return_value.filter_by.assert_called_once_with()
+        self.query.return_value.filter_by.return_value.all.assert_called_with()
 
     def test_submit(self):
         """Submit should create gamecopy and gameentity (with count)."""

@@ -84,7 +84,11 @@ class GameCopyListController(GameCopyControllerBase):
                 Game.name,
                 User.name.label('author_name'))
             .join(GameCopy).join(Game).join(User)
-            .filter(GameEntity.convent_id == convent.id)
+            .filter(
+                and_(
+                    GameEntity.convent_id == convent.id,
+                    Game.is_active.is_(True),
+                ))
             .all())
 
 

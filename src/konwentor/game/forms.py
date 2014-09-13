@@ -38,9 +38,7 @@ class GameDeleteForm(PostForm):
         self.addField(Field('obj_id', validators=[NotEmpty()]))
 
     def submit(self, data):
-        try:
-            element = self.db.query(Game).filter_by(id=data['obj_id'][0]).one()
-            element.remove(self.db)
-            self.db.commit()
-        finally:
-            self.db.rollback()
+        _id = data['obj_id'][0]
+        element = self.db.query(Game).filter_by(id=_id).one()
+        element.is_active = False
+        self.db.commit()

@@ -16,7 +16,7 @@ class GameCopyAddForm(PostForm):
             'game_id',
             label='Gra',
             validators=[NotEmpty(), IsDigit()])
-        field.data = self.get_objects(Game)
+        field.data = self.get_objects(Game, is_active=True)
         self.addField(field)
 
         field = Field(
@@ -30,7 +30,7 @@ class GameCopyAddForm(PostForm):
             'convent_id',
             label='Konwent',
             validators=[NotEmpty(), IsDigit()])
-        field.data = self.get_objects(Convent)
+        field.data = self.get_objects(Convent, is_active=True)
         self.addField(field)
 
         field = Field(
@@ -39,12 +39,12 @@ class GameCopyAddForm(PostForm):
             validators=[NotEmpty(), IsDigit()])
         self.addField(field)
 
-    def get_objects(self, cls):
+    def get_objects(self, cls, **kwargs):
         objects = [{
             'label': '(Wybierz)',
             'value': '',
         }]
-        for obj in self.db.query(cls).all():
+        for obj in self.db.query(cls).filter_by(**kwargs).all():
             objects.append({
                 'label': obj.name,
                 'value': str(obj.id),

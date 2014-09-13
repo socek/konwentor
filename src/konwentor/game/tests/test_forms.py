@@ -49,7 +49,7 @@ class SqlGameAddFormTests(SqlFormTestCase):
         game = self.query(Game).filter_by(name='my dynamic name').one()
         self.assertEqual('my dynamic name', game.name)
 
-        game.remove(self.db)
+        self.db.delete(game)
         self.db.commit()
 
 
@@ -69,4 +69,6 @@ class SqlGameDeleteFormTests(SqlFormTestCase):
         self.db.flush()
         self.assertRaises(
             NoResultFound,
-            self.query(Game).filter_by(id=_id).one)
+            self.query(Game).filter_by(id=_id, is_active=True).one)
+
+        Game.delete_by_id(self.db, _id)
