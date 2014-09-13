@@ -1,1 +1,16 @@
-<a href="{{url}}" class="btn btn-xs btn-danger">USUŃ</a>
+{% from "modal.jinja2" import modal %}
+
+{% macro  title() %}Jesteś pewien?{% endmacro %}
+
+{% macro  btn() %}
+    {{form.begin(style='display: inline;')}}
+    {{form.hidden('obj_id')}}
+    {{form.submit('Zgadza się!', 'btn-danger', 'btn')}}
+    {{form.end()}}
+{% endmacro %}
+
+{% call modal("delete_modal_" ~ widget.id, "btn-xs btn-danger", "USUŃ", title, btn) %}
+    Jeseś pewien, że chcesz usunąć konwent "<strong>{{widget.name}}</strong>"?
+{% endcall %}
+
+

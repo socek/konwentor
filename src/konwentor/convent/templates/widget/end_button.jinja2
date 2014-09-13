@@ -4,7 +4,7 @@
 
 {% macro  btn() %}<a href="{{url}}" class="btn btn-warning">Akceptuj</a>{% endmacro %}
 
-{% call modal("return_modal_" ~ convent.id, "btn-xs btn-warning", "Zakończ", title, btn) %}
-    Jeseś pewien, że chcesz zakończyć konwent "<strong>{{convent.name}}</strong>"?
+{% call modal("return_modal_" ~ widget.id, "btn-xs btn-warning", "Zakończ", title, btn) %}
+    Jeseś pewien, że chcesz zakończyć konwent "<strong>{{widget.name}}</strong>"?
 {% endcall %}
 

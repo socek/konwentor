@@ -1,5 +1,8 @@
 from hatak.plugins.jinja2 import Jinja2HelperMany
 
+from konwentor.forms.helpers import FormWidget
+from .forms import ConventDeleteForm
+
 
 def has_access_to_route(route):
     def decorator(method):
@@ -27,6 +30,10 @@ class ConventWidget(Jinja2HelperMany):
         self.convent = convent
 
     @property
+    def id(self):
+        return self.convent.id
+
+    @property
     def name(self):
         return self.convent.name
 
@@ -42,8 +49,16 @@ class ConventWidget(Jinja2HelperMany):
 
     @has_access_to_route('convent:delete')
     def delete(self):
+        form = ConventDeleteForm(self.request)
+        form.action = self.route(
+            'convent:delete', obj_id=self.convent.id)
+        form({
+            'obj_id': [self.convent.id, ],
+        })
+
         return self.render_for('delete_button', {
-            'url': self.route('convent:delete', obj_id=self.convent.id)
+            'url': self.route('convent:delete', obj_id=self.convent.id),
+            'form': FormWidget(self.request, form)
         })
 
     def start(self):
@@ -59,7 +74,6 @@ class ConventWidget(Jinja2HelperMany):
         if self.convent.is_user_able_to_end(self.user):
             return self.render_for('end_button', {
                 'url': self.route('convent:end', obj_id=self.convent.id),
-                'convent': self.convent,
             })
         else:
             return ''

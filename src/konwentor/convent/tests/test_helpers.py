@@ -52,6 +52,9 @@ class ConventWidgetTests(TestCase):
         self.widget = ConventWidget(self.request, self.convent)
         self.add_mock_object(self.widget, 'render_for')
 
+    def test_id(self):
+        self.assertEqual(self.convent.id, self.widget.id)
+
     def test_name(self):
         self.assertEqual(self.convent.name, self.widget.name)
 
@@ -72,16 +75,27 @@ class ConventWidgetTests(TestCase):
             result)
 
     def test_delete(self):
+        self.add_mock('ConventDeleteForm')
+        self.add_mock('FormWidget')
+
         result = self.widget.delete()
+
         self.mocks['render_for'].assert_called_once_with(
             'delete_button',
             {
-                'url': self.route('convent:delete', obj_id=self.convent.id)
+                'url': self.route('convent:delete', obj_id=self.convent.id),
+                'form': self.mocks['FormWidget'].return_value,
             }
         )
+        form = self.mocks['ConventDeleteForm'].return_value
         self.assertEqual(
             self.mocks['render_for'].return_value,
             result)
+        self.mocks['FormWidget'].assert_called_once_with(self.request, form)
+        self.mocks['ConventDeleteForm'].assert_called_once_with(self.request)
+        self.assertEqual(
+            self.route('convent:delete', obj_id=self.convent.id),
+            form.action)
 
     def test_start_fail(self):
         self.convent.is_user_able_to_start.return_value = False
@@ -126,7 +140,6 @@ class ConventWidgetTests(TestCase):
             'end_button',
             {
                 'url': self.route('convent:end', obj_id=self.convent.id),
-                'convent': self.widget.convent,
             }
         )
         self.assertEqual(
