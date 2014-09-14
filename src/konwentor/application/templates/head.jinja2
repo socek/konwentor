@@ -29,12 +29,21 @@
     <!-- Custom Fonts -->
     <link href="{{static('/font-awesome-4.1.0/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
 
+    <!-- jQuery Ui -->
+    <link href="{{static('/css/jquery-ui.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{static('/css/jquery-ui.structure.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{static('/css/jquery-ui.theme.min.css')}}" rel="stylesheet" type="text/css">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    {% for link in _css_links -%}
+        <link href="{{static('/css/'+ link)}}" rel="stylesheet" type="text/css">
+    {%- endfor %}
 
 </head>
 <body>
@@ -47,6 +56,17 @@
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="{{static('/js/plugins/metisMenu/metisMenu.min.js')}}"></script>
+
+    <!-- jQuery UI -->
+    <script src="{{static('/js/jquery-ui.min.js')}}"></script>
+
+    {% for link in _js_links -%}
+        <script src="{{static('/js/' + link)}}"></script>
+    {%- endfor %}
+
+    <script type="text/javascript">
+    {%- for code in _js_codes %}{{code|safe}}{% endfor -%}
+    </script>
 
     {% block js %}{% endblock %}
     <!-- Custom Theme JavaScript -->

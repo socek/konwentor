@@ -97,12 +97,13 @@ class FormWidgetTestCase(TestCase):
         """select should render <input type="select"> tag"""
         self._input_test('select')
 
-    def _input_test(self, name):
+    def _input_test(self, name, method_name=None):
         self.form.field_patterns = {
             'myname': 'fake field',
         }
+        method_name = method_name or name
 
-        method = getattr(self.widget, name)
+        method = getattr(self.widget, method_name)
         result = method('myname', True, False)
 
         self.assert_render_for(
@@ -124,3 +125,13 @@ class FormWidgetTestCase(TestCase):
         self.form.get_error.assert_called_once_with('myname')
         self.form.get_message.assert_called_once_with('myname')
         self.form.get_value.assert_called_once_with('myname')
+
+    def test_combobox(self):
+        # result = self.form.combobox('myname', 1, 2)
+        self._input_test('select', 'combobox')
+
+        self.request.add_js_link.assert_called_once_with('combobox.js')
+        self.request.add_js.assert_called_once_with(
+            '''$(document).ready(function() {
+                $("#%s").combobox();
+                });''' % (self.widget.get_id('myname')))

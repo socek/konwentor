@@ -37,6 +37,34 @@ class GameCopyAddFormTest(FormTestCase):
         self.query.return_value.filter_by.assert_called_once_with()
         self.query.return_value.filter_by.return_value.all.assert_called_with()
 
+    def test_get_objects_with_other(self):
+        """get_objects should return list of dicts"""
+        self.query.return_value.filter_by.call_count = 0
+        example_model = MagicMock()
+        self.query.return_value.filter_by.return_value.all.return_value = [
+            example_model]
+
+        data = self.form.get_objects(self, True)
+
+        self.assertEqual({
+            'label': '(Wybierz)',
+            'value': '',
+        }, data[0])
+
+        self.assertEqual({
+            'label': example_model.name,
+            'value': str(example_model.id),
+        }, data[1])
+
+        self.assertEqual({
+            'label': '',
+            'value': '-1',
+        }, data[2])
+
+        self.query.assert_called_with(self)
+        self.query.return_value.filter_by.assert_called_once_with()
+        self.query.return_value.filter_by.return_value.all.assert_called_with()
+
     def test_submit(self):
         """Submit should create gamecopy and gameentity (with count)."""
         self.add_mock('Game')
@@ -47,14 +75,15 @@ class GameCopyAddFormTest(FormTestCase):
         self.mocks['create_gameentity'].return_value.count = 3
 
         self.form.submit({
-            'game_id': ['game_id'],
+            'game_id': ['1'],
             'user_id': ['user_id'],
             'convent_id': ['convent_id'],
             'count': ['2'],
+            'game_id_sec': ['game_id_sec'],
         })
 
         self.mocks['Game'].get_by_id.assert_called_once_with(
-            self.db, 'game_id')
+            self.db, '1')
         self.mocks['User'].get_by_id.assert_called_once_with(
             self.db, 'user_id')
         self.mocks['Convent'].get_by_id.assert_called_once_with(
@@ -105,6 +134,28 @@ class GameCopyAddFormTest(FormTestCase):
             convent=convent,
             gamecopy=gamecopy)
         self.db.add.assert_called_once_with(gameentity)
+
+    def test_get_or_create_game_on_bad_id(self):
+        """get_or_create_game should create game if game_id == -1"""
+        self.add_mock('Game')
+
+        result = self.form.get_or_create_game(-1, 'myname')
+
+        game = self.mocks['Game'].get_or_create.return_value
+        self.assertEqual(game, result)
+        self.mocks['Game'].get_or_create.assert_called_once_with(
+            self.db, name='myname')
+
+    def test_get_or_create_game(self):
+        """get_or_create_game should get game from db if game_id is set"""
+        self.add_mock('Game')
+
+        result = self.form.get_or_create_game(10, 'myname')
+
+        game = self.mocks['Game'].get_by_id.return_value
+        self.assertEqual(game, result)
+        self.mocks['Game'].get_by_id.assert_called_once_with(
+            self.db, 10)
 
 
 class GameCopyAddFormSqlTestCase(SqlTestCase):

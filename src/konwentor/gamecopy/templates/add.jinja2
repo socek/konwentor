@@ -1,4 +1,5 @@
 {% extends "main.jinja2" %}
+{% from "modal.jinja2" import modal %}
 
 {% block page_head -%}
     Gry na konwencie - Dodawanie
@@ -15,13 +16,14 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6">
-                            {{form.begin()}}
+                            {{form.begin('newgame')}}
                                 {{form.error()}}
-                                {{form.select('game_id')}}
+                                {{form.combobox('game_id')}}
                                 {{form.select('user_id')}}
                                 {{form.select('convent_id')}}
                                 {{form.text('count')}}
                                 {{form.submit('Dodaj')}}
+                                <input type="hidden" name="confirmation" />
                             {{form.end()}}
                         </div>
                     </div>
@@ -29,4 +31,31 @@
             </div>
         </div>
     </div>
+
+    {% macro  title() %}Jesteś pewny, ze chcesz utworzyć nową grę?{% endmacro %}
+    {% macro  btn() %}
+        <a href="#" id="newgame_yes" class="btn btn-danger">Zgadza się!</a>
+    {% endmacro %}
+    {% call modal("confirm_modal", "btn-xs btn-danger", "", title, btn) %}
+        Podana nazwa gry nie została znaleziona. Czy jesteś pewien, że chcesz ją stworzyć?
+    {% endcall %}
+
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $('#newgame').submit(function(event){
+            var target = $(event.target);
+            var value = $('select[name=game_id]', target).val();
+            var confirmation = $('input[name=confirmation]', target).val();
+            if(value == -1 && confirmation == '') {
+                $('#confirm_modal').modal();
+                event.preventDefault();
+            }
+        });
+        $('#newgame_yes').click(function(){
+            var target = $('#newgame');
+            $('input[name=confirmation]', target).val('true');
+            target.submit();
+        });
+    </script>
 {% endblock %}

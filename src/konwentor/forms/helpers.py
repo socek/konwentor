@@ -9,6 +9,9 @@ class FormWidget(Jinja2HelperMany):
         super().__init__(request)
         self.form = form
 
+    def get_id(self, name):
+        return '%s_%s' % (self.form.name, name)
+
     def begin(self, id_=None, style=None):
         data = {}
         data['action'] = getattr(self.form, 'action', None)
@@ -29,10 +32,18 @@ class FormWidget(Jinja2HelperMany):
     def select(self, name, disabled=False, autofocus=False):
         return self._input('select', name, disabled, autofocus)
 
+    def combobox(self, name, disabled=False, autofocus=False):
+        self.request.add_js_link('combobox.js')
+        self.request.add_js(
+            '''$(document).ready(function() {
+                $("#%s").combobox();
+                });''' % (self.get_id(name)))
+        return self.select(name, disabled, autofocus)
+
     def _input(self, input_type, name, disabled=False, autofocus=False):
         data = {}
         data['name'] = name
-        data['id'] = '%s_%s' % (self.form.name, name)
+        data['id'] = self.get_id(name)
         data['label'] = self.form.get_label(name)
         data['error'] = self.form.get_error(name)
         data['message'] = self.form.get_message(name)

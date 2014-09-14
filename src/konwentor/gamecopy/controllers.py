@@ -47,6 +47,8 @@ class GameCopyAddController(GameCopyControllerBase):
         if not self.verify_convent():
             return
 
+        self.db.flush()
+
         form = self.add_form(GameCopyAddForm)
         initial_data = {
             'count': '1',

@@ -18,6 +18,13 @@ class GameCopyAddForm(PostForm):
             validators=[NotEmpty(), IsDigit()])
         field.data = self.get_objects(Game, is_active=True)
         self.addField(field)
+        field = Field(
+            'game_id_sec',
+            validators=[])
+        self.addField(field)
+        self.addField(Field(
+            'confirmation',
+            validators=[]))
 
         field = Field(
             'user_id',
@@ -39,7 +46,7 @@ class GameCopyAddForm(PostForm):
             validators=[NotEmpty(), IsDigit()])
         self.addField(field)
 
-    def get_objects(self, cls, **kwargs):
+    def get_objects(self, cls, other=False, **kwargs):
         objects = [{
             'label': '(Wybierz)',
             'value': '',
@@ -49,10 +56,16 @@ class GameCopyAddForm(PostForm):
                 'label': obj.name,
                 'value': str(obj.id),
             })
+        if other:
+            objects.append({
+                'label': '',
+                'value': '-1',
+            })
         return objects
 
     def submit(self, data):
-        game = Game.get_by_id(self.db, data['game_id'][0])
+        game = self.get_or_create_game(
+            data['game_id'][0], data['game_id_sec'][0])
         user = User.get_by_id(self.db, data['user_id'][0])
         convent = Convent.get_by_id(self.db, data['convent_id'][0])
         count = data['count'][0]
@@ -65,6 +78,12 @@ class GameCopyAddForm(PostForm):
             self.db.commit()
         finally:
             self.db.rollback()
+
+    def get_or_create_game(self, game_id, name):
+        if int(game_id) == -1:
+            return Game.get_or_create(self.db, name=name)
+        else:
+            return Game.get_by_id(self.db, game_id)
 
     def create_gamecopy(self, game, user):
         gamecopy = GameCopy.get_or_create(

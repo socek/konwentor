@@ -343,3 +343,21 @@ table.dataTable thead .sorting:after {
 .panel-yellow a:hover {
     color: #df8a13;
 }
+.custom-combobox {
+    position: relative;
+    display: block;
+}
+.custom-combobox-toggle {
+    position: absolute;
+    top: -1px;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+    height: 34px;
+}
+.custom-combobox-input {
+    margin: 0;
+    padding: 0 0 0 5px;
+    line-height: initial;
+    height: 34px;
+}
