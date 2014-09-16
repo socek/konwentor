@@ -18,7 +18,7 @@
                         <div class="col-lg-6">
                             {{form.begin('newgame')}}
                                 {{form.error()}}
-                                {{form.combobox('game_id')}}
+                                {{form.combobox('game_name')}}
                                 {{form.select('user_id')}}
                                 {{form.select('convent_id')}}
                                 {{form.text('count')}}
@@ -45,9 +45,10 @@
     <script type="text/javascript">
         $('#newgame').submit(function(event){
             var target = $(event.target);
-            var value = $('select[name=game_id]', target).val();
+            var value = $('input[name=game_name]', target).val();
+            var values = $('#GameCopyAddForm_game_name_list').children("li").map(function() {return $(this).text();});
             var confirmation = $('input[name=confirmation]', target).val();
-            if(value == -1 && confirmation == '') {
+            if($.inArray(value, values) == -1 && confirmation == '') {
                 $('#confirm_modal').modal();
                 event.preventDefault();
             }

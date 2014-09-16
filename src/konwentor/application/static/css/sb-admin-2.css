@@ -344,8 +344,8 @@ table.dataTable thead .sorting:after {
     color: #df8a13;
 }
 .custom-combobox {
-    position: relative;
     display: block;
+    padding-top: 1px;
 }
 .custom-combobox-toggle {
     position: absolute;
@@ -356,8 +356,8 @@ table.dataTable thead .sorting:after {
     height: 34px;
 }
 .custom-combobox-input {
-    margin: 0;
-    padding: 0 0 0 5px;
-    line-height: initial;
-    height: 34px;
+    position: relative;
+    display: block;
+    float: left;
+    width: 449px;
 }

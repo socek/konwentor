@@ -38,7 +38,7 @@ class FormWidget(Jinja2HelperMany):
             '''$(document).ready(function() {
                 $("#%s").combobox();
                 });''' % (self.get_id(name)))
-        return self.select(name, disabled, autofocus)
+        return self._input('combobox', name, disabled, autofocus)
 
     def _input(self, input_type, name, disabled=False, autofocus=False):
         data = {}
