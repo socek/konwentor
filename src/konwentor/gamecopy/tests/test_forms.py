@@ -75,22 +75,21 @@ class GameCopyAddFormTest(FormTestCase):
         self.mocks['create_gameentity'].return_value.count = 3
 
         self.form.submit({
-            'game_id': ['1'],
+            'game_name': ['1'],
             'user_id': ['user_id'],
             'convent_id': ['convent_id'],
             'count': ['2'],
-            'game_id_sec': ['game_id_sec'],
         })
 
-        self.mocks['Game'].get_by_id.assert_called_once_with(
-            self.db, '1')
+        self.mocks['Game'].get_or_create.assert_called_once_with(
+            self.db, name='1', is_active=True)
         self.mocks['User'].get_by_id.assert_called_once_with(
             self.db, 'user_id')
         self.mocks['Convent'].get_by_id.assert_called_once_with(
             self.db, 'convent_id')
 
         self.mocks['create_gamecopy'].assert_called_once_with(
-            self.mocks['Game'].get_by_id.return_value,
+            self.mocks['Game'].get_or_create.return_value,
             self.mocks['User'].get_by_id.return_value,
         )
 
@@ -135,27 +134,17 @@ class GameCopyAddFormTest(FormTestCase):
             gamecopy=gamecopy)
         self.db.add.assert_called_once_with(gameentity)
 
-    def test_get_or_create_game_on_bad_id(self):
-        """get_or_create_game should create game if game_id == -1"""
+    def test_get_or_create_game(self):
+        """get_or_create_game should get game from db or create it if not found
+        """
         self.add_mock('Game')
 
-        result = self.form.get_or_create_game(-1, 'myname')
+        result = self.form.get_or_create_game('myname')
 
         game = self.mocks['Game'].get_or_create.return_value
         self.assertEqual(game, result)
         self.mocks['Game'].get_or_create.assert_called_once_with(
-            self.db, name='myname')
-
-    def test_get_or_create_game(self):
-        """get_or_create_game should get game from db if game_id is set"""
-        self.add_mock('Game')
-
-        result = self.form.get_or_create_game(10, 'myname')
-
-        game = self.mocks['Game'].get_by_id.return_value
-        self.assertEqual(game, result)
-        self.mocks['Game'].get_by_id.assert_called_once_with(
-            self.db, 10)
+            self.db, name='myname', is_active=True)
 
 
 class GameCopyAddFormSqlTestCase(SqlTestCase):
@@ -172,7 +161,7 @@ class GameCopyAddFormSqlTestCase(SqlTestCase):
 
         self.request.POST.dict_of_lists.return_value = {
             self.form.form_name_value: [self.form.name, ],
-            'game_id': [str(game.id), ],
+            'game_name': [game.name, ],
             'user_id': [str(user.id), ],
             'convent_id': [str(convent.id), ],
             'count': ['5', ],

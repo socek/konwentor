@@ -2,7 +2,6 @@ $(document).ready(function() {
     $.widget("custom.combobox", {
         _create: function() {
             this.wrapper = $("<span>")
-                .addClass("custom-combobox")
                 .insertAfter(this.element);
             this._createAutocomplete();
             this._createShowAllButton();
@@ -14,7 +13,6 @@ $(document).ready(function() {
                     minLength: 0,
                     source: $.proxy(this, "_source")
                 })
-                .addClass('custom-combobox-input')
                 .tooltip({
                     tooltipClass: "ui-state-highlight"
                 });

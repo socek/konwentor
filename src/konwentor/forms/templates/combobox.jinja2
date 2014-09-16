@@ -1,5 +1,5 @@
-<div class="form-group">
-    <label style="display: block;">{{label}}:</label>
+<div class="form-group custom-combobox">
+    <label>{{label}}:</label>
     {%- if error %} <div class="label label-danger">{{message}}</div>{%- endif -%}
 
     <input
@@ -9,7 +9,7 @@
             id="{{id}}"
             {%- if disabled %} disabled=disabled {% endif -%}
             >
-    <ul id="{{id}}_list" style="display: none;">
+    <ul id="{{id}}_list">
         {%- for element in field.data -%}
             {%- if element['value'] != '' -%}
                 <li>{{element['label']}}</li>

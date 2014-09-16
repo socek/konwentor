@@ -127,8 +127,7 @@ class FormWidgetTestCase(TestCase):
         self.form.get_value.assert_called_once_with('myname')
 
     def test_combobox(self):
-        # result = self.form.combobox('myname', 1, 2)
-        self._input_test('select', 'combobox')
+        self._input_test('combobox')
 
         self.request.add_js_link.assert_called_once_with('combobox.js')
         self.request.add_js.assert_called_once_with(

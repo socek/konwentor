@@ -1,5 +1,4 @@
 {% extends "main.jinja2" %}
-{% from "modal.jinja2" import modal %}
 
 {% block page_head -%}
     Gry na konwencie - Dodawanie
@@ -32,31 +31,24 @@
         </div>
     </div>
 
-    {% macro  title() %}Jesteś pewny, ze chcesz utworzyć nową grę?{% endmacro %}
-    {% macro  btn() %}
-        <a href="#" id="newgame_yes" class="btn btn-danger">Zgadza się!</a>
-    {% endmacro %}
-    {% call modal("confirm_modal", "btn-xs btn-danger", "", title, btn) %}
-        Podana nazwa gry nie została znaleziona. Czy jesteś pewien, że chcesz ją stworzyć?
-    {% endcall %}
-
+{% include "./widget/gc_modal.jinja2" %}
 {% endblock %}
+
 {% block js %}
+    <script src="{{static('/js/form_confirm.js')}}"></script>
     <script type="text/javascript">
-        $('#newgame').submit(function(event){
-            var target = $(event.target);
-            var value = $('input[name=game_name]', target).val();
-            var values = $('#GameCopyAddForm_game_name_list').children("li").map(function() {return $(this).text();});
-            var confirmation = $('input[name=confirmation]', target).val();
-            if($.inArray(value, values) == -1 && confirmation == '') {
-                $('#confirm_modal').modal();
-                event.preventDefault();
+        $(document).ready(function() {
+            var is_confirm_needed = function(target) {
+                var value = $('input[name=game_name]', target).val();
+                var values = $('#GameCopyAddForm_game_name_list')
+                    .children("li")
+                    .map(function() {
+                        return $(this).text();
+                    });
+                return ($.inArray(value, values) == -1);
             }
-        });
-        $('#newgame_yes').click(function(){
-            var target = $('#newgame');
-            $('input[name=confirmation]', target).val('true');
-            target.submit();
+            init_form_confirm('#newgame', is_confirm_needed);
         });
     </script>
 {% endblock %}
+

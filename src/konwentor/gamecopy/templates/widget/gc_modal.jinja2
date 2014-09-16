@@ -1,0 +1,11 @@
+{% from "modal.jinja2" import modal %}
+
+{% macro  title() %}Jesteś pewny, ze chcesz utworzyć nową grę?{% endmacro %}
+
+{% macro  btn() %}
+    <a href="#" id="newgame_yes" class="btn btn-danger">Zgadza się!</a>
+{% endmacro %}
+
+{% call modal("newgame_confirm_modal", "btn-xs btn-danger", "", title, btn) %}
+    Podana nazwa gry nie została znaleziona. Czy jesteś pewien, że chcesz ją stworzyć?
+{% endcall %}
