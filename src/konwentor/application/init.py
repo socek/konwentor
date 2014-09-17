@@ -1,11 +1,11 @@
 from hatak.application import Application
 from hatak.plugins.haml import HamlPlugin
+from hatak.plugins.statics import StaticPlugin
 
 from konwentor.auth.plugin import AuthPlugin
 from konwentor.menu.plugin import MenuPlugin
 from konwentor.flashmsg.plugin import FlashMessagePlugin
 from konwentor.forms.plugin import FormPlugin
-from konwentor.statics.plugin import StaticPlugin
 
 from .routes import make_routes
 
