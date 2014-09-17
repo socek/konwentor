@@ -129,7 +129,7 @@ class FormWidgetTestCase(TestCase):
     def test_combobox(self):
         self._input_test('combobox')
 
-        self.request.add_js_link.assert_called_once_with('combobox.js')
+        self.request.add_js_link.assert_called_once_with('/js/combobox.js')
         self.request.add_js.assert_called_once_with(
             '''$(document).ready(function() {
                 $("#%s").combobox();
