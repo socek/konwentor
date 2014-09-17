@@ -8,7 +8,7 @@ init_form_confirm = function(id, is_confirm_needed) {
         }
     });
     $(id + '_yes').click(function(){
-        var target = $(id + '_confirm_modal');
+        var target = $(id);
         $('input[name=confirmation]', target).val('true');
         target.submit();
     });
