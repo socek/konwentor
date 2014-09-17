@@ -15,6 +15,10 @@ class StaticHelper(Jinja2HelperMany):
     def css_links(self):
         return self.request.registry['css_links']
 
+    @property
+    def js_codes(self):
+        return self.request.registry['js_codes']
+
     def add_js_link(self, link):
         self.request.add_js_link(link)
         return ''
@@ -24,7 +28,10 @@ class StaticHelper(Jinja2HelperMany):
         return ''
 
     def generate_js_links(self):
-        return self.render_for('js_link', {'links': self.js_links})
+        return self.render_for('js_links', {'links': self.js_links})
 
     def generate_css_links(self):
         return self.render_for('css_links', {'links': self.css_links})
+
+    def generate_js_codes(self):
+        return self.render_for('js_codes', {'codes': self.js_codes})
