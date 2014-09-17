@@ -1,3 +1,4 @@
+{{static.add_js_link('/js/form_confirm.js')}}
 {% extends "main.jinja2" %}
 
 {% block page_head -%}
@@ -35,7 +36,6 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{static('/js/form_confirm.js')}}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             var is_confirm_needed = function(target) {

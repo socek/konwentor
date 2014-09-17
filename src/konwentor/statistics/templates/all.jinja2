@@ -1,5 +1,5 @@
 {% extends "main.jinja2" %}
-{% from "table.jinja2" import jsinit, mainjs with context%}
+{% from "table.jinja2" import jsinit with context %}
 {% from "konwentor.statistics:templates/main_table.jinja2" import main_table %}
 {% from "konwentor.statistics:templates/games_table.jinja2" import games_table %}
 {% from "konwentor.statistics:templates/people_table.jinja2" import people_table %}
@@ -15,7 +15,6 @@
 {% endblock %}
 
 {% block js %}
-    {{mainjs()}}
     <script type="text/javascript">
     $(document).ready(function() {
         $('#statistics_table').dataTable({

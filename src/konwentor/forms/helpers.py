@@ -33,7 +33,7 @@ class FormWidget(Jinja2HelperMany):
         return self._input('select', name, disabled, autofocus)
 
     def combobox(self, name, disabled=False, autofocus=False):
-        self.request.add_js_link('combobox.js')
+        self.request.add_js_link('/js/combobox.js')
         self.request.add_js(
             '''$(document).ready(function() {
                 $("#%s").combobox();

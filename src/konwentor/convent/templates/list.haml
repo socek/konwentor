@@ -1,5 +1,5 @@
 -extends "main.jinja2"
--from "table.jinja2" import table
+-from "table.jinja2" import table with context
 
 -block page_head
   Konwenty
@@ -24,8 +24,6 @@
         =convent.end()
 
 -block js
-  %script src="{{static('/js/plugins/dataTables/jquery.dataTables.js')}}"
-  %script src="{{static('/js/plugins/dataTables/dataTables.bootstrap.js')}}"
   %script type="text/javascript"
     $(document).ready(function() {
       $('#convents_table').dataTable({

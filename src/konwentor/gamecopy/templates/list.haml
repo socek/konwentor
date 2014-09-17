@@ -1,5 +1,5 @@
 -extends "main.jinja2"
--from "table.jinja2" import table
+-from "table.jinja2" import table with context
 
 -block page_head
   Gry na konwencie
@@ -32,8 +32,6 @@
         =game.move_to_box()
 
 -block js
-  %script src="{{static('/js/plugins/dataTables/jquery.dataTables.js')}}"
-  %script src="{{static('/js/plugins/dataTables/dataTables.bootstrap.js')}}"
   %script type="text/javascript"
     $(document).ready(function() {
         $('#games_on_convent_table').dataTable({

@@ -11,28 +11,7 @@
 
     <title>Konwentor</title>
 
-    <!-- Bootstrap Core CSS -->
-    <link href="{{static('/css/bootstrap.min.css')}}" rel="stylesheet">
-
-    <!-- MetisMenu CSS -->
-    <link href="{{static('/css/plugins/metisMenu/metisMenu.min.css')}}" rel="stylesheet">
-
-    <!-- Timeline CSS -->
-    <link href="{{static('/css/plugins/timeline.css')}}" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="{{static('/css/sb-admin-2.css')}}" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="{{static('/css/plugins/morris.css')}}" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="{{static('/font-awesome-4.1.0/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
-
-    <!-- jQuery Ui -->
-    <link href="{{static('/css/jquery-ui.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{static('/css/jquery-ui.structure.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{static('/css/jquery-ui.theme.min.css')}}" rel="stylesheet" type="text/css">
+    {{static.generate_css_links()}}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,35 +20,16 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    {% for link in _css_links -%}
-        <link href="{{static('/css/'+ link)}}" rel="stylesheet" type="text/css">
-    {%- endfor %}
-
 </head>
 <body>
     {% block body %}{% endblock %}
-    <!-- jQuery Version 1.11.0 -->
-    <script src="{{static('/js/jquery-1.11.0.js')}}"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{static('/js/bootstrap.min.js')}}"></script>
-
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="{{static('/js/plugins/metisMenu/metisMenu.min.js')}}"></script>
-
-    <!-- jQuery UI -->
-    <script src="{{static('/js/jquery-ui.min.js')}}"></script>
-
-    {% for link in _js_links -%}
-        <script src="{{static('/js/' + link)}}"></script>
-    {%- endfor %}
+    {{static.generate_js_links()}}
 
     <script type="text/javascript">
     {%- for code in _js_codes %}{{code|safe}}{% endfor -%}
     </script>
 
     {% block js %}{% endblock %}
-    <!-- Custom Theme JavaScript -->
-    <script src="{{static('/js/sb-admin-2.js')}}"></script>
 </body>
 </html>

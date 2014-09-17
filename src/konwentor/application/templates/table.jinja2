@@ -1,3 +1,6 @@
+{{static.add_js_link('/js/plugins/dataTables/jquery.dataTables.js')}}
+{{static.add_js_link('/js/plugins/dataTables/dataTables.bootstrap.js')}}
+
 {% macro table(title, header, objects, id) -%}
     <div class="row">
         <div class="col-lg-12">
@@ -29,10 +32,6 @@
     </div>
 {%- endmacro %}
 
-{% macro mainjs() %}
-    <script src="{{static('/js/plugins/dataTables/jquery.dataTables.js')}}"></script>
-    <script src="{{static('/js/plugins/dataTables/dataTables.bootstrap.js')}}"></script>
-{% endmacro %}
 
 {% macro jsinit(id, bFilter="true", order=None) %}
     <script type="text/javascript">
