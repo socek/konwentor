@@ -1,8 +1,9 @@
 from sqlalchemy.orm.exc import NoResultFound
 from formskit import Field
 
+from konwentor.convent.forms import IdExists
 from konwentor.forms.models import PostForm
-from konwentor.forms.validators import NotEmpty
+from konwentor.forms.validators import NotEmpty, IsDigit
 
 from .models import Game
 
@@ -26,9 +27,26 @@ class GameAddForm(PostForm):
         except NoResultFound:
             return True
 
+    def set_values(self, element, data):
+        element.name = data['name'][0]
+
     def submit(self, data):
-        element = Game(name=data['name'][0])
+        element = Game()
+        self.set_values(element, data)
         self.db.add(element)
+        self.db.commit()
+
+
+class GameEditForm(GameAddForm):
+
+    def createForm(self):
+        super().createForm()
+        self.addField(Field('id', validators=[NotEmpty(), IsDigit()]))
+
+        self.addFormValidator(IdExists(Game))
+
+    def submit(self, data):
+        self.set_values(self.model, data)
         self.db.commit()
 
 

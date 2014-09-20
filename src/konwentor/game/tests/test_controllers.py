@@ -6,7 +6,8 @@ from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy.orm.exc import NoResultFound
 
 from ..controllers import GameListController, GameAddController, GameDelete
-from ..forms import GameDeleteForm, GameAddForm
+from ..controllers import GameEditController
+from ..forms import GameDeleteForm, GameAddForm, GameEditForm
 
 
 class GameListControllerTests(ControllerTestCase):
@@ -142,3 +143,66 @@ class GameDeleteSqlControllerTests(SqlControllerTestCase):
 
         obj = self.data['element']
         self.assertEqual(fixtures['Game']['first'], obj)
+
+
+class GameEditControllerTests(ControllerTestCase):
+    prefix_from = GameEditController
+
+    def setUp(self):
+        super().setUp()
+        self.matchdict['obj_id'] = '10'
+        self.add_mock_object(self.controller, 'add_form', auto_spec=True)
+        self.form = self.mocks['add_form'].return_value
+        self.add_mock_object(self.controller, 'redirect', auto_spec=True)
+        self.add_mock_object(self.controller, 'get_game')
+        self.game = self.mocks['get_game'].return_value
+        self.defaults = {
+            'id': [self.game.id],
+            'name': [self.game.name],
+        }
+
+    def test_make_success(self):
+        """GameEdit should add GameEditForm form and redirect to
+        game:list if the form is successed"""
+        self.form.return_value = True
+
+        self.controller.make()
+
+        self.form.assert_called_once_with(self.defaults)
+        self.mocks['add_form'].assert_called_once_with(GameEditForm)
+        self.mocks['redirect'].assert_called_once_with('game:list')
+
+    def test_make_fail(self):
+        """GameEdit should add GameAddForm form  and do nothing
+        if the form is failed or not used"""
+        self.form.return_value = False
+
+        self.controller.make()
+
+        self.form.assert_called_once_with(self.defaults)
+        self.mocks['add_form'].assert_called_once_with(GameEditForm)
+        self.assertFalse(self.mocks['redirect'].called)
+
+
+class SqlGameEditControllerTests(SqlControllerTestCase):
+    prefix_from = GameEditController
+
+    def test_get_game_when_game_exists(self):
+        game = fixtures['Game']['first']
+        self.matchdict['obj_id'] = str(game.id)
+
+        result = self.controller.get_game()
+
+        self.assertEqual(game, self.data['game'])
+        self.assertEqual(game, result)
+
+    def test_get_game_when_game_not_exists(self):
+        self.matchdict['obj_id'] = '1231231231231124'
+
+        self.assertRaises(HTTPNotFound, self.controller.get_game)
+
+    def test_get_game_when_game_is_inactive(self):
+        game = fixtures['Game']['inactive']
+        self.matchdict['obj_id'] = str(game.id)
+
+        self.assertRaises(HTTPNotFound, self.controller.get_game)

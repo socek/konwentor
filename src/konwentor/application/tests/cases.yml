@@ -32,10 +32,13 @@ konwentor:
                 - GameAddControllerTests
                 - GameDeleteControllerTests
                 - GameDeleteSqlControllerTests
+                - GameEditControllerTests
+                - SqlGameEditControllerTests
             test_forms:
                 - GameAddFormTest
                 - SqlGameAddFormTests
                 - SqlGameDeleteFormTests
+                - SqlGameEditFormTests
     statistics:
         tests:
             test_controllers:

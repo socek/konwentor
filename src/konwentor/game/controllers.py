@@ -3,7 +3,7 @@ from pyramid.httpexceptions import HTTPNotFound
 from hatak.controller import Controller
 
 from .models import Game
-from .forms import GameAddForm, GameDeleteForm
+from .forms import GameAddForm, GameDeleteForm, GameEditForm
 
 
 class GameListController(Controller):
@@ -30,6 +30,36 @@ class GameListController(Controller):
             form({
                 'obj_id': [game.id, ],
             })
+
+
+class GameEditController(Controller):
+
+    template = 'game:edit.haml'
+    permissions = [('game', 'add'), ]
+    menu_highlighted = 'game:list'
+
+    def make(self):
+        form = self.add_form(GameEditForm)
+        game = self.get_game()
+
+        defaults = {
+            'id': [game.id],
+            'name': [game.name],
+        }
+
+        if form(defaults) is True:
+            self.redirect('game:list')
+
+    def get_game(self):
+        try:
+            obj_id = int(self.matchdict['obj_id'])
+            self.data['game'] = (
+                self.query(Game)
+                .filter_by(id=obj_id, is_active=True)
+                .one())
+            return self.data['game']
+        except NoResultFound:
+            raise HTTPNotFound()
 
 
 class GameAddController(Controller):

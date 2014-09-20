@@ -24,6 +24,9 @@
         <tr>
             <td>{{game.name}}</td>
             <td>
+                {% if user.has_access_to_route('game:edit') -%}
+                    <a href="{{route('game:edit', obj_id=game.id)}}" class="btn btn-xs btn-primary">Edytuj</a>&nbsp;
+                {%- endif %}
                 {% if user.has_access_to_route('game:delete') -%}
                     {% macro  title() %}Jesteś pewny, ze chcesz usunąc tę grę?{% endmacro %}
                     {% macro  btn() %}

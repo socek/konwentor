@@ -44,6 +44,10 @@ game:
             controller: GameDelete
             route: game:delete
             url: /game/delete/{obj_id:\d+}
+        -
+            controller: GameEditController
+            route: game:edit
+            url: /game/edit/{obj_id:\d+}
 
 gamecopy:
     controllers:

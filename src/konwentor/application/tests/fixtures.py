@@ -37,6 +37,7 @@ class Fixtures(Base):
         self._create(Game, name='third')
 
         self._create(Game, name='dynamic1')
+        self._create(Game, name='inactive', is_active=False)
 
     def create_copies(self):
         self._create_nameless(
