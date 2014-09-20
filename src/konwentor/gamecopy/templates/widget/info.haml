@@ -1,0 +1,23 @@
+-if game.players_description
+  %div
+    %strong
+      Gracze:&nbsp;
+    =game.players_description
+
+-if game.time_description
+  %div
+    %strong
+      Czas:&nbsp;
+    =game.time_description
+
+-if game.type_description
+  %div
+    %strong
+      Typ:&nbsp;
+    =game.type_description
+
+-if game.difficulty
+  %div
+    %strong
+      Trudność:&nbsp;
+    =game.difficulty

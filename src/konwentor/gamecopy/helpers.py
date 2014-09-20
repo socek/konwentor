@@ -64,3 +64,8 @@ class GameEntityWidget(HamlHelperMany):
             return 'success'
         else:
             return "info"
+
+    def info(self):
+        return self.render_for('info', {
+            'game': self.obj.Game,
+        })

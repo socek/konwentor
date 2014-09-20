@@ -83,6 +83,7 @@ class GameCopyListController(GameCopyControllerBase):
         return (
             self.query(
                 GameEntity,
+                Game,
                 Game.name,
                 User.name.label('author_name'))
             .join(GameCopy).join(Game).join(User)

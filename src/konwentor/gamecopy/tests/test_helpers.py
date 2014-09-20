@@ -123,3 +123,13 @@ class GameEntityWidgetTests(TestCase):
             '',
             self.widget.move_to_box()
         )
+
+    def test_info(self):
+        self.assertEqual(
+            self.mocks['render_for'].return_value,
+            self.widget.info()
+        )
+        self.mocks['render_for'].assert_called_once_with(
+            'info', {
+                'game': self.obj.Game,
+            })

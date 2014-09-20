@@ -10,6 +10,7 @@
     %th << Właściciel
     %th << Ilość kopii
     %th << Wypożyczono
+    %th << Info
     %th << Akcje
 
 
@@ -27,6 +28,8 @@
       %td -> =game.author_name
       %td -> =game.count
       %td -> =game.active_borrows_len
+      %td -> =game.info()
+
       %td
         =game.borrow()
         =game.move_to_box()

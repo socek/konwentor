@@ -42,10 +42,16 @@ class GameEditController(Controller):
         form = self.add_form(GameEditForm)
         game = self.get_game()
 
-        defaults = {
-            'id': [game.id],
-            'name': [game.name],
-        }
+        value_names = [
+            'id',
+            'name',
+            'players_description',
+            'time_description',
+            'type_description',
+            'difficulty']
+        defaults = {}
+        for name in value_names:
+            defaults[name] = [getattr(game, name)]
 
         if form(defaults) is True:
             self.redirect('game:list')

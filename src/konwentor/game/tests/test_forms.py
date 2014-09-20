@@ -1,4 +1,5 @@
 from hatak.tests.cases import FormTestCase, SqlFormTestCase
+from hatak.tests.fixtures import fixtures
 from sqlalchemy.orm.exc import NoResultFound
 
 from ..forms import GameAddForm, GameDeleteForm, GameEditForm
@@ -43,11 +44,22 @@ class SqlGameAddFormTests(SqlFormTestCase):
 
     def test_submit(self):
         """GameAddForm should create new game."""
-        self.form.submit({'name': ['my dynamic name']})
+        data = {
+            'name': ['my dynamic name', ],
+            'players_description': ['players description'],
+            'time_description': ['time description'],
+            'type_description': ['type description'],
+            'difficulty': ['difficulty'],
+        }
+        self.form.submit(data)
 
         self.db.flush()
         game = self.query(Game).filter_by(name='my dynamic name').one()
         self.assertEqual('my dynamic name', game.name)
+        self.assertEqual('players description', game.players_description)
+        self.assertEqual('time description', game.time_description)
+        self.assertEqual('type description', game.type_description)
+        self.assertEqual('difficulty', game.difficulty)
 
         self.db.delete(game)
         self.db.commit()
@@ -93,11 +105,38 @@ class SqlGameEditFormTests(SqlFormTestCase, GameFactoryMixin):
             self._create_fake_post({
                 'name': ['my mega name', ],
                 'id': [str(self.game.id), ],
+                'players_description': ['players description'],
+                'time_description': ['time description'],
+                'type_description': ['type description'],
+                'difficulty': ['difficulty'],
             })
             self.assertEqual(True, self.form({'id': [str(self.game.id)]}))
 
             self.db.flush()
             game = self.query(Game).filter_by(id=self.game.id).one()
             self.assertEqual('my mega name', game.name)
+            self.assertEqual('players description', game.players_description)
+            self.assertEqual('time description', game.time_description)
+            self.assertEqual('type description', game.type_description)
+            self.assertEqual('difficulty', game.difficulty)
         finally:
             self.delete_game()
+
+    def test_validate_uniqe_name_when_name_found(self):
+        """validate_uniqe_name should return False if name is in database"""
+        name = 'second'
+        self.form.model = fixtures['Game']['first']
+        self.assertEqual(False, self.form.validate_uniqe_name(name))
+
+    def test_validate_uniqe_name_when_name_not_found(self):
+        """validate_uniqe_name should return True if name is not in database"""
+        name = 'New name'
+        self.form.model = fixtures['Game']['first']
+        self.assertEqual(True, self.form.validate_uniqe_name(name))
+
+    def test_validate_uniqe_name_when_name_not_changed(self):
+        """validate_uniqe_name should return True if name is in database but
+        has the same id as our model"""
+        name = 'first'
+        self.form.model = fixtures['Game']['first']
+        self.assertEqual(True, self.form.validate_uniqe_name(name))

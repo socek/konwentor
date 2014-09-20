@@ -159,6 +159,10 @@ class GameEditControllerTests(ControllerTestCase):
         self.defaults = {
             'id': [self.game.id],
             'name': [self.game.name],
+            'players_description': [self.game.players_description],
+            'time_description': [self.game.time_description],
+            'type_description': [self.game.type_description],
+            'difficulty': [self.game.difficulty],
         }
 
     def test_make_success(self):
