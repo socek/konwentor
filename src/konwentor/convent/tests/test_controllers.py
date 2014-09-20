@@ -3,12 +3,11 @@ from hatak.tests.cases import ControllerTestCase, SqlControllerTestCase
 from hatak.tests.fixtures import fixtures
 from pyramid.httpexceptions import HTTPNotFound
 
-from ..forms import ConventAddForm, ConventDeleteForm
-from konwentor.convent.controllers import ConventDelete
-from konwentor.convent.controllers import ChooseConventController
-from konwentor.convent.controllers import ConventListController, ConventAdd
-from konwentor.convent.controllers import EndConventController
-from konwentor.convent.controllers import StartConventController
+from ..controllers import ConventDelete, ChooseConventController
+from ..controllers import ConventEditController
+from ..controllers import ConventListController, ConventAdd
+from ..controllers import EndConventController, StartConventController
+from ..forms import ConventAddForm, ConventDeleteForm, ConventEditForm
 
 
 class ConventListControllerTests(ControllerTestCase):
@@ -65,29 +64,96 @@ class ConventListControllerSqlTests(SqlControllerTestCase):
 class ConventAddTests(ControllerTestCase):
     prefix_from = ConventAdd
 
+    def setUp(self):
+        super().setUp()
+        self.add_mock_object(self.controller, 'add_form', auto_spec=True)
+        self.form = self.mocks['add_form'].return_value
+        self.add_mock_object(self.controller, 'redirect', auto_spec=True)
+
     def test_make_success(self):
         """ConventAdd should add ConventAddForm form and redirect to
         convent:list if the form is successed"""
-        self.add_mock_object(self.controller, 'add_form', auto_spec=True)
-        form = self.mocks['add_form'].return_value
-        form.return_value = True
-        self.add_mock_object(self.controller, 'redirect', auto_spec=True)
+        self.form.return_value = True
 
         self.controller.make()
 
         self.mocks['add_form'].assert_called_once_with(ConventAddForm)
         self.mocks['redirect'].assert_called_once_with('convent:list')
+        self.form.assert_called_once_with()
 
     def test_make_fail(self):
         """ConventAdd should add ConventAddForm form  and do nothing
         if the form is failed or not used"""
-        self.add_mock_object(self.controller, 'add_form', auto_spec=True)
-        form = self.mocks['add_form'].return_value
-        form.return_value = False
+        self.form.return_value = False
 
         self.controller.make()
 
         self.mocks['add_form'].assert_called_once_with(ConventAddForm)
+        self.assertFalse(self.mocks['redirect'].called)
+        self.form.assert_called_once_with()
+
+
+class ConventEditControllerTests(ControllerTestCase):
+    prefix_from = ConventEditController
+
+    def setUp(self):
+        super().setUp()
+        self.matchdict['obj_id'] = '10'
+        self.add_mock_object(self.controller, 'add_form', auto_spec=True)
+        self.form = self.mocks['add_form'].return_value
+        self.add_mock_object(self.controller, 'redirect', auto_spec=True)
+        self.add_mock_object(self.controller, 'get_convent')
+        self.convent = self.mocks['get_convent'].return_value
+        self.defaults = {
+            'id': [self.convent.id],
+            'name': [self.convent.name],
+        }
+
+    def test_make_success(self):
+        """ConventEdit should add ConventEditForm form and redirect to
+        convent:list if the form is successed"""
+        self.form.return_value = True
+
+        self.controller.make()
+
+        self.form.assert_called_once_with(self.defaults)
+        self.mocks['add_form'].assert_called_once_with(ConventEditForm)
+        self.mocks['redirect'].assert_called_once_with('convent:list')
+
+    def test_make_fail(self):
+        """ConventEdit should add ConventAddForm form  and do nothing
+        if the form is failed or not used"""
+        self.form.return_value = False
+
+        self.controller.make()
+
+        self.form.assert_called_once_with(self.defaults)
+        self.mocks['add_form'].assert_called_once_with(ConventEditForm)
+        self.assertFalse(self.mocks['redirect'].called)
+
+
+class SqlConventEditControllerTests(SqlControllerTestCase):
+    prefix_from = ConventEditController
+
+    def test_get_convent_when_convent_exists(self):
+        convent = fixtures['Convent']['first']
+        self.matchdict['obj_id'] = str(convent.id)
+
+        result = self.controller.get_convent()
+
+        self.assertEqual(convent, self.data['convent'])
+        self.assertEqual(convent, result)
+
+    def test_get_convent_when_convent_not_exists(self):
+        self.matchdict['obj_id'] = '1231231231231124'
+
+        self.assertRaises(HTTPNotFound, self.controller.get_convent)
+
+    def test_get_convent_when_convent_is_inactive(self):
+        convent = fixtures['Convent']['inactive']
+        self.matchdict['obj_id'] = str(convent.id)
+
+        self.assertRaises(HTTPNotFound, self.controller.get_convent)
 
 
 class ConventDeleteTests(ControllerTestCase):

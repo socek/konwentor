@@ -61,6 +61,12 @@ class ConventWidget(Jinja2HelperMany):
             'form': FormWidget(self.request, form)
         })
 
+    @has_access_to_route('convent:add')
+    def edit(self):
+        return self.render_for('edit_button', {
+            'url': self.route('convent:edit', obj_id=self.convent.id),
+        })
+
     def start(self):
         if self.convent.is_user_able_to_start(self.user):
             return self.render_for('start_button', {

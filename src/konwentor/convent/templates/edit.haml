@@ -1,0 +1,20 @@
+-extends "main.jinja2"
+
+-block page_head
+  Konwenty - Edytowanie
+
+-block content
+  %div.row
+    %div.col-lg-12
+      %div.panel.panel-default
+        %div.panel-heading
+          Edytuj konwent
+        %div.panel-body
+          %div.row
+            %div.col-lg-6
+              =form.begin()
+              =form.error()
+              =form.hidden('id')
+              =form.text('name')
+              =form.submit('Zapisz')
+              =form.end()

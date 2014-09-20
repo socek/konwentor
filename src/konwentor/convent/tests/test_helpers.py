@@ -74,6 +74,18 @@ class ConventWidgetTests(TestCase):
             self.mocks['render_for'].return_value,
             result)
 
+    def test_edit(self):
+        result = self.widget.edit()
+        self.mocks['render_for'].assert_called_once_with(
+            'edit_button',
+            {
+                'url': self.route('convent:edit', obj_id=self.convent.id)
+            }
+        )
+        self.assertEqual(
+            self.mocks['render_for'].return_value,
+            result)
+
     def test_delete(self):
         self.add_mock('ConventDeleteForm')
         self.add_mock('FormWidget')

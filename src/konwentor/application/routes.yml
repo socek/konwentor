@@ -24,6 +24,10 @@ convent:
             controller: EndConventController
             route: convent:end
             url: /convent/end/{obj_id:\d+}
+        -
+            controller: ConventEditController
+            route: convent:edit
+            url: /convent/edit/{obj_id:\d+}
 
 game:
     controllers:

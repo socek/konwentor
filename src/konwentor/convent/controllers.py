@@ -4,7 +4,7 @@ from pyramid.httpexceptions import HTTPNotFound
 from hatak.controller import Controller
 
 from .models import Convent
-from .forms import ConventAddForm, ConventDeleteForm
+from .forms import ConventAddForm, ConventDeleteForm, ConventEditForm
 from .helpers import ConventWidget
 
 
@@ -39,6 +39,36 @@ class ConventAdd(Controller):
 
         if form() is True:
             self.redirect('convent:list')
+
+
+class ConventEditController(Controller):
+
+    template = 'convent:edit.haml'
+    permissions = [('convent', 'add'), ]
+    menu_highlighted = 'convent:list'
+
+    def make(self):
+        form = self.add_form(ConventEditForm)
+        convent = self.get_convent()
+
+        defaults = {
+            'id': [convent.id],
+            'name': [convent.name],
+        }
+
+        if form(defaults) is True:
+            self.redirect('convent:list')
+
+    def get_convent(self):
+        try:
+            obj_id = int(self.matchdict['obj_id'])
+            self.data['convent'] = (
+                self.query(Convent)
+                .filter_by(id=obj_id, is_active=True)
+                .one())
+            return self.data['convent']
+        except NoResultFound:
+            raise HTTPNotFound()
 
 
 class ConventDelete(Controller):
