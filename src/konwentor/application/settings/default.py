@@ -1,4 +1,5 @@
 def make_settings(settings, paths):
+    settings['debug'] = False
     settings['jinja2.directories'] = 'konwentor.application:templates'
     settings['authentication_debug'] = False
     settings['session.type'] = 'file'
