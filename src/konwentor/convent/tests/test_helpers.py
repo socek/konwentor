@@ -1,5 +1,5 @@
 from mock import MagicMock
-from hatak.tests.cases import TestCase
+from hatak.plugins.toster.cases import TestCase
 
 from ..helpers import has_access_to_route, ConventWidget
 
@@ -65,7 +65,7 @@ class ConventWidgetTests(TestCase):
     def test_switch(self):
         result = self.widget.switch()
         self.mocks['render_for'].assert_called_once_with(
-            'choose_button',
+            'choose_button.jinja2',
             {
                 'url': self.route('convent:choose', obj_id=self.convent.id)
             }
@@ -77,7 +77,7 @@ class ConventWidgetTests(TestCase):
     def test_edit(self):
         result = self.widget.edit()
         self.mocks['render_for'].assert_called_once_with(
-            'edit_button',
+            'edit_button.jinja2',
             {
                 'url': self.route('convent:edit', obj_id=self.convent.id)
             }
@@ -93,7 +93,7 @@ class ConventWidgetTests(TestCase):
         result = self.widget.delete()
 
         self.mocks['render_for'].assert_called_once_with(
-            'delete_button',
+            'delete_button.jinja2',
             {
                 'url': self.route('convent:delete', obj_id=self.convent.id),
                 'form': self.mocks['FormWidget'].return_value,
@@ -124,7 +124,7 @@ class ConventWidgetTests(TestCase):
             self.widget.user)
 
         self.mocks['render_for'].assert_called_once_with(
-            'start_button',
+            'start_button.jinja2',
             {
                 'url': self.route('convent:start', obj_id=self.convent.id),
                 'convent': self.widget.convent,
@@ -149,7 +149,7 @@ class ConventWidgetTests(TestCase):
             self.widget.user)
 
         self.mocks['render_for'].assert_called_once_with(
-            'end_button',
+            'end_button.jinja2',
             {
                 'url': self.route('convent:end', obj_id=self.convent.id),
             }
@@ -171,7 +171,7 @@ class ConventWidgetTests(TestCase):
         result = self.widget.ended_warning()
 
         self.mocks['render_for'].assert_called_once_with(
-            'ended_warning',
+            'ended_warning.jinja2',
             {}
         )
         self.assertEqual(

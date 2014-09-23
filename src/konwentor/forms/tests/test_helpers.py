@@ -1,6 +1,6 @@
 from mock import MagicMock
 
-from hatak.tests.cases import TestCase
+from hatak.plugins.toster.cases import TestCase
 
 from ..helpers import FormWidget
 
@@ -28,7 +28,7 @@ class FormWidgetTestCase(TestCase):
 
         self.assert_render_for(
             result,
-            'begin',
+            'begin.jinja2',
             {
                 'action': self.form.action,
                 'id': 'fake_id',
@@ -42,7 +42,7 @@ class FormWidgetTestCase(TestCase):
 
         self.assert_render_for(
             result,
-            'end',
+            'end.jinja2',
             {
             },)
 
@@ -52,7 +52,7 @@ class FormWidgetTestCase(TestCase):
 
         self.assert_render_for(
             result,
-            'hidden',
+            'hidden.jinja2',
             {
                 'name': 'myname',
                 'value': self.form.get_value.return_value
@@ -66,7 +66,7 @@ class FormWidgetTestCase(TestCase):
 
         self.assert_render_for(
             result,
-            'submit',
+            'submit.jinja2',
             {
                 'label': 'mylabel',
                 'class': 'myclass',
@@ -79,7 +79,7 @@ class FormWidgetTestCase(TestCase):
 
         self.assert_render_for(
             result,
-            'error',
+            'error.jinja2',
             {
                 'error': self.form.error,
                 'message': self.form.message,
@@ -108,7 +108,7 @@ class FormWidgetTestCase(TestCase):
 
         self.assert_render_for(
             result,
-            name,
+            name + '.jinja2',
             {
                 'name': 'myname',
                 'id': '%s_myname' % (self.form.name),

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from hatak.tests.cases import TestCase
+from hatak.plugins.toster.cases import TestCase
 
 from ..models import GameBorrow
 

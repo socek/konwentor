@@ -1,7 +1,7 @@
 from mock import create_autospec, MagicMock
 
 from hatak.controller import Controller
-from hatak.tests.cases import TestCase
+from hatak.plugins.toster.cases import TestCase
 
 from konwentor.forms.helpers import FormWidget
 from konwentor.forms.plugin import FormControllerPlugin

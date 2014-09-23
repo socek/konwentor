@@ -1,5 +1,5 @@
 from mock import MagicMock
-from hatak.tests.cases import ModelTestCase
+from hatak.plugins.toster.cases import ModelTestCase
 
 from ..models import Convent
 

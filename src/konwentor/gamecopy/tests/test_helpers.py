@@ -1,5 +1,5 @@
 from mock import MagicMock
-from hatak.tests.cases import TestCase
+from hatak.plugins.toster.cases import TestCase
 
 from ..helpers import GameEntityWidget
 
@@ -67,7 +67,7 @@ class GameEntityWidgetTests(TestCase):
             self.widget.borrow()
         )
         self.mocks['render_for'].assert_called_once_with(
-            'borrow_button',
+            'borrow_button.haml',
             {
                 'url': self.route.return_value,
             })
@@ -99,7 +99,7 @@ class GameEntityWidgetTests(TestCase):
         )
 
         self.mocks['render_for'].assert_called_once_with(
-            'move_to_box_button',
+            'move_to_box_button.haml',
             {
                 'url': self.route.return_value,
                 'game': self.widget,
@@ -130,6 +130,6 @@ class GameEntityWidgetTests(TestCase):
             self.widget.info()
         )
         self.mocks['render_for'].assert_called_once_with(
-            'info', {
+            'info.haml', {
                 'game': self.obj.Game,
             })

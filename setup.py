@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'hatak==0.1.3',
+    'hatak==0.2',
     'waitress',
     'pyramid_debugtoolbar',
     'pyramid_beaker',
@@ -33,8 +33,7 @@ if __name__ == '__main__':
                         '[paste.app_factory]',
                         'main = konwentor.application.init:main',
                         '[console_scripts]',
-                        'hatak_tests = konwentor.application.tests.runner:run',
-                        'hatak_alembic = konwentor.application.alembic:run'
+                        'konwentor_manage = konwentor.application.manage:run',
                         ''])
           ),
           )

@@ -1,4 +1,4 @@
-from hatak.tests.fixtures import Fixtures as Base
+from hatak.plugins.toster.fixtures import Fixtures as Base
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
 from konwentor.auth.models import User

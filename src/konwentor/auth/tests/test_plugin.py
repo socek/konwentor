@@ -1,4 +1,4 @@
-from hatak.tests.cases import TestCase, ControllerPluginTests
+from hatak.plugins.toster.cases import TestCase, ControllerPluginTests
 from mock import MagicMock
 from pyramid.httpexceptions import HTTPForbidden
 

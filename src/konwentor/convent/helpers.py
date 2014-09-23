@@ -43,7 +43,7 @@ class ConventWidget(Jinja2HelperMany):
 
     @has_access_to_route('convent:choose')
     def switch(self):
-        return self.render_for('choose_button', {
+        return self.render_for('choose_button.jinja2', {
             'url': self.route('convent:choose', obj_id=self.convent.id)
         })
 
@@ -56,20 +56,20 @@ class ConventWidget(Jinja2HelperMany):
             'obj_id': [self.convent.id, ],
         })
 
-        return self.render_for('delete_button', {
+        return self.render_for('delete_button.jinja2', {
             'url': self.route('convent:delete', obj_id=self.convent.id),
             'form': FormWidget(self.request, form)
         })
 
     @has_access_to_route('convent:add')
     def edit(self):
-        return self.render_for('edit_button', {
+        return self.render_for('edit_button.jinja2', {
             'url': self.route('convent:edit', obj_id=self.convent.id),
         })
 
     def start(self):
         if self.convent.is_user_able_to_start(self.user):
-            return self.render_for('start_button', {
+            return self.render_for('start_button.jinja2', {
                 'url': self.route('convent:start', obj_id=self.convent.id),
                 'convent': self.convent,
             })
@@ -78,7 +78,7 @@ class ConventWidget(Jinja2HelperMany):
 
     def end(self):
         if self.convent.is_user_able_to_end(self.user):
-            return self.render_for('end_button', {
+            return self.render_for('end_button.jinja2', {
                 'url': self.route('convent:end', obj_id=self.convent.id),
             })
         else:
@@ -86,7 +86,7 @@ class ConventWidget(Jinja2HelperMany):
 
     def ended_warning(self):
         if self.convent.state == 'ended':
-            return self.render_for('ended_warning', {})
+            return self.render_for('ended_warning.jinja2', {})
         else:
             return ''
 

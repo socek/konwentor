@@ -1,10 +1,10 @@
-from hatak.plugins.haml import HamlHelperMany
+from hatak.plugins.jinja2 import Jinja2HelperMany
 
 
 from konwentor.convent.helpers import has_access_to_route
 
 
-class GameEntityWidget(HamlHelperMany):
+class GameEntityWidget(Jinja2HelperMany):
     prefix = 'konwentor.gamecopy:templates/widget'
 
     def __init__(self, request, obj):
@@ -34,7 +34,7 @@ class GameEntityWidget(HamlHelperMany):
     @has_access_to_route('gameborrow:add')
     def borrow(self):
         if self.obj.GameEntity.is_avalible():
-            return self.render_for('borrow_button', {
+            return self.render_for('borrow_button.haml', {
                 'url': self.route(
                     'gameborrow:add',
                     obj_id=self.obj.GameEntity.id),
@@ -45,7 +45,7 @@ class GameEntityWidget(HamlHelperMany):
     @has_access_to_route('gamecopy:movetobox')
     def move_to_box(self):
         if not self.obj.GameEntity.is_in_box:
-            return self.render_for('move_to_box_button', {
+            return self.render_for('move_to_box_button.haml', {
                 'url': self.route(
                     'gamecopy:movetobox',
                     obj_id=self.obj.GameEntity.id,
@@ -66,6 +66,6 @@ class GameEntityWidget(HamlHelperMany):
             return "info"
 
     def info(self):
-        return self.render_for('info', {
+        return self.render_for('info.haml', {
             'game': self.obj.Game,
         })

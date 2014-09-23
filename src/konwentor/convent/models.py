@@ -1,4 +1,4 @@
-from hatak.db import Base
+from hatak.plugins.sql import Base
 from sqlalchemy import Column, Integer, String, Boolean
 
 

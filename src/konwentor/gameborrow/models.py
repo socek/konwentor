@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from hatak.db import Base
+from hatak.plugins.sql import Base
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean, String
 from sqlalchemy.orm import relationship
 

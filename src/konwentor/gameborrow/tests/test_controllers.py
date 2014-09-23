@@ -1,5 +1,5 @@
-from hatak.tests.cases import ControllerTestCase, SqlControllerTestCase
-from hatak.tests.fixtures import fixtures
+from hatak.plugins.toster.cases import ControllerTestCase, SqlControllerTestCase
+from hatak.plugins.toster.fixtures import fixtures
 from pyramid.httpexceptions import HTTPNotFound
 
 from ..controllers import GameBorrowAddController, GameBorrowListController

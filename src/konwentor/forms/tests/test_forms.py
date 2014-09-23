@@ -1,4 +1,4 @@
-from hatak.tests.cases import FormTestCase
+from hatak.plugins.toster.cases import FormTestCase
 
 from ..models import PostForm
 

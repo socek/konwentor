@@ -1,5 +1,5 @@
-from hatak.tests.cases import FormTestCase, SqlFormTestCase
-from hatak.tests.fixtures import fixtures
+from hatak.plugins.toster.cases import FormTestCase, SqlFormTestCase
+from hatak.plugins.toster.fixtures import fixtures
 from sqlalchemy.orm.exc import NoResultFound
 
 from ..forms import GameAddForm, GameDeleteForm, GameEditForm

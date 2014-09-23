@@ -1,5 +1,5 @@
 from mock import MagicMock
-from hatak.tests.cases import TestCase
+from hatak.plugins.toster.cases import TestCase
 
 from ..models import MenuObject
 

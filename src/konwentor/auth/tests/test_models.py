@@ -1,6 +1,6 @@
 from mock import MagicMock
 from hatak.controller import Controller
-from hatak.tests.cases import ModelTestCase
+from hatak.plugins.toster.cases import ModelTestCase
 from mock import create_autospec
 
 from konwentor.auth.models import User, NotLoggedUser
