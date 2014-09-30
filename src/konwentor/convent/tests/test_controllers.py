@@ -1,6 +1,6 @@
 from mock import MagicMock
-from hatak.plugins.toster.cases import ControllerTestCase, SqlControllerTestCase
-from hatak.plugins.toster.fixtures import fixtures
+from haplugin.toster import ControllerTestCase, SqlControllerTestCase
+from haplugin.toster.fixtures import fixtures
 from pyramid.httpexceptions import HTTPNotFound
 
 from ..controllers import ConventDelete, ChooseConventController

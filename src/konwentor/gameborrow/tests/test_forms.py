@@ -1,5 +1,5 @@
-from hatak.plugins.toster.cases import FormTestCase, SqlFormTestCase
-from hatak.plugins.toster.fixtures import fixtures
+from haplugin.toster import FormTestCase, SqlFormTestCase
+from haplugin.toster.fixtures import fixtures
 
 from ..forms import GameBorrowAddForm
 

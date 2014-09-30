@@ -65,6 +65,7 @@ konwentor:
                 - NotLoggedUserTestCase
             test_plugin:
                 - AuthPluginTests
+                - UserRequestPluginTests
                 - AuthControllerPluginTests
     forms:
         tests:

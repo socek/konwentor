@@ -7,7 +7,6 @@ install_requires = [
     'psycopg2',
     'formskit==0.4.1',
     'uwsgi',
-    'soktest',
     'coverage',
 
     'hatak_logging',
@@ -17,6 +16,8 @@ install_requires = [
     'hatak_alembic',
     'hatak_beaker',
     'hatak_debugtoolbar',
+    'hatak_toster',
+    'hatak_statics',
 ]
 dependency_links = [
 

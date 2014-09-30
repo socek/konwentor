@@ -1,4 +1,4 @@
-from hatak.plugins.toster.cases import ModelTestCase
+from haplugin.toster import ModelTestCase
 
 from ..models import Game
 

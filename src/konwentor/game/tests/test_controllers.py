@@ -1,6 +1,5 @@
-from hatak.plugins.toster.cases import ControllerTestCase
-from hatak.plugins.toster.cases import SqlControllerTestCase
-from hatak.plugins.toster.fixtures import fixtures
+from haplugin.toster import ControllerTestCase, SqlControllerTestCase
+from haplugin.toster.fixtures import fixtures
 from mock import MagicMock
 from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy.orm.exc import NoResultFound

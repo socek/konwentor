@@ -1,5 +1,5 @@
 from mock import MagicMock
-from hatak.plugins.toster.cases import ModelTestCase
+from haplugin.toster import ModelTestCase
 
 from ..models import GameEntity
 

@@ -1,6 +1,6 @@
 from mock import MagicMock
 
-from hatak.plugins.toster.cases import TestCase
+from haplugin.toster import TestCase
 
 from ..helpers import FormWidget
 

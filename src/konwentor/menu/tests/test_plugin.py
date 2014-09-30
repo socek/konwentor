@@ -1,4 +1,4 @@
-from hatak.plugins.toster.cases import TestCase
+from haplugin.toster import TestCase
 from mock import MagicMock
 
 from ..helpers import MenuWidget

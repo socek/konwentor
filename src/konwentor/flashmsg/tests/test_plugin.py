@@ -1,4 +1,4 @@
-from hatak.plugins.toster.cases import PluginTestCase, ControllerPluginTests
+from haplugin.toster import PluginTestCase, ControllerPluginTests
 
 from ..plugin import FlashMessagePlugin, FlashMessageControllerPlugin
 from ..helpers import FlashMessageWidget

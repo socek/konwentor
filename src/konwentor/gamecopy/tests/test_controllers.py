@@ -1,9 +1,8 @@
 from mock import MagicMock
 from sqlalchemy.orm.exc import NoResultFound
 
-from hatak.plugins.toster.cases import ControllerTestCase
-from hatak.plugins.toster.cases import SqlControllerTestCase
-from hatak.plugins.toster.fixtures import fixtures
+from haplugin.toster import ControllerTestCase, SqlControllerTestCase
+from haplugin.toster.fixtures import fixtures
 
 from ..controllers import EndController
 from ..controllers import GameCopyAddController, GameCopyToBoxController

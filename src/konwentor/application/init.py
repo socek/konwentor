@@ -1,6 +1,4 @@
 from hatak.application import Application
-from hatak.plugins.toster.plugin import TosterPlugin
-from hatak.plugins.statics.plugin import StaticPlugin
 
 from haplugin.logging import LoggingPlugin
 from haplugin.jinja2 import Jinja2Plugin
@@ -9,6 +7,8 @@ from haplugin.sql import SqlPlugin
 from haplugin.alembic import AlembicPlugin
 from haplugin.beaker import BeakerPlugin
 from haplugin.debugtoolbar import DebugtoolbarPlugin
+from haplugin.toster import TosterPlugin
+from haplugin.statics import StaticPlugin
 
 from konwentor.auth.plugin import AuthPlugin
 from konwentor.flashmsg.plugin import FlashMessagePlugin

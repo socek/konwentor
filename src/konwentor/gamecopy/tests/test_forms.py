@@ -1,7 +1,7 @@
 from mock import MagicMock, create_autospec
 
-from hatak.plugins.toster.cases import FormTestCase, SqlTestCase
-from hatak.plugins.toster.fixtures import fixtures
+from haplugin.toster import FormTestCase, SqlTestCase
+from haplugin.toster.fixtures import fixtures
 
 from ..forms import GameCopyAddForm
 from ..models import GameCopy, GameEntity

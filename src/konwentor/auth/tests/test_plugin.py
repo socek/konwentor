@@ -1,8 +1,8 @@
-from hatak.plugins.toster.cases import TestCase, ControllerPluginTests
+from haplugin.toster import TestCase, ControllerPluginTests
 from mock import MagicMock
 from pyramid.httpexceptions import HTTPForbidden
 
-from ..plugin import AuthPlugin, AuthControllerPlugin
+from ..plugin import AuthPlugin, AuthControllerPlugin, UserRequestPlugin
 
 
 class AuthPluginTests(TestCase):
@@ -14,11 +14,13 @@ class AuthPluginTests(TestCase):
         self.plugin = AuthPlugin()
         self.plugin.init(self.app)
 
-    def test_after_config(self):
-        self.plugin.after_config()
+    def test_add_request_plugins(self):
+        self.add_mock_object(self.plugin, 'add_request_plugin')
 
-        self.app.config.add_request_method.assert_called_once_with(
-            self.plugin.get_user, 'user', reify=True)
+        self.plugin.add_request_plugins()
+
+        self.mocks['add_request_plugin'].assert_called_once_with(
+            UserRequestPlugin)
 
     def test_add_unpackers(self):
         cache = {'runned': False}
@@ -40,6 +42,15 @@ class AuthPluginTests(TestCase):
 
         self.assertEqual([AuthControllerPlugin], plugins)
 
+
+class UserRequestPluginTests(TestCase):
+    prefix_from = UserRequestPlugin
+
+    def setUp(self):
+        super().setUp()
+        self.plugin = self.prefix_from()
+        self.plugin.init(self.request)
+
     def test_get_user(self):
         """get_user should get user_id from session and return User object with
         the same id"""
@@ -48,7 +59,7 @@ class AuthPluginTests(TestCase):
         }
         self.add_mock('User')
 
-        result = self.plugin.get_user(self.request)
+        result = self.plugin.return_once()
 
         self.assertEqual(
             self.mocks['User'].get_by_id.return_value,
@@ -61,7 +72,7 @@ class AuthPluginTests(TestCase):
         self.request.session = {}
         self.add_mock('NotLoggedUser')
 
-        result = self.plugin.get_user(self.request)
+        result = self.plugin.return_once()
 
         self.assertEqual(self.mocks['NotLoggedUser'].return_value, result)
 
@@ -101,4 +112,3 @@ class AuthControllerPluginTests(ControllerPluginTests):
 
         self.plugin.user.assign_request.assert_called_once_with(
             self.controller.request)
-
