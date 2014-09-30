@@ -1,4 +1,4 @@
-from hatak.plugins.jinja2 import Jinja2HelperMany
+from haplugin.jinja2 import Jinja2HelperMany
 
 
 from konwentor.convent.helpers import has_access_to_route

@@ -1,4 +1,4 @@
-from hatak.plugins.jinja2 import Jinja2HelperMany
+from haplugin.jinja2 import Jinja2HelperMany
 
 
 class FormWidget(Jinja2HelperMany):

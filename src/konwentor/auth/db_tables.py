@@ -1,4 +1,4 @@
-from hatak.plugins.sql import Base
+from haplugin.sql import Base
 from sqlalchemy import Column, Integer, ForeignKey, Table
 
 users_2_permissions = Table(

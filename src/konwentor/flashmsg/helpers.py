@@ -1,4 +1,4 @@
-from hatak.plugins.jinja2 import Jinja2HelperSingle
+from haplugin.jinja2 import Jinja2HelperSingle
 
 from .models import FlashMessage
 

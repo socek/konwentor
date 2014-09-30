@@ -4,17 +4,19 @@ from setuptools import setup, find_packages
 install_requires = [
     'hatak==0.2',
     'waitress',
-    'pyramid_debugtoolbar',
-    'pyramid_beaker',
-    'pyramid_jinja2',
     'psycopg2',
     'formskit==0.4.1',
     'uwsgi',
     'soktest',
     'coverage',
-    'alembic',
-    'pyyaml',
-    'Hamlish-Jinja',
+
+    'hatak_logging',
+    'hatak_jinja2',
+    'hatak_haml',
+    'hatak_sql',
+    'hatak_alembic',
+    'hatak_beaker',
+    'hatak_debugtoolbar',
 ]
 dependency_links = [
 

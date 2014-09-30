@@ -1,7 +1,7 @@
 from hashlib import sha1
 import os
 
-from hatak.plugins.sql import Base
+from haplugin.sql import Base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 

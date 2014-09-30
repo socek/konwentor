@@ -1,4 +1,4 @@
-from hatak.plugins.plugin import Plugin
+from hatak.plugin import Plugin
 from hatak.controller import ControllerPlugin
 
 from konwentor.forms.helpers import FormWidget

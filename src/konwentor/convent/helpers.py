@@ -1,4 +1,4 @@
-from hatak.plugins.jinja2 import Jinja2HelperMany
+from haplugin.jinja2 import Jinja2HelperMany
 
 from konwentor.forms.helpers import FormWidget
 from .forms import ConventDeleteForm

@@ -1,6 +1,6 @@
 from pyramid.httpexceptions import HTTPForbidden
 
-from hatak.plugins.plugin import Plugin
+from hatak.plugin import Plugin, RequestPlugin
 from hatak.controller import ControllerPlugin
 
 from .models import User, NotLoggedUser
@@ -8,24 +8,27 @@ from .models import User, NotLoggedUser
 
 class AuthPlugin(Plugin):
 
-    def after_config(self):
-        self.config.add_request_method(self.get_user, 'user', reify=True)
+    def add_request_plugins(self):
+        self.add_request_plugin(UserRequestPlugin)
 
     def add_unpackers(self, unpacker):
         unpacker.add('user', lambda req: req.user)
 
-    def get_user(self, request):
-        session = request.session
-        db = request.db
-
-        user_id = session.get('user_id', None)
-        if user_id:
-            return User.get_by_id(db, user_id)
-        else:
-            return NotLoggedUser()
-
     def add_controller_plugins(self, plugins):
         plugins.append(AuthControllerPlugin)
+
+
+class UserRequestPlugin(RequestPlugin):
+
+    def __init__(self):
+        super().__init__('user')
+
+    def return_once(self):
+        user_id = self.request.session.get('user_id', None)
+        if user_id:
+            return User.get_by_id(self.request.db, user_id)
+        else:
+            return NotLoggedUser()
 
 
 class AuthControllerPlugin(ControllerPlugin):
