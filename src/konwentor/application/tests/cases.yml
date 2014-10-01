@@ -69,12 +69,8 @@ konwentor:
                 - AuthControllerPluginTests
     forms:
         tests:
-            test_forms:
-                - PostFormTest
             test_helpers:
                 - FormWidgetTestCase
-            test_plugin:
-                - FormControllerPluginTest
     gamecopy:
         tests:
             test_forms:

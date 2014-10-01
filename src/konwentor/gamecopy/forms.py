@@ -1,6 +1,6 @@
 from formskit import Field
 
-from konwentor.forms.models import PostForm
+from haplugin.formskit import PostForm
 from konwentor.forms.validators import NotEmpty, IsDigit
 from konwentor.auth.models import User
 from konwentor.convent.models import Convent

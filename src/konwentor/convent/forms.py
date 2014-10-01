@@ -2,7 +2,7 @@ from formskit import Field
 from formskit.formvalidators import FormValidator
 from sqlalchemy.orm.exc import NoResultFound
 
-from konwentor.forms.models import PostForm
+from haplugin.formskit import PostForm
 from konwentor.forms.validators import NotEmpty, IsDigit
 
 from .models import Convent

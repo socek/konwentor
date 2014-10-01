@@ -18,6 +18,7 @@ install_requires = [
     'hatak_debugtoolbar',
     'hatak_toster',
     'hatak_statics',
+    'hatak_formskit',
 ]
 dependency_links = [
 

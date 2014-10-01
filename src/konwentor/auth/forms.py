@@ -2,7 +2,7 @@ from formskit import Field
 from formskit.formvalidators import FormValidator
 
 from konwentor.forms.validators import NotEmpty
-from konwentor.forms.models import PostForm
+from haplugin.formskit import PostForm
 
 from .models import User
 
