@@ -98,13 +98,3 @@ konwentor:
             test_plugin:
                 - MenuPluginTests
                 - MenuControllerPluginTests
-    flashmsg:
-        tests:
-            test_models:
-                - FlashMessageTests
-            test_helpers:
-                - FlashMessageWidgetTests
-            test_plugin:
-                - FlashMessagePluginTests
-                - FlashMessageControllerPluginTests
-                - AddFlashmsgRequestPluginTests
