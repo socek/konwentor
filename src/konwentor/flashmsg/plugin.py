@@ -1,4 +1,4 @@
-from hatak.plugin import Plugin
+from hatak.plugin import Plugin, RequestPlugin
 from hatak.controller import ControllerPlugin
 
 from .helpers import FlashMessageWidget
@@ -13,18 +13,19 @@ class FlashMessagePlugin(Plugin):
     def add_unpackers(self, unpacker):
         unpacker.add('add_flashmsg', lambda req: req.add_flashmsg)
 
-    def after_config(self):
-        self.config.add_request_method(
-            self.add_flashmsg,
-            'add_flashmsg',
-            reify=True)
+    def add_request_plugins(self):
+        self.add_request_plugin(AddFlashmsgRequestPlugin)
 
-    def add_flashmsg(self, request):
-        def add(*args, **kwargs):
-            data = request.session.get('flash_messages', [])
-            data.append(FlashMessage(*args, **kwargs).to_dict())
-            request.session['flash_messages'] = data
-        return add
+
+class AddFlashmsgRequestPlugin(RequestPlugin):
+
+    def __init__(self):
+        super().__init__('add_flashmsg')
+
+    def __call__(self, *args, **kwargs):
+        data = self.request.session.get('flash_messages', [])
+        data.append(FlashMessage(*args, **kwargs).to_dict())
+        self.request.session['flash_messages'] = data
 
 
 class FlashMessageControllerPlugin(ControllerPlugin):

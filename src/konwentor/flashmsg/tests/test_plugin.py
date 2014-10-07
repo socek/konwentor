@@ -1,6 +1,7 @@
-from haplugin.toster import PluginTestCase, ControllerPluginTests
+from haplugin.toster import PluginTestCase, ControllerPluginTests, TestCase
 
 from ..plugin import FlashMessagePlugin, FlashMessageControllerPlugin
+from ..plugin import AddFlashmsgRequestPlugin
 from ..helpers import FlashMessageWidget
 
 
@@ -13,20 +14,28 @@ class FlashMessagePluginTests(PluginTestCase):
 
         self.assertEqual([FlashMessageControllerPlugin], plugins)
 
-    def test_after_config(self):
-        self.plugin.after_config()
+    def test_add_request_plugins(self):
+        self.add_mock_object(self.plugin, 'add_request_plugin')
 
-        self.config.add_request_method.assert_called_once_with(
-            self.plugin.add_flashmsg,
-            'add_flashmsg',
-            reify=True)
+        self.plugin.add_request_plugins()
 
-    def test_add_flashmsg(self):
+        self.mocks['add_request_plugin'].assert_called_once_with(
+            AddFlashmsgRequestPlugin)
+
+
+class AddFlashmsgRequestPluginTests(TestCase):
+    prefix_from = AddFlashmsgRequestPlugin
+
+    def setUp(self):
+        super().setUp()
+        self.plugin = self.prefix_from()
+        self.plugin.init(self.request)
+
+    def test_call(self):
         """add_flashmsg should add flash message data to session"""
         self.request.session = {}
-        add = self.plugin.add_flashmsg(self.request)
 
-        add('message', 'type')
+        self.plugin('message', 'type')
 
         self.assertEqual(
             [{'message': 'message', 'msgtype': 'type'}],

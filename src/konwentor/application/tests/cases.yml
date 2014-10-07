@@ -107,3 +107,4 @@ konwentor:
             test_plugin:
                 - FlashMessagePluginTests
                 - FlashMessageControllerPluginTests
+                - AddFlashmsgRequestPluginTests
