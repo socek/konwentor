@@ -14,10 +14,12 @@ class MenuPluginTests(TestCase):
 
     def test_add_controller_plugins(self):
         """add_controller_plugins should add MenuControllerPlugin to plugins"""
-        plugins = []
-        self.plugin.add_controller_plugins(plugins)
+        self.add_mock_object(self.plugin, 'add_controller_plugin')
 
-        self.assertEqual([MenuControllerPlugin], plugins)
+        self.plugin.add_controller_plugins()
+
+        self.mocks['add_controller_plugin'].assert_called_once_with(
+            MenuControllerPlugin)
 
 
 class MenuControllerPluginTests(TestCase):
@@ -26,7 +28,8 @@ class MenuControllerPluginTests(TestCase):
     def setUp(self):
         super().setUp()
         self.controller = MagicMock()
-        self.plugin = self.prefix_from(self.controller)
+        self.parent = MagicMock()
+        self.plugin = self.prefix_from(self.parent, self.controller)
 
     def test_make_helpers_success(self):
         """make_helpers should add MenuWidget to helpers if

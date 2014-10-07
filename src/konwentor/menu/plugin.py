@@ -6,8 +6,8 @@ from .helpers import MenuWidget
 
 class MenuPlugin(Plugin):
 
-    def add_controller_plugins(self, plugins):
-        plugins.append(MenuControllerPlugin)
+    def add_controller_plugins(self):
+        self.add_controller_plugin(MenuControllerPlugin)
 
 
 class MenuControllerPlugin(ControllerPlugin):

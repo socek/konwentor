@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'hatak==0.2',
+    'hatak==0.2.1',
     'waitress',
     'psycopg2',
     'formskit==0.4.1',

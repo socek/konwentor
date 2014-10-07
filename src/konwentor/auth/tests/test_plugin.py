@@ -33,14 +33,17 @@ class AuthPluginTests(TestCase):
             self.assertEqual(req.user, result)
         unpacker = MagicMock()
         unpacker.add = unpacker_add
-        self.plugin.add_unpackers(unpacker)
+        self.plugin.app.unpacker = unpacker
+        self.plugin.add_unpackers()
         self.assertEqual(True, cache['runned'])
 
     def test_add_controller_plugins(self):
-        plugins = []
-        self.plugin.add_controller_plugins(plugins)
+        self.add_mock_object(self.plugin, 'add_controller_plugin')
 
-        self.assertEqual([AuthControllerPlugin], plugins)
+        self.plugin.add_controller_plugins()
+
+        self.mocks['add_controller_plugin'].assert_called_once_with(
+            AuthControllerPlugin)
 
 
 class UserRequestPluginTests(TestCase):

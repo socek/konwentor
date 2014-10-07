@@ -11,11 +11,11 @@ class AuthPlugin(Plugin):
     def add_request_plugins(self):
         self.add_request_plugin(UserRequestPlugin)
 
-    def add_unpackers(self, unpacker):
-        unpacker.add('user', lambda req: req.user)
+    def add_unpackers(self):
+        self.unpacker.add('user', lambda req: req.user)
 
-    def add_controller_plugins(self, plugins):
-        plugins.append(AuthControllerPlugin)
+    def add_controller_plugins(self):
+        self.add_controller_plugin(AuthControllerPlugin)
 
 
 class UserRequestPlugin(RequestPlugin):
