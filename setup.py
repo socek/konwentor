@@ -20,6 +20,7 @@ install_requires = [
     'hatak_statics',
     'hatak_formskit',
     'hatak_flashmsg',
+    'hatak_auth',
 ]
 dependency_links = [
 

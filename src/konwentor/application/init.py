@@ -10,11 +10,11 @@ from haplugin.debugtoolbar import DebugtoolbarPlugin
 from haplugin.toster import TosterPlugin
 from haplugin.statics import StaticPlugin
 from haplugin.flashmsg import FlashMessagePlugin
+from haplugin.auth import AuthPlugin
 
 from konwentor.forms.helpers import FormWidget
 from haplugin.formskit import FormPlugin
 
-from konwentor.auth.plugin import AuthPlugin
 from konwentor.menu.plugin import MenuPlugin
 
 from konwentor.application.tests.fixtures import Fixtures

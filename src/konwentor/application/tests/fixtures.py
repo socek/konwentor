@@ -2,9 +2,9 @@ from haplugin.toster import Fixtures as Base
 
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
-from konwentor.auth.models import User
 from konwentor.gamecopy.models import GameCopy, GameEntity
 from konwentor.gameborrow.models import GameBorrow
+from konwentor.auth.models import User
 
 
 class Fixtures(Base):
