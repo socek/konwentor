@@ -6,6 +6,7 @@ def make_settings(settings, paths):
     settings['session.key'] = 'needtochangethis'
     settings['session.secret'] = 'needtochangethistoo'
     settings['session.cookie_on_exception'] = True
+    settings['auth_redirect'] = 'convent:list'
 
     paths['session.data_dir'] = ["%(data)s", 'sessions', 'data']
     paths['session.lock_dir'] = ["%(data)s", 'sessions', 'lock']

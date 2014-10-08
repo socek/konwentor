@@ -10,15 +10,12 @@ class LoginController(Controller):
 
     def make(self):
         if self.user.is_logged():
-            self.redirect('convent:list')
+            self.redirect(self.settings['auth_redirect'])
             return
 
-        self.form = LoginForm(self.request)
-        if self.form() is True:
-            self.redirect('convent:list')
-
-    def make_helpers(self):
-        self.add_helper('form', LoginFormWidget, self.form)
+        form = self.add_form(LoginForm, widget=LoginFormWidget)
+        if form() is True:
+            self.redirect(self.settings['auth_redirect'])
 
 
 class ForbiddenController(Controller):

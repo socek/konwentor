@@ -3,6 +3,7 @@ from mock import MagicMock
 from pyramid.httpexceptions import HTTPForbidden
 
 from ..plugin import AuthPlugin, AuthControllerPlugin, UserRequestPlugin
+from ..plugin import UserClassRequestPlugin
 
 
 class AuthPluginTests(TestCase):
@@ -19,8 +20,10 @@ class AuthPluginTests(TestCase):
 
         self.plugin.add_request_plugins()
 
-        self.mocks['add_request_plugin'].assert_called_once_with(
-            UserRequestPlugin)
+        self.assertEqual(2, self.mocks['add_request_plugin'].call_count)
+        self.mocks['add_request_plugin'].assert_any_call(UserRequestPlugin)
+        self.mocks['add_request_plugin'].assert_any_call(
+            UserClassRequestPlugin)
 
     def test_add_unpackers(self):
         cache = {'runned': False}
@@ -51,7 +54,9 @@ class UserRequestPluginTests(TestCase):
 
     def setUp(self):
         super().setUp()
+        self.parent = MagicMock()
         self.plugin = self.prefix_from()
+        self.plugin.set_parent(self.parent)
         self.plugin.init(self.request)
 
     def test_get_user(self):
@@ -60,24 +65,37 @@ class UserRequestPluginTests(TestCase):
         self.request.session = {
             'user_id': 100,
         }
-        self.add_mock('User')
+        self.parent.User.get_by_id.reset_mock()
 
         result = self.plugin.return_once()
 
         self.assertEqual(
-            self.mocks['User'].get_by_id.return_value,
+            self.parent.User.get_by_id.return_value,
             result)
-        self.mocks['User'].get_by_id.assert_called_once_with(self.db, 100)
+        self.parent.User.get_by_id.assert_called_once_with(self.db, 100)
 
     def test_get_user_fake(self):
         """get_user should return NotLoggedUser object if no user_id found in
         session"""
         self.request.session = {}
-        self.add_mock('NotLoggedUser')
 
         result = self.plugin.return_once()
 
-        self.assertEqual(self.mocks['NotLoggedUser'].return_value, result)
+        self.assertEqual(self.parent.NotLoggedUser.return_value, result)
+
+
+class UserClassRequestPluginTests(TestCase):
+    prefix_from = UserClassRequestPlugin
+
+    def setUp(self):
+        super().setUp()
+        self.parent = MagicMock()
+        self.plugin = self.prefix_from()
+        self.plugin.set_parent(self.parent)
+        self.plugin.init(self.request)
+
+    def test_return_once(self):
+        self.assertEqual(self.parent.User, self.plugin.return_once())
 
 
 class AuthControllerPluginTests(ControllerPluginTests):

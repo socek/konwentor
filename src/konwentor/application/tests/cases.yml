@@ -66,6 +66,7 @@ konwentor:
             test_plugin:
                 - AuthPluginTests
                 - UserRequestPluginTests
+                - UserClassRequestPluginTests
                 - AuthControllerPluginTests
     forms:
         tests:

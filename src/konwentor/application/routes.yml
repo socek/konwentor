@@ -79,17 +79,6 @@ gameborrow:
             route: gameborrow:return
             url: /game/borrows/return/{obj_id:\d+}
 
-auth:
-    controllers:
-        -
-            controller: LoginController
-            route: auth:login
-            url: /login
-        -
-            controller: LogoutController
-            route: auth:logout
-            url: /logout
-
 statistics:
     controllers:
         -

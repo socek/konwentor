@@ -1,10 +1,8 @@
 from formskit import Field
 from formskit.formvalidators import FormValidator
+from formskit.validators import NotEmpty
 
-from konwentor.forms.validators import NotEmpty
 from haplugin.formskit import PostForm
-
-from .models import User
 
 
 class EmailMustExists(FormValidator):
@@ -15,12 +13,10 @@ class EmailMustExists(FormValidator):
         db = self.form.db
 
         email = self.form.get_value('email')
-        user = db.query(User).filter_by(email=email).first()
-        if user is None:
-            return False
-        else:
-            self.form.user = user
-            return True
+        user_cls = self.form.request.user_cls
+        user = db.query(user_cls).filter_by(email=email).first()
+        self.form.user = user
+        return not user is None
 
 
 class LoginForm(PostForm):
@@ -34,7 +30,10 @@ class LoginForm(PostForm):
         self.addFormValidator(EmailMustExists())
 
     def overalValidation(self, data):
-        self.user = self.db.query(User).filter_by(email=data['email'][0]).one()
+        user_cls = self.request.user_cls
+        self.user = (
+            self.db.query(user_cls).filter_by(email=data['email'][0]).one()
+        )
         if self.user.validate_password(data['password'][0]):
             return True
         else:

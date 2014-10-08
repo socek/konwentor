@@ -1,6 +1,6 @@
 from jinja2.exceptions import TemplateNotFound
 
-from konwentor.forms.helpers import FormWidget
+from haplugin.formskit.helpers import FormWidget
 
 
 class LoginFormWidget(FormWidget):
