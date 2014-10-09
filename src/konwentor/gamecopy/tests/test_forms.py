@@ -1,6 +1,6 @@
 from mock import MagicMock, create_autospec
 
-from haplugin.toster import FormTestCase, SqlTestCase
+from haplugin.toster import FormTestCase, SqlFormTestCase
 from haplugin.toster.fixtures import fixtures
 
 from ..forms import GameCopyAddForm
@@ -147,7 +147,7 @@ class GameCopyAddFormTest(FormTestCase):
             self.db, name='myname', is_active=True)
 
 
-class GameCopyAddFormSqlTestCase(SqlTestCase):
+class GameCopyAddFormSqlTestCase(SqlFormTestCase):
 
     prefix_from = GameCopyAddForm
 

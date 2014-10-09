@@ -20,7 +20,9 @@ def make_settings(settings, paths):
     paths['tests_yaml'] = ['%(project_path)s', 'tests', 'cases.yml']
 
     paths['sqlite_db'] = ["%(data)s", 'database.db']
-    settings['db:url'] = 'sqlite:///%(sqlite_db)s' % paths
+    settings['db:type'] = 'sqlite'
+    settings['db:db'] = '%(sqlite_db)s' % paths
+    settings['db:url'] = '%(db:type)s:///%(db:db)s'
 
     paths['alembic:versions'] = 'alembic'
     paths['alembic:ini'] = ['%(data)s', 'alembic.ini']

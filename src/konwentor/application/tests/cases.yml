@@ -58,16 +58,6 @@ konwentor:
             test_forms:
                 - GameBorrowAddFormTest
                 - SqlGameBorrowAddFormTest
-    auth:
-        tests:
-            test_models:
-                - UserTestCase
-                - NotLoggedUserTestCase
-            test_plugin:
-                - AuthPluginTests
-                - UserRequestPluginTests
-                - UserClassRequestPluginTests
-                - AuthControllerPluginTests
     forms:
         tests:
             test_helpers:
