@@ -8,24 +8,32 @@ def make_settings(settings, paths):
     settings['session.cookie_on_exception'] = True
     settings['auth_redirect'] = 'convent:list'
 
-    paths['session.data_dir'] = ["%(data)s", 'sessions', 'data']
-    paths['session.lock_dir'] = ["%(data)s", 'sessions', 'lock']
+    paths['session'] = {
+        'data_dir': ["%(data)s", 'sessions', 'data'],
+        'lock_dir': ["%(data)s", 'sessions', 'lock'],
+    }
+    settings['session.data_dir'] = '%(paths:session:data_dir)s'
+    settings['session.lock_dir'] = '%(paths:session:lock_dir)s'
 
     paths['data'] = 'data'
     paths['frontend'] = ['%(data)s', 'frontend.ini']
-    paths['logging:config'] = '%(frontend)s'
-    paths['logging:tests'] = ['%(data)s', 'tests.log']
+    paths['logging'] = {
+        'config': '%(frontend)s',
+        'tests': ['%(data)s', 'tests.log'],
+    }
     paths['static'] = 'konwentor.application:static'
     paths['routes'] = ['%(project_path)s', 'routes.yml']
     paths['tests_yaml'] = ['%(project_path)s', 'tests', 'cases.yml']
 
-    paths['sqlite_db'] = ["%(data)s", 'database.db']
-    settings['db:type'] = 'sqlite'
-    settings['db:db'] = '%(sqlite_db)s' % paths
-    settings['db:url'] = '%(db:type)s:///%(db:db)s'
+    paths.set_path('sqlite_db', 'data', '%(db:name)s.db')
+    settings['db'] = {}
+    settings['db']['type'] = 'sqlite'
+    settings['db']['name'] = 'konwentor_develop'
 
-    paths['alembic:versions'] = 'alembic'
-    paths['alembic:ini'] = ['%(data)s', 'alembic.ini']
+    paths['alembic'] = {
+        'versions': 'alembic',
+        'ini': ['%(data)s', 'alembic.ini'],
+    }
 
     settings['css'] = [
         '/css/bootstrap.min.css',
