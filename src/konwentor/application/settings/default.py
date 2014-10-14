@@ -27,6 +27,15 @@ def make_settings(settings, paths):
 
     paths.set_path('sqlite_db', 'data', '%(db:name)s.db')
     settings['db'] = {}
+
+    # ----------------------------------------
+    # This is example postgresql configuration
+    # ----------------------------------------
+    # settings['db']['type'] = 'postgresql'
+    # settings['db']['login'] = 'develop'
+    # settings['db']['password'] = 'develop'
+    # settings['db']['host'] = 'localhost'
+    # settings['db']['port'] = '5432'
     settings['db']['type'] = 'sqlite'
     settings['db']['name'] = 'konwentor_develop'
 
