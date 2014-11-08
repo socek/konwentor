@@ -34,6 +34,15 @@ class StatisticsSqlsTest(SqlControllerTestCase):
         borrows = self.controller.get_borrows()
         self.assertEqual([], borrows)
 
+    def test_get_borrows(self):
+        self.controller.data = {'convent': fixtures['Convent']['second']}
+        borrows = self.controller.get_borrows()
+        self.assertEqual(
+            [
+                fixtures['GameBorrow'][3],
+                fixtures['GameBorrow'][4]],
+            borrows)
+
     def test_add_all_games(self):
         self.controller.add_all_games()
         result = self.controller.data['statistics'][0]
