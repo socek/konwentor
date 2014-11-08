@@ -31,6 +31,7 @@ class StatisticsController(GameCopyControllerBase):
     def get_borrows(self):
         return (
             self.db.query(GameBorrow)
+            .join(GameEntity)
             .filter(GameEntity.convent == self.data['convent'])
             .all())
 

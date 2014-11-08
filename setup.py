@@ -28,7 +28,7 @@ dependency_links = [
 
 if __name__ == '__main__':
     setup(name='Konwentor',
-          version='0.2',
+          version='0.2.1',
           packages=find_packages('src'),
           package_dir={'': 'src'},
           install_requires=install_requires,
