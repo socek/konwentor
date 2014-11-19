@@ -1,10 +1,11 @@
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import and_
 from formskit import Field
+from formskit.validators import NotEmpty, IsDigit
 
 from haplugin.formskit import PostForm
 from konwentor.convent.forms import IdExists
-from konwentor.forms.validators import NotEmpty, IsDigit
+
 
 from .models import Game
 

@@ -1,42 +1,43 @@
-from formskit import Field
 from formskit.formvalidators import FormValidator
+from formskit.validators import NotEmpty, IsDigit
 from sqlalchemy.orm.exc import NoResultFound
 
 from haplugin.formskit import PostForm
-from konwentor.forms.validators import NotEmpty, IsDigit
 
 from .models import Convent
 
 
 class ConventAddForm(PostForm):
 
-    def createForm(self):
-        self.addField(Field('name', label='Nazwa', validators=[NotEmpty()]))
+    def create_form(self):
+        self.add_field('name', label='Nazwa', validators=[NotEmpty()])
 
-    def submit(self, data):
-        Convent.create(self.db, name=data['name'][0])
+    def submit(self):
+        data = self.get_data_dict(True)
+        Convent.create(self.db, name=data['name'])
 
 
 class ConventEditForm(ConventAddForm):
 
-    def createForm(self):
-        super().createForm()
-        self.addField(Field('id', validators=[NotEmpty(), IsDigit()]))
+    def create_form(self):
+        super().create_form()
+        self.add_field('id', validators=[NotEmpty(), IsDigit()])
 
-        self.addFormValidator(IdExists(Convent))
+        self.add_form_validator(IdExists(Convent))
 
-    def submit(self, data):
+    def submit(self):
         self.model.name = self.get_value('name')
         self.db.commit()
 
 
 class ConventDeleteForm(PostForm):
 
-    def createForm(self):
-        self.addField(Field('obj_id', validators=[NotEmpty()]))
+    def create_form(self):
+        self.add_field('obj_id', validators=[NotEmpty()])
 
-    def submit(self, data):
-        convent = Convent.get_by_id(self.db, int(data['obj_id'][0]))
+    def submit(self):
+        data = self.get_data_dict(True)
+        convent = Convent.get_by_id(self.db, int(data['obj_id']))
         convent.is_active = False
         self.db.commit()
 

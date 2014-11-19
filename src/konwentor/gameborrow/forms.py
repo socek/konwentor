@@ -1,7 +1,7 @@
 from formskit import Field
+from formskit.validators import NotEmpty
 
 from haplugin.formskit import PostForm
-from konwentor.forms.validators import NotEmpty
 
 from konwentor.gamecopy.models import GameEntity
 from .models import GameBorrow

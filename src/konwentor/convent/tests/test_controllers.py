@@ -184,9 +184,9 @@ class ConventDeleteTests(ControllerTestCase):
 
         self.mocks['verify_convent_id'].assert_called_once_with()
         self.mocks['add_form'].assert_called_once_with(ConventDeleteForm)
-        form.assert_called_once_with({
-            'obj_id': 'my obj id',
-        })
+        form.assert_called_once_with()
+        form.set_value.assert_called_once_with(
+            'obj_id', 'my obj id')
         self.mocks['redirect'].assert_called_once_with('convent:list')
 
     def test_make_fail(self):

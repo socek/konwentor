@@ -63,3 +63,6 @@ def make_settings(settings, paths):
         '/js/jquery-ui.min.js',
         '/js/sb-admin-2.js',
     ]
+
+    from konwentor.application.translations import KonwentorMessage
+    settings['form_message'] = KonwentorMessage

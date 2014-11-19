@@ -52,9 +52,7 @@ class ConventWidget(Jinja2HelperMany):
         form = ConventDeleteForm(self.request)
         form.action = self.route(
             'convent:delete', obj_id=self.convent.id)
-        form({
-            'obj_id': [self.convent.id, ],
-        })
+        form.set_value('obj_id', self.convent.id)
 
         return self.render_for('delete_button.jinja2', {
             'url': self.route('convent:delete', obj_id=self.convent.id),

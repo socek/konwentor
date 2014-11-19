@@ -1,7 +1,7 @@
-from formskit import Field
+from formskit.validators import NotEmpty, IsDigit
+from formskit.field_convert import ToInt
 
 from haplugin.formskit import PostForm
-from konwentor.forms.validators import NotEmpty, IsDigit
 from konwentor.auth.models import User
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
@@ -11,37 +11,34 @@ from .models import GameCopy, GameEntity
 
 class GameCopyAddForm(PostForm):
 
-    def createForm(self):
-        field = Field(
+    def create_form(self):
+        field = self.add_field(
             'game_name',
             label='Gra',
             validators=[NotEmpty()])
         field.data = self.get_objects(Game, is_active=True)
-        self.addField(field)
 
-        self.addField(Field(
+        self.add_field(
             'confirmation',
-            validators=[]))
+            validators=[])
 
-        field = Field(
+        field = self.add_field(
             'user_id',
             label='Właściciel',
             validators=[NotEmpty(), IsDigit()])
         field.data = self.get_objects(User)
-        self.addField(field)
 
-        field = Field(
+        field = self.add_field(
             'convent_id',
             label='Konwent',
             validators=[NotEmpty(), IsDigit()])
         field.data = self.get_objects(Convent, is_active=True)
-        self.addField(field)
 
-        field = Field(
+        self.add_field(
             'count',
             label='Ilość',
-            validators=[NotEmpty(), IsDigit()])
-        self.addField(field)
+            validators=[NotEmpty(), IsDigit()],
+            convert=ToInt())
 
     def get_objects(self, cls, other=False, **kwargs):
         objects = [{
@@ -60,15 +57,15 @@ class GameCopyAddForm(PostForm):
             })
         return objects
 
-    def submit(self, data):
-        game = self.get_or_create_game(data['game_name'][0])
-        user = User.get_by_id(self.db, data['user_id'][0])
-        convent = Convent.get_by_id(self.db, data['convent_id'][0])
-        count = data['count'][0]
+    def submit(self):
+        data = self.get_data_dict(True)
+        game = self.get_or_create_game(data['game_name'])
+        user = User.get_by_id(self.db, data['user_id'])
+        convent = Convent.get_by_id(self.db, data['convent_id'])
 
         gamecopy = self.create_gamecopy(game, user)
         gameentity = self.create_gameentity(convent, gamecopy)
-        gameentity.count += int(count)
+        gameentity.count += data['count']
 
         try:
             self.db.commit()

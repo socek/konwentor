@@ -5,7 +5,6 @@ install_requires = [
     'hatak==0.2.4',
     'waitress',
     'psycopg2',
-    'formskit==0.4.1',
     'uwsgi',
     'coverage',
 
@@ -18,9 +17,9 @@ install_requires = [
     'hatak_debugtoolbar',
     'hatak_toster',
     'hatak_statics',
-    'hatak_formskit',
+    'hatak_formskit>=0.2',
     'hatak_flashmsg',
-    'hatak_auth',
+    'hatak_auth>=0.2',
 ]
 dependency_links = [
 

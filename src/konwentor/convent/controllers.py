@@ -48,15 +48,13 @@ class ConventEditController(Controller):
     menu_highlighted = 'convent:list'
 
     def make(self):
-        form = self.add_form(ConventEditForm)
         convent = self.get_convent()
 
-        defaults = {
-            'id': [convent.id],
-            'name': [convent.name],
-        }
+        form = self.add_form(ConventEditForm)
+        form.set_value('id', convent.id)
+        form.set_value('name', convent.name)
 
-        if form(defaults) is True:
+        if form() is True:
             self.redirect('convent:list')
 
     def get_convent(self):
@@ -80,11 +78,9 @@ class ConventDelete(Controller):
         self.verify_convent_id()
 
         form = self.add_form(ConventDeleteForm)
-        data = {
-            'obj_id': self.matchdict['obj_id'],
-        }
+        form.set_value('obj_id', self.matchdict['obj_id'])
 
-        if form(data) is True:
+        if form() is True:
             self.redirect('convent:list')
 
     def verify_convent_id(self):
