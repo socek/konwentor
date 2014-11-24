@@ -1,4 +1,4 @@
-from mock import MagicMock
+from mock import MagicMock, call
 from sqlalchemy.orm.exc import NoResultFound
 
 from haplugin.toster import ControllerTestCase, SqlControllerTestCase
@@ -118,11 +118,12 @@ class GameCopyAddControllerTests(ControllerTestCase):
         self.controller.make()
 
         self.mocks['add_form'].assert_called_once_with(GameCopyAddForm)
-        form.assert_called_once_with(initial_data={
-            'count': '1',
-            'user_id': [str(self.user.id)],
-            'convent_id': [str(self.session['convent_id'])]
-        })
+        form.assert_called_once_with()
+        form.set_value.assert_has_calls([
+            call('count', 1),
+            call('user_id', self.user.id),
+            call('convent_id', self.session['convent_id']),
+        ])
         self.assertEqual(0, self.mocks['add_flashmsg'].call_count)
 
     def test_form_submitted(self):
@@ -132,15 +133,13 @@ class GameCopyAddControllerTests(ControllerTestCase):
 
         self.controller.make()
 
-        initial_data = {
-            'count': '1',
-            'user_id': [str(self.user.id)],
-            'convent_id': [str(self.session['convent_id'])]
-        }
         self.mocks['add_form'].assert_called_once_with(GameCopyAddForm)
-        form.assert_called_once_with(initial_data=initial_data)
-        self.assertEqual({}, form.fields)
-        form._gatherFormsData.assert_called_once_with(initial_data)
+        form.assert_called_once_with()
+        form.set_value.assert_has_calls([
+            call('count', 1),
+            call('user_id', self.user.id),
+            call('convent_id', self.session['convent_id']),
+        ])
 
         self.mocks['add_flashmsg'].assert_called_once_with(
             'Dodano grę.', 'info')
