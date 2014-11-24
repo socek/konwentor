@@ -1,4 +1,4 @@
-from mock import MagicMock
+from mock import MagicMock, call
 from haplugin.toster import ControllerTestCase, SqlControllerTestCase
 from haplugin.toster.fixtures import fixtures
 from pyramid.httpexceptions import HTTPNotFound
@@ -116,7 +116,11 @@ class ConventEditControllerTests(ControllerTestCase):
 
         self.controller.make()
 
-        self.form.assert_called_once_with(self.defaults)
+        self.form.assert_called_once_with()
+        self.form.set_value.assert_has_calls([
+            call('id', self.convent.id),
+            call('name', self.convent.name),
+        ])
         self.mocks['add_form'].assert_called_once_with(ConventEditForm)
         self.mocks['redirect'].assert_called_once_with('convent:list')
 
@@ -127,7 +131,12 @@ class ConventEditControllerTests(ControllerTestCase):
 
         self.controller.make()
 
-        self.form.assert_called_once_with(self.defaults)
+        self.form.assert_called_once_with()
+        self.form.set_value.assert_has_calls([
+            call('id', self.convent.id),
+            call('name', self.convent.name),
+        ])
+
         self.mocks['add_form'].assert_called_once_with(ConventEditForm)
         self.assertFalse(self.mocks['redirect'].called)
 
