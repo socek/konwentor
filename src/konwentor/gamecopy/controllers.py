@@ -50,14 +50,17 @@ class GameCopyAddController(GameCopyControllerBase):
         self.db.flush()
 
         form = self.add_form(GameCopyAddForm)
-        form.set_value('count', 1)
-        form.set_value('user_id', self.user.id)
-        form.set_value('convent_id', self.session['convent_id'])
 
         if form():
             self.add_flashmsg('Dodano grę.', 'info')
             self.session['last_convent_id'] = form.get_value('convent_id')
             form.reset()
+
+        form.parse_dict({
+            'count': ['1'],
+            'user_id': [str(self.user.id)],
+            'convent_id': [self.session['last_convent_id']]
+        })
 
 
 class GameCopyListController(GameCopyControllerBase):

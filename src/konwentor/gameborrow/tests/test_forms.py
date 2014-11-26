@@ -25,7 +25,7 @@ class GameBorrowAddFormTest(FormTestCase):
 
         self.assertEqual(
             True,
-            self.form.overalValidation({'game_entity_id': ['1']}))
+            self.form.overal_validation({'game_entity_id': ['1']}))
 
         self.mocks['get_entity'].assert_called_once_with('1')
 
@@ -35,7 +35,7 @@ class GameBorrowAddFormTest(FormTestCase):
 
         self.assertEqual(
             False,
-            self.form.overalValidation({'game_entity_id': ['1']}))
+            self.form.overal_validation({'game_entity_id': ['1']}))
 
         self.mocks['get_entity'].assert_called_once_with('1')
         self.assertEqual(
@@ -45,13 +45,14 @@ class GameBorrowAddFormTest(FormTestCase):
     def test_submit(self):
         self.add_mock('GameBorrow')
 
-        self.form.submit({
+        self.form.parse_dict({
             'game_entity_id': [12],
             'name': ['sds'],
             'surname': ['zxc'],
             'document_type': ['ccs'],
             'document_number': ['wer'],
         })
+        self.form.submit()
 
         element = self.mocks['GameBorrow'].return_value
 

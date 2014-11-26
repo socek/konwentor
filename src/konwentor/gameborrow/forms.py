@@ -9,28 +9,28 @@ from .models import GameBorrow
 
 class GameBorrowAddForm(PostForm):
 
-    def createForm(self):
-        self.addField(Field(
+    def create_form(self):
+        self.add_field(
             'game_entity_id',
-            validators=[NotEmpty()]))
-        self.addField(Field(
+            validators=[NotEmpty()])
+        self.add_field(
             'name',
             label='Imię',
-            validators=[NotEmpty()]))
-        self.addField(Field(
+            validators=[NotEmpty()])
+        self.add_field(
             'surname',
             label='Nazwisko',
-            validators=[NotEmpty()]))
+            validators=[NotEmpty()])
         field = Field(
             'document_type',
             label='Dokument',
             validators=[NotEmpty()])
         field.data = self.get_avalible_documents()
-        self.addField(field)
-        self.addField(Field(
+        self.add_field_object(field)
+        self.add_field(
             'document_number',
             label='Numer dokumentu',
-            validators=[NotEmpty()]))
+            validators=[NotEmpty()])
 
     def get_avalible_documents(self):
         return [
@@ -60,7 +60,7 @@ class GameBorrowAddForm(PostForm):
             }
         ]
 
-    def overalValidation(self, data):
+    def overal_validation(self, data):
         entity = self.get_entity(data['game_entity_id'][0])
         if entity.is_avalible():
             return True
@@ -68,13 +68,14 @@ class GameBorrowAddForm(PostForm):
             self.message = 'Ta gra nie ma już wolnych kopii.'
             return False
 
-    def submit(self, data):
+    def submit(self):
+        data = self.get_data_dict(True)
         element = GameBorrow()
-        element.game_entity_id = data['game_entity_id'][0]
-        element.name = data['name'][0]
-        element.surname = data['surname'][0]
-        element.document_type = data['document_type'][0]
-        element.document_number = data['document_number'][0]
+        element.game_entity_id = data['game_entity_id']
+        element.name = data['name']
+        element.surname = data['surname']
+        element.document_type = data['document_type']
+        element.document_number = data['document_number']
 
         element.is_borrowed = True
 

@@ -12,9 +12,10 @@ class ConventAddFormTest(FormTestCase):
 
     def test_submit(self):
         self.add_mock('Convent')
-        self.form.submit({
-            'name': ['myname'],
+        self.form._parse_raw_data({
+            self.form.fields['name'].get_name(): ['myname'],
         })
+        self.form.submit()
 
         self.mocks['Convent'].create.assert_called_once_with(
             self.db, name='myname')
@@ -26,9 +27,10 @@ class ConventDeleteFormTest(FormTestCase):
 
     def test_submit(self):
         self.add_mock('Convent')
-        self.form.submit({
-            'obj_id': ['123'],
+        self.form._parse_raw_data({
+            self.form.fields['obj_id'].get_name(): ['123'],
         })
+        self.form.submit()
 
         self.mocks['Convent'].get_by_id.assert_called_once_with(
             self.db, 123)
@@ -45,7 +47,7 @@ class SqlConventEditFormTest(SqlFormTestCase):
         convent_id = fixtures['Convent']['first'].id
         self.add_mock_object(
             self.form, 'get_value', return_value=str(convent_id))
-        self.form.formValidators[0].validate()
+        self.form.form_validators[0].validate()
 
         self.mocks['get_value'].assert_called_once_with('id')
         self.assertEqual(fixtures['Convent']['first'], self.form.model)
@@ -53,7 +55,7 @@ class SqlConventEditFormTest(SqlFormTestCase):
     def test_id_exists_validator_fail(self):
         self.add_mock_object(
             self.form, 'get_value', return_value='1234566')
-        self.assertEqual(False, self.form.formValidators[0].validate())
+        self.assertEqual(False, self.form.form_validators[0].validate())
 
 
 class ConventEditFormTest(FormTestCase):
@@ -64,8 +66,9 @@ class ConventEditFormTest(FormTestCase):
             self.form, 'get_value', return_value='myname')
 
         self.form.model = MagicMock()
+        self.form._parse_raw_data({})
 
-        self.form.submit({})
+        self.form.submit()
 
         self.assertEqual('myname', self.form.model.name)
         self.db.commit.assert_called_once_with()

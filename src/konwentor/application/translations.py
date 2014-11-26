@@ -7,6 +7,7 @@ class KonwentorMessage(Message):
         'EmailMustExists': 'Email i/lub hasło są błedne.',
         'NotEmpty': 'Te pole nie może być puste.',
         'IsDigit': 'Ten element musi być liczbą.',
+        'CSRF token do not match!': 'Token CSRF się nie zgadza.',
     }
 
     def translate(self):

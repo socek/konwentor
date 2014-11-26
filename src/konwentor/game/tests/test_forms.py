@@ -9,21 +9,21 @@ from ..models import Game
 class GameAddFormTest(FormTestCase):
     prefix_from = GameAddForm
 
-    def test_overalValidation_success(self):
+    def test_overal_validation_success(self):
         """GameAddForm should check if there is game of the same name."""
         self.add_mock_object(self.form, 'validate_uniqe_name')
         self.mocks['validate_uniqe_name'].return_value = True
 
-        result = self.form.overalValidation({'name': ['myname']})
+        result = self.form.overal_validation({'name': ['myname']})
 
         self.mocks['validate_uniqe_name'].assert_called_once_with('myname')
         self.assertEqual(True, result)
 
-    def test_overalValidation_fail(self):
+    def test_overal_validation_fail(self):
         self.add_mock_object(self.form, 'validate_uniqe_name')
         self.mocks['validate_uniqe_name'].return_value = False
 
-        result = self.form.overalValidation({'name': ['myname']})
+        result = self.form.overal_validation({'name': ['myname']})
 
         self.mocks['validate_uniqe_name'].assert_called_once_with('myname')
         self.assertEqual(False, result)
@@ -36,30 +36,30 @@ class SqlGameAddFormTests(SqlFormTestCase):
 
     def test_validate_uniqe_name_found(self):
         """validate_uniqe_name should return False if name found"""
-        self.assertEqual(False, self.form.validate_uniqe_name('first'))
+        assert self.form.validate_uniqe_name('first') is False
 
     def test_validate_uniqe_name_not_found(self):
         """validate_uniqe_name should return True if name not found"""
-        self.assertEqual(True, self.form.validate_uniqe_name('firstasdasd'))
+        assert self.form.validate_uniqe_name('firstasdasd') is True
 
     def test_submit(self):
         """GameAddForm should create new game."""
-        data = {
+        self.form.parse_dict({
             'name': ['my dynamic name', ],
             'players_description': ['players description'],
             'time_description': ['time description'],
             'type_description': ['type description'],
             'difficulty': ['difficulty'],
-        }
-        self.form.submit(data)
+        })
+        self.form.submit()
 
         self.db.flush()
         game = self.query(Game).filter_by(name='my dynamic name').one()
-        self.assertEqual('my dynamic name', game.name)
-        self.assertEqual('players description', game.players_description)
-        self.assertEqual('time description', game.time_description)
-        self.assertEqual('type description', game.type_description)
-        self.assertEqual('difficulty', game.difficulty)
+        assert 'my dynamic name' == game.name
+        assert 'players description' == game.players_description
+        assert 'time description' == game.time_description
+        assert 'type description' == game.type_description
+        assert 'difficulty' == game.difficulty
 
         self.db.delete(game)
         self.db.commit()
@@ -85,7 +85,8 @@ class SqlGameDeleteFormTests(SqlFormTestCase, GameFactoryMixin):
         self.create_game()
 
         try:
-            self.form.submit({'obj_id': [self.game.id]})
+            self.form.set_value('obj_id', self.game.id)
+            self.form.submit()
 
             self.db.flush()
             self.assertRaises(
@@ -103,22 +104,28 @@ class SqlGameEditFormTests(SqlFormTestCase, GameFactoryMixin):
         self.create_game()
         try:
             self._create_fake_post({
-                'name': ['my mega name', ],
-                'id': [str(self.game.id), ],
-                'players_description': ['players description'],
-                'time_description': ['time description'],
-                'type_description': ['type description'],
-                'difficulty': ['difficulty'],
+                self.form.fields['name'].get_name(): [
+                    'my mega name', ],
+                self.form.fields['id'].get_name(): [
+                    str(self.game.id), ],
+                self.form.fields['players_description'].get_name(): [
+                    'players description'],
+                self.form.fields['time_description'].get_name(): [
+                    'time description'],
+                self.form.fields['type_description'].get_name(): [
+                    'type description'],
+                self.form.fields['difficulty'].get_name(): [
+                    'difficulty'],
             })
-            self.assertEqual(True, self.form({'id': [str(self.game.id)]}))
+            assert self.form() is True
 
             self.db.flush()
             game = self.query(Game).filter_by(id=self.game.id).one()
-            self.assertEqual('my mega name', game.name)
-            self.assertEqual('players description', game.players_description)
-            self.assertEqual('time description', game.time_description)
-            self.assertEqual('type description', game.type_description)
-            self.assertEqual('difficulty', game.difficulty)
+            assert 'my mega name' == game.name
+            assert 'players description' == game.players_description
+            assert 'time description' == game.time_description
+            assert 'type description' == game.type_description
+            assert 'difficulty' == game.difficulty
         finally:
             self.delete_game()
 

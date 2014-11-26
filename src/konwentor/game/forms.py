@@ -1,6 +1,5 @@
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import and_
-from formskit import Field
 from formskit.validators import NotEmpty, IsDigit
 
 from haplugin.formskit import PostForm
@@ -12,14 +11,14 @@ from .models import Game
 
 class GameAddForm(PostForm):
 
-    def createForm(self):
-        self.addField(Field('name', label='Nazwa', validators=[NotEmpty()]))
-        self.addField(Field('players_description', label='Gracze'))
-        self.addField(Field('time_description', label='Czas'))
-        self.addField(Field('type_description', label='Typ'))
-        self.addField(Field('difficulty', label='Trudność'))
+    def create_form(self):
+        self.add_field('name', label='Nazwa', validators=[NotEmpty()])
+        self.add_field('players_description', label='Gracze')
+        self.add_field('time_description', label='Czas')
+        self.add_field('type_description', label='Typ')
+        self.add_field('difficulty', label='Trudność')
 
-    def overalValidation(self, data):
+    def overal_validation(self, data):
         if self.validate_uniqe_name(data['name'][0]):
             return True
         else:
@@ -33,33 +32,35 @@ class GameAddForm(PostForm):
         except NoResultFound:
             return True
 
+    def submit(self):
+        element = Game()
+        data = self.get_data_dict(True)
+        self.set_values(element, data)
+        self.db.add(element)
+        self.db.commit()
+
     def set_values(self, element, data):
-        element.name = data['name'][0]
+        element.name = data['name']
         descriptions = [
             'players_description',
             'time_description',
             'type_description',
             'difficulty']
         for name in descriptions:
-            value = data[name][0].strip() or None
+            value = data[name].strip()
             setattr(element, name, value)
-
-    def submit(self, data):
-        element = Game()
-        self.set_values(element, data)
-        self.db.add(element)
-        self.db.commit()
 
 
 class GameEditForm(GameAddForm):
 
-    def createForm(self):
-        super().createForm()
-        self.addField(Field('id', validators=[NotEmpty(), IsDigit()]))
+    def create_form(self):
+        super().create_form()
+        self.add_field('id', validators=[NotEmpty(), IsDigit()])
 
-        self.addFormValidator(IdExists(Game))
+        self.add_form_validator(IdExists(Game))
 
-    def submit(self, data):
+    def submit(self):
+        data = self.get_data_dict(True)
         self.set_values(self.model, data)
         self.db.commit()
 
@@ -78,11 +79,12 @@ class GameEditForm(GameAddForm):
 
 class GameDeleteForm(PostForm):
 
-    def createForm(self):
-        self.addField(Field('obj_id', validators=[NotEmpty()]))
+    def create_form(self):
+        self.add_field('obj_id', validators=[NotEmpty()])
 
-    def submit(self, data):
-        _id = data['obj_id'][0]
+    def submit(self):
+        data = self.get_data_dict(True)
+        _id = data['obj_id']
         element = self.db.query(Game).filter_by(id=_id).one()
         element.is_active = False
         self.db.commit()

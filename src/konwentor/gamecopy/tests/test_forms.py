@@ -74,12 +74,13 @@ class GameCopyAddFormTest(FormTestCase):
         self.add_mock_object(self.form, 'create_gameentity', autospec=True)
         self.mocks['create_gameentity'].return_value.count = 3
 
-        self.form.submit({
+        self.form.parse_dict({
             'game_name': ['1'],
             'user_id': ['user_id'],
             'convent_id': ['convent_id'],
             'count': ['2'],
         })
+        self.form.submit()
 
         self.mocks['Game'].get_or_create.assert_called_once_with(
             self.db, name='1', is_active=True)
@@ -160,11 +161,11 @@ class GameCopyAddFormSqlTestCase(SqlFormTestCase):
         convent = fixtures['Convent']['dynamic1']
 
         self.request.POST.dict_of_lists.return_value = {
-            self.form.form_name_value: [self.form.name, ],
-            'game_name': [game.name, ],
-            'user_id': [str(user.id), ],
-            'convent_id': [str(convent.id), ],
-            'count': ['5', ],
+            self.form.form_name_value: [self.form.get_name(), ],
+            self.form.fields['game_name'].get_name(): [game.name, ],
+            self.form.fields['user_id'].get_name(): [str(user.id), ],
+            self.form.fields['convent_id'].get_name(): [str(convent.id), ],
+            self.form.fields['count'].get_name(): ['5', ],
         }
 
         self.form()

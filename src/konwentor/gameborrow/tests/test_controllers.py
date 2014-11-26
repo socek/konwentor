@@ -25,9 +25,8 @@ class GameBorrowAddControllerTests(ControllerTestCase):
         self.assertEqual(
             self.mocks['get_game_entity'].return_value,
             self.data['game_entity'])
-        self.form.assert_called_once_with({
-            'game_entity_id': [self.data['game_entity'].id]
-        })
+        self.form.set_value('game_entity_id', self.data['game_entity'].id)
+        self.form.assert_called_once_with()
         self.assertEqual(0, self.mocks['add_flashmsg'].call_count)
         self.assertEqual(0, self.mocks['redirect'].call_count)
 
@@ -39,9 +38,10 @@ class GameBorrowAddControllerTests(ControllerTestCase):
         self.assertEqual(
             self.mocks['get_game_entity'].return_value,
             self.data['game_entity'])
-        self.form.assert_called_once_with({
-            'game_entity_id': [self.data['game_entity'].id]
-        })
+        self.form.set_value.assert_called_once_with(
+            'game_entity_id',
+            self.data['game_entity'].id)
+        self.form.assert_called_once_with()
         self.mocks['add_flashmsg'].assert_called_once_with(
             'Gra została wypożyczona.', 'success')
         self.mocks['redirect'].assert_called_once_with('gamecopy:list')

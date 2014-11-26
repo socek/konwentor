@@ -27,9 +27,8 @@ class GameListController(Controller):
             self.data['forms'][game.id] = self.data[name]
             form.action = self.request.route_path(
                 'game:delete', obj_id=game.id)
-            form({
-                'obj_id': [game.id, ],
-            })
+            form.set_value('obj_id', game.id)
+            form()
 
 
 class GameEditController(Controller):
@@ -42,6 +41,7 @@ class GameEditController(Controller):
         form = self.add_form(GameEditForm)
         game = self.get_game()
 
+        defaults = {}
         value_names = [
             'id',
             'name',
@@ -49,11 +49,11 @@ class GameEditController(Controller):
             'time_description',
             'type_description',
             'difficulty']
-        defaults = {}
         for name in value_names:
             defaults[name] = [getattr(game, name)]
+        form.parse_dict(defaults)
 
-        if form(defaults) is True:
+        if form() is True:
             self.redirect('game:list')
 
     def get_game(self):
@@ -90,11 +90,9 @@ class GameDelete(Controller):
         self.get_element()
 
         form = self.add_form(GameDeleteForm)
-        form_data = {
-            'obj_id': self.matchdict['obj_id'],
-        }
+        form.set_value('obj_id', self.matchdict['obj_id'])
 
-        if form(form_data) is True:
+        if form() is True:
             self.redirect('game:list')
 
     def get_element(self):

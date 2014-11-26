@@ -222,9 +222,9 @@ class ConventDeleteTests(ControllerTestCase):
 
         self.mocks['verify_convent_id'].assert_called_once_with()
         self.mocks['add_form'].assert_called_once_with(ConventDeleteForm)
-        form.assert_called_once_with({
-            'obj_id': 'my obj id',
-        })
+        form.set_value.assert_called_once_with(
+            'obj_id', 'my obj id')
+        form.assert_called_once_with()
 
 
 class SqlConventDeleteTests(SqlControllerTestCase):

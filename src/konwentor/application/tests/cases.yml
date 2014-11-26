@@ -89,3 +89,8 @@ konwentor:
             test_plugin:
                 - MenuPluginTests
                 - MenuControllerPluginTests
+
+    application:
+        tests:
+            test_translations:
+                - KonwentorMessageTests

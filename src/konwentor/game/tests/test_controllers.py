@@ -45,7 +45,8 @@ class GameListControllerTests(ControllerTestCase):
             self.request.route_path.return_value)
         self.request.route_path.assert_called_once_with(
             'game:delete', obj_id=10)
-        form.assert_called_once_with({'obj_id': [10, ]})
+        form.set_value.assert_called_once_with('obj_id', 10)
+        form.assert_called_once_with()
 
 
 class GameListSqlControllerTests(SqlControllerTestCase):
@@ -109,7 +110,8 @@ class GameDeleteControllerTests(ControllerTestCase):
 
         self.mocks['get_element'].assert_called_once_with()
         self.mocks['add_form'].assert_called_once_with(GameDeleteForm)
-        self.form.assert_called_once_with({'obj_id': 15})
+        self.form.set_value('obj_id', 15)
+        self.form.assert_called_once_with()
         self.assertEqual(0, self.mocks['redirect'].call_count)
 
     def test_make_on_post(self):
@@ -121,7 +123,8 @@ class GameDeleteControllerTests(ControllerTestCase):
 
         self.mocks['get_element'].assert_called_once_with()
         self.mocks['add_form'].assert_called_once_with(GameDeleteForm)
-        self.form.assert_called_once_with({'obj_id': 15})
+        self.form.set_value.assert_called_once_with('obj_id', 15)
+        self.form.assert_called_once_with()
         self.mocks['redirect'].assert_called_once_with('game:list')
 
     def test_get_element_on_error(self):
@@ -171,7 +174,8 @@ class GameEditControllerTests(ControllerTestCase):
 
         self.controller.make()
 
-        self.form.assert_called_once_with(self.defaults)
+        self.form.parse_dict.assert_called_once_with(self.defaults)
+        self.form.assert_called_once_with()
         self.mocks['add_form'].assert_called_once_with(GameEditForm)
         self.mocks['redirect'].assert_called_once_with('game:list')
 
@@ -182,7 +186,8 @@ class GameEditControllerTests(ControllerTestCase):
 
         self.controller.make()
 
-        self.form.assert_called_once_with(self.defaults)
+        self.form.parse_dict.assert_called_once_with(self.defaults)
+        self.form.assert_called_once_with()
         self.mocks['add_form'].assert_called_once_with(GameEditForm)
         self.assertFalse(self.mocks['redirect'].called)
 
