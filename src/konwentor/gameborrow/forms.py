@@ -71,11 +71,11 @@ class GameBorrowAddForm(PostForm):
     def submit(self):
         data = self.get_data_dict(True)
         element = GameBorrow()
+        element.assign_request(self.request)
         element.game_entity_id = data['game_entity_id']
         element.name = data['name']
         element.surname = data['surname']
-        element.document_type = data['document_type']
-        element.document_number = data['document_number']
+        element.set_document(data['document_type'], data['document_number'])
 
         element.is_borrowed = True
 

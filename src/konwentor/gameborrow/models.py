@@ -1,4 +1,5 @@
 from datetime import datetime
+from hashlib import sha224
 
 from haplugin.sql import Base
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean, String
@@ -25,8 +26,8 @@ class GameBorrow(Base):
 
     name = Column(String)
     surname = Column(String)
-    document_type = Column(String)
-    document_number = Column(String)
+
+    stats_hash = Column(String, nullable=False)
 
     gameentity = relationship("GameEntity", backref='borrows')
 
@@ -35,3 +36,11 @@ class GameBorrow(Base):
             return self.return_timestamp.strftime("%Y-%m-%d %H:%M:%S")
         except AttributeError:
             return ''
+
+    def set_document(self, document, number):
+        self.stats_hash = self.make_hash_document(document, number)
+
+    def make_hash_document(self, document, number):
+        seed = self.settings['personal_seed']
+        data = bytes(seed + document + number, encoding='utf8')
+        return sha224(data).hexdigest()

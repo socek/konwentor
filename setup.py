@@ -15,7 +15,7 @@ install_requires = [
     'hatak_alembic',
     'hatak_beaker',
     'hatak_debugtoolbar',
-    'hatak_toster',
+    'hatak_toster>=0.2.1',
     'hatak_statics',
     'hatak_formskit>=0.2',
     'hatak_flashmsg',

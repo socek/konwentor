@@ -87,8 +87,8 @@ class StatisticsSqlsTest(SqlControllerTestCase):
 
         self.assertEqual(
             [
-                ('Franek', 'Kimono', 'paszport', '123', 2),
-                ('Ten', 'Drugi', 'paszport', '1234', 1),
+                ('Franek', 'Kimono', 2),
+                ('Ten', 'Drugi', 1),
             ],
             self.data['peoples'])
 

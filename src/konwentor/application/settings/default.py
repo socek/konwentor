@@ -66,3 +66,5 @@ def make_settings(settings, paths):
 
     from konwentor.application.translations import KonwentorMessage
     settings['form_message'] = KonwentorMessage
+
+    settings['personal_seed'] = 'asodijaoiwjwqeoijqwe'

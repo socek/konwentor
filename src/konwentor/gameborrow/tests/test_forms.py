@@ -59,9 +59,8 @@ class GameBorrowAddFormTest(FormTestCase):
         self.assertEqual(12, element.game_entity_id)
         self.assertEqual('sds', element.name)
         self.assertEqual('zxc', element.surname)
-        self.assertEqual('ccs', element.document_type)
-        self.assertEqual('wer', element.document_number)
         self.assertEqual(True, element.is_borrowed)
+        element.set_document.assert_called_once_with('ccs', 'wer')
 
         self.db.add.assert_called_once_with(element)
         self.db.commit.assert_called_once_with()

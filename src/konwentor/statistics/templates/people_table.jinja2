@@ -4,8 +4,6 @@
     <tr>
         <th>Imię</th>
         <th>Nazwisko</th>
-        <th>Dokument</th>
-        <th>Numer dokumentu</th>
         <th>Ilość</th>
     </tr>
 {%- endmacro %}
@@ -17,8 +15,6 @@
         <tr>
             <td>{{stat.name}}</td>
             <td>{{stat.surname}}</td>
-            <td>{{stat.document_type}}</td>
-            <td>{{stat.document_number}}</td>
             <td>{{stat.borrows}}</td>
         </tr>
     {% endcall %}

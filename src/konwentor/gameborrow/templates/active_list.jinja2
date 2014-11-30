@@ -8,7 +8,6 @@
         <th>Imię</th>
         <th>Nazwisko</th>
         <th>Kiedy</th>
-        <th>Dokument</th>
         <th>Akcje</th>
     </tr>
 {%- endmacro %}
@@ -25,7 +24,6 @@
             <td>{{borrow.name}}</td>
             <td>{{borrow.surname}}</td>
             <td>{{borrow.borrowed_timestamp.strftime ("%Y-%m-%d %H:%M:%S")}}</td>
-            <td>{{borrow.document_number}} ({{borrow.document_type}})</td>
             <td>
                 {% if user.has_access_to_route('gameborrow:return') -%}
                     {% macro  title() %}Sprawdź dane!{% endmacro %}
@@ -35,7 +33,6 @@
                             <li><strong>Gra</strong>: {{borrow.gameentity.gamecopy.game.name}}</li>
                             <li><strong>Właściciel</strong>: {{borrow.gameentity.gamecopy.owner.name}}</li>
                             <li><strong>Wypożyczający</strong>: {{borrow.name}} {{borrow.surname}}</li>
-                            <li><strong>Dokument</strong>: {{borrow.document_number}} ({{borrow.document_type}})</li>
                         </ul>
                     {% endcall %}
                 {%- endif %}

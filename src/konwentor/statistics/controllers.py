@@ -43,8 +43,8 @@ class StatisticsController(GameCopyControllerBase):
 
     def add_all_people(self):
         peoples = (
-            self.query(GameBorrow.document_type, GameBorrow.document_number)
-            .group_by(GameBorrow.document_type, GameBorrow.document_number)
+            self.query(GameBorrow.stats_hash)
+            .group_by(GameBorrow.stats_hash)
             .join(GameEntity)
             .filter(GameEntity.convent == self.data['convent'])
         )
@@ -72,11 +72,9 @@ class StatisticsController(GameCopyControllerBase):
             self.query(
                 func.max(GameBorrow.name).label('name'),
                 func.min(GameBorrow.surname).label('surname'),
-                GameBorrow.document_type,
-                GameBorrow.document_number,
                 func.count(GameBorrow.id).label('borrows'),)
             .join(GameEntity)
-            .group_by(GameBorrow.document_type, GameBorrow.document_number)
+            .group_by(GameBorrow.stats_hash)
             .order_by(desc('borrows'))
             .filter(GameEntity.convent == self.data['convent'])
             .all()
