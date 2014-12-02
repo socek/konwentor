@@ -1,9 +1,12 @@
 from haplugin.toster import ControllerTestCase, SqlControllerTestCase
 from haplugin.toster.fixtures import fixtures
+from mock import MagicMock
 from pyramid.httpexceptions import HTTPNotFound
 
 from ..controllers import GameBorrowAddController, GameBorrowListController
-from ..controllers import GameBorrowReturnController
+from ..controllers import GameBorrowReturnController, ShowPersonHint
+from konwentor.gameborrow.models import make_hash_document
+from konwentor.application.init import main
 
 
 class GameBorrowAddControllerTests(ControllerTestCase):
@@ -197,3 +200,104 @@ class SqlGameBorrowReturnControllerTests(SqlControllerTestCase):
         self.matchdict['obj_id'] = 21321312
 
         self.assertRaises(HTTPNotFound, self.controller.get_borrow)
+
+
+class ShowPersonHintTests(ControllerTestCase):
+    prefix_from = ShowPersonHint
+
+    def test_make(self):
+        self.add_mock_object(self.controller, 'get_hint')
+        self.controller.POST = {'number': 'something'}
+        self.controller.data = {}
+
+        self.controller.make()
+
+        self.mocks['get_hint'].assert_called_once_with('something')
+        obj = self.mocks['get_hint'].return_value
+        self.assertEqual({
+            'name': obj.name,
+            'surname': obj.surname,
+            'document': obj.document,
+        }, self.controller.data)
+
+    def test_get_hint_found(self):
+        self.controller.document_types = ['one']
+        self.add_mock_object(
+            self.controller,
+            'get_values_by_document_and_number')
+
+        result = self.controller.get_hint('something')
+
+        mocked = self.mocks['get_values_by_document_and_number']
+        self.assertEqual(
+            mocked.return_value,
+            result)
+        mocked.assert_called_once_with('one', 'something')
+
+    def test_get_hint_not_found(self):
+        self.controller.document_types = ['one']
+        self.add_mock_object(
+            self.controller,
+            'get_values_by_document_and_number',
+            side_effect=AttributeError)
+
+        result = self.controller.get_hint('something')
+
+        mocked = self.mocks['get_values_by_document_and_number']
+        self.assertEqual(result.name, '')
+        self.assertEqual(result.surname, '')
+        self.assertEqual(result.document, '')
+        mocked.assert_called_once_with('one', 'something')
+
+    def test_get_values_by_document_and_number(self):
+        self.add_mock('make_hash_document')
+        self.add_mock_object(self.controller, 'get_game_borrow_by_stat_hash')
+        self.controller.request = MagicMock()
+
+        result = self.controller.get_values_by_document_and_number(
+            'doc',
+            'num')
+
+        self.assertEqual(
+            self.mocks['get_game_borrow_by_stat_hash'].return_value,
+            result)
+
+        self.assertEqual('doc', result.document)
+
+        self.mocks['make_hash_document'].assert_called_once_with(
+            self.controller.request,
+            'doc',
+            'num')
+
+    def test_get_values_by_document_and_number_raise_attribute_error(self):
+        self.add_mock('make_hash_document')
+        self.add_mock_object(
+            self.controller,
+            'get_game_borrow_by_stat_hash',
+            return_value=None)
+        self.controller.request = MagicMock()
+
+        self.assertRaises(
+            AttributeError,
+            self.controller.get_values_by_document_and_number,
+            'doc',
+            'num',
+        )
+
+        self.mocks['make_hash_document'].assert_called_once_with(
+            self.controller.request,
+            'doc',
+            'num')
+
+
+class SqlShowPersonHintTests(SqlControllerTestCase):
+    prefix_from = ShowPersonHint
+
+    def test_get_game_borrow_by_stat_hash(self):
+        self.controller.request.registry['settings'] = main.settings
+        hashed = make_hash_document(self.controller.request, 'paszport', '123')
+
+        result = self.controller.get_game_borrow_by_stat_hash(hashed)
+
+        self.assertEqual('FranekLast', result.name)
+        self.assertEqual('KimonoLast', result.surname)

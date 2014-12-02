@@ -1,12 +1,13 @@
 from datetime import datetime
+from collections import namedtuple
 
-from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
+from sqlalchemy.orm.exc import NoResultFound
 
-from hatak.controller import Controller
+from hatak.controller import Controller, JsonController
 
 from .forms import GameBorrowAddForm
-from .models import GameBorrow
+from .models import GameBorrow, make_hash_document
 from konwentor.gamecopy.controllers import GameCopyControllerBase
 from konwentor.gamecopy.models import GameEntity
 
@@ -94,3 +95,49 @@ class GameBorrowReturnController(Controller):
                 .one())
         except NoResultFound:
             raise HTTPNotFound()
+
+
+class ShowPersonHint(JsonController):
+    permissions = [('gameborrow', 'add'), ]
+    document_types = [
+        'dowód',
+        'legitymacja',
+        'prawo jazdy',
+        'paszport',
+        'inne',
+    ]
+
+    def make(self):
+        number = self.POST['number']
+        obj = self.get_hint(number)
+        self.data['name'] = obj.name
+        self.data['surname'] = obj.surname
+        self.data['document'] = obj.document
+
+    def get_hint(self, number):
+        for document in self.document_types:
+            try:
+                return self.get_values_by_document_and_number(document, number)
+            except AttributeError:
+                # obj is a None, so we need to search further
+                pass
+
+        obj = namedtuple('Result', ['name', 'surname', 'document'])('', '', '')
+        return obj
+
+    def get_values_by_document_and_number(self, document, number):
+        hashed = make_hash_document(self.request, document, number)
+        obj = self.get_game_borrow_by_stat_hash(hashed)
+        obj.document = document
+        return obj
+
+    def get_game_borrow_by_stat_hash(self, hashed):
+        return (
+            self.db.query(
+                GameBorrow.name,
+                GameBorrow.surname,
+            )
+            .filter(GameBorrow.stats_hash == hashed)
+            .order_by(GameBorrow.borrowed_timestamp.desc())
+            .first()
+        )

@@ -6,6 +6,12 @@ from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean, String
 from sqlalchemy.orm import relationship
 
 
+def make_hash_document(request, document, number):
+    seed = request.registry['settings']['personal_seed']
+    data = bytes(seed + document + number, encoding='utf8')
+    return sha224(data).hexdigest()
+
+
 class GameBorrow(Base):
     __tablename__ = 'game_borrows'
 

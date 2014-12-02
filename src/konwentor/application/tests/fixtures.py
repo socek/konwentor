@@ -138,8 +138,8 @@ class Fixtures(Base):
         obj = self._create_nameless(
             GameBorrow,
             gameentity=self.fixtures['GameEntity'][3],
-            name='Franek',
-            surname='Kimono',
+            name='FranekLast',
+            surname='KimonoLast',
             stats_hash='x',
             is_borrowed=False
         )

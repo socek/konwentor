@@ -55,6 +55,8 @@ konwentor:
                 - SqlGameBorrowListControllerTests
                 - GameBorrowReturnControllerTests
                 - SqlGameBorrowReturnControllerTests
+                - ShowPersonHintTests
+                - SqlShowPersonHintTests
             test_forms:
                 - GameBorrowAddFormTest
                 - SqlGameBorrowAddFormTest

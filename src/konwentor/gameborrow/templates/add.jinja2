@@ -1,3 +1,4 @@
+{{static.add_js_link('/js/game.borrows.js')}}
 {% extends "main.jinja2" %}
 
 {% block page_head -%}
@@ -14,13 +15,13 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6">
-                            {{form.begin()}}
+                            {{form.begin(id_='GameBorrowAddForm')}}
                                 {{form.error()}}
                                 {{form.hidden('game_entity_id')}}
+                                {{form.text('document_number')}}
+                                {{form.select('document_type')}}
                                 {{form.text('name')}}
                                 {{form.text('surname')}}
-                                {{form.select('document_type')}}
-                                {{form.text('document_number')}}
                                 {{form.submit('Wypożycz')}}
                             {{form.end()}}
                         </div>
