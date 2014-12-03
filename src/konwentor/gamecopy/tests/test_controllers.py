@@ -127,7 +127,10 @@ class GameCopyAddControllerTests(ControllerTestCase):
         self.assertEqual(0, self.mocks['add_flashmsg'].call_count)
 
     def test_form_submitted(self):
-        self.session = self.controller.session = {'last_convent_id': 1}
+        self.session = self.controller.session = {
+            'last_convent_id': '1',
+            'convent_id': 2
+        }
         form = self.mocks['add_form'].return_value
         form.return_value = True
 
@@ -138,7 +141,7 @@ class GameCopyAddControllerTests(ControllerTestCase):
         form.parse_dict.assert_called_once_with({
             'count': ['1'],
             'user_id': [str(self.user.id)],
-            'convent_id': [self.session['last_convent_id']],
+            'convent_id': ['1'],
         })
 
         self.mocks['add_flashmsg'].assert_called_once_with(
