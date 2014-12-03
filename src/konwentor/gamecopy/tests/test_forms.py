@@ -30,7 +30,7 @@ class GameCopyAddFormTest(FormTestCase):
 
         self.assertEqual({
             'label': example_model.name,
-            'value': str(example_model.id),
+            'value': example_model.id,
         }, data[1])
 
         self.query.assert_called_with(self)
@@ -53,7 +53,7 @@ class GameCopyAddFormTest(FormTestCase):
 
         self.assertEqual({
             'label': example_model.name,
-            'value': str(example_model.id),
+            'value': example_model.id,
         }, data[1])
 
         self.assertEqual({
@@ -75,19 +75,19 @@ class GameCopyAddFormTest(FormTestCase):
         self.mocks['create_gameentity'].return_value.count = 3
 
         self.form.parse_dict({
-            'game_name': ['1'],
-            'user_id': ['user_id'],
-            'convent_id': ['convent_id'],
-            'count': ['2'],
+            'game_name': '1',
+            'user_id': 4,
+            'convent_id': 5,
+            'count': 2,
         })
         self.form.submit()
 
         self.mocks['Game'].get_or_create.assert_called_once_with(
             self.db, name='1', is_active=True)
         self.mocks['User'].get_by_id.assert_called_once_with(
-            self.db, 'user_id')
+            self.db, 4)
         self.mocks['Convent'].get_by_id.assert_called_once_with(
-            self.db, 'convent_id')
+            self.db, 5)
 
         self.mocks['create_gamecopy'].assert_called_once_with(
             self.mocks['Game'].get_or_create.return_value,

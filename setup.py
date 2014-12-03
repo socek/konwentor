@@ -7,6 +7,7 @@ install_requires = [
     'psycopg2',
     'uwsgi',
     'coverage',
+    'formskit>=0.5.1',
 
     'hatak_logging',
     'hatak_jinja2',
