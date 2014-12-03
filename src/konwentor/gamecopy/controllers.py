@@ -54,6 +54,7 @@ class GameCopyAddController(GameCopyControllerBase):
         if form():
             self.add_flashmsg('Dodano grę.', 'info')
             self.session['last_convent_id'] = form.get_value('convent_id')
+            self.session['last_user_id'] = form.get_value('user_id')
             self.redirect('gamecopy:add')
 
     def prepere_form(self):
@@ -66,6 +67,9 @@ class GameCopyAddController(GameCopyControllerBase):
 
         if 'last_convent_id' in self.session:
             initial_data['convent_id'] = self.session['last_convent_id']
+
+        if 'last_user_id' in self.session:
+            initial_data['user_id'] = self.session['last_user_id']
 
         form.parse_dict(initial_data)
 

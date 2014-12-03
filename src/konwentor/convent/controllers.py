@@ -103,10 +103,11 @@ class ChooseConventController(ConventDelete):
 
     def switch_convent(self):
         self.session['convent_id'] = int(self.matchdict['obj_id'])
-        try:
-            del(self.session['last_convent_id'])
-        except KeyError:
-            pass
+        for key in ['last_convent_id', 'last_user_id']:
+            try:
+                del(self.session[key])
+            except KeyError:
+                pass
 
 
 class StartConventController(ChooseConventController):
