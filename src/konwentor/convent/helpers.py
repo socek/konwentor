@@ -20,7 +20,7 @@ class ConventWidget(Jinja2HelperMany):
     prefix = 'konwentor.convent:templates/widget'
 
     STATES = {
-        'not started': 'Nie ropoczęto',
+        'not started': 'Nie rozpoczęto',
         'running': 'W trakcie',
         'ended': 'Zakończony',
     }

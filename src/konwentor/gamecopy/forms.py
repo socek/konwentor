@@ -43,21 +43,22 @@ class GameCopyAddForm(PostForm):
             convert=ToInt())
 
     def get_objects(self, cls, other=False, **kwargs):
-        objects = [{
-            'label': '(Wybierz)',
-            'value': '',
-        }]
-        for obj in self.db.query(cls).filter_by(**kwargs).all():
-            objects.append({
-                'label': obj.name,
-                'value': obj.id,
-            })
-        if other:
-            objects.append({
-                'label': '',
-                'value': '-1',
-            })
-        return objects
+        def generator():
+            yield {
+                'label': '(Wybierz)',
+                'value': '',
+            }
+            for obj in self.db.query(cls).filter_by(**kwargs).all():
+                yield {
+                    'label': obj.name,
+                    'value': obj.id,
+                }
+            if other:
+                yield {
+                    'label': '',
+                    'value': '-1',
+                }
+        return generator
 
     def submit(self):
         data = self.get_data_dict(True)

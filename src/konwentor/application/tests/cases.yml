@@ -60,6 +60,10 @@ konwentor:
             test_forms:
                 - GameBorrowAddFormTest
                 - SqlGameBorrowAddFormTest
+                - SqlGameBorrowReturnFormTest
+                - GameBorrowReturnFormTest
+                - IsGameBorrowExistingTest
+                - SqlIsGameBorrowExistingTest
     forms:
         tests:
             test_helpers:

@@ -1,6 +1,6 @@
 from haplugin.toster import ControllerTestCase, SqlControllerTestCase
 from haplugin.toster.fixtures import fixtures
-from mock import MagicMock
+from mock import MagicMock, call
 from pyramid.httpexceptions import HTTPNotFound
 
 from ..controllers import GameBorrowAddController, GameBorrowListController
@@ -111,6 +111,177 @@ class GameBorrowListControllerTests(ControllerTestCase):
         self.assertEqual(
             self.mocks['generate_log'].return_value,
             self.data['logs'])
+
+    def test_prepere_template(self):
+        self.add_mock('GameBorrowReturnForm')
+        form = self.mocks['GameBorrowReturnForm'].return_value
+        borrow = MagicMock()
+        self.mocks['get_borrows'].return_value = [borrow]
+        self.add_mock('FormWidget')
+
+        self.controller.prepere_template()
+
+        self.mocks['get_convent'].assert_called_once_with()
+        self.mocks['get_borrows'].assert_called_once_with(self.data['convent'])
+        self.mocks['generate_log'].assert_called_once_with(
+            self.data['convent'])
+
+        self.assertEqual(
+            self.mocks['get_convent'].return_value,
+            self.data['convent'])
+        self.assertEqual(
+            self.mocks['get_borrows'].return_value,
+            self.data['borrows'])
+        self.assertEqual(
+            self.mocks['generate_log'].return_value,
+            self.data['logs'])
+
+        self.mocks['GameBorrowReturnForm'].assert_called_once_with(
+            self.request)
+        form.set_value.assert_has_calls([
+            call('game_borrow_id', borrow.id),
+            call('convent_id', self.session['convent_id']),
+        ])
+
+    def test_process_form_on_empty(self):
+        self.add_mock('GameBorrowReturnForm')
+        self.add_mock_object(self.controller, '_on_form_success')
+        self.add_mock_object(self.controller, '_on_form_fail')
+        form = self.mocks['GameBorrowReturnForm'].return_value
+        form.success = form.return_value = None
+
+        self.controller.process_form()
+
+        self.mocks['GameBorrowReturnForm'].assert_called_once_with(
+            self.request)
+        form.set_value.assert_called_once_with(
+            'convent_id', self.session['convent_id'])
+        form.assert_called_once_with()
+
+        self.assertEqual(self.mocks['_on_form_success'].called, False)
+        self.assertEqual(self.mocks['_on_form_fail'].called, False)
+
+    def test_process_form_on_success(self):
+        self.add_mock('GameBorrowReturnForm')
+        self.add_mock_object(self.controller, '_on_form_success')
+        self.add_mock_object(self.controller, '_on_form_fail')
+        form = self.mocks['GameBorrowReturnForm'].return_value
+        form.success = form.return_value = True
+
+        self.controller.process_form()
+
+        self.mocks['GameBorrowReturnForm'].assert_called_once_with(
+            self.request)
+        form.set_value.assert_called_once_with(
+            'convent_id', self.session['convent_id'])
+        form.assert_called_once_with()
+
+        self.mocks['_on_form_success'].assert_called_once_with(form)
+        self.assertEqual(self.mocks['_on_form_fail'].called, False)
+
+    def test_process_form_on_fail(self):
+        self.add_mock('GameBorrowReturnForm')
+        self.add_mock_object(self.controller, '_on_form_success')
+        self.add_mock_object(self.controller, '_on_form_fail')
+        form = self.mocks['GameBorrowReturnForm'].return_value
+        form.success = form.return_value = False
+
+        self.controller.process_form()
+
+        self.mocks['GameBorrowReturnForm'].assert_called_once_with(
+            self.request)
+        form.set_value.assert_called_once_with(
+            'convent_id', self.session['convent_id'])
+        form.assert_called_once_with()
+
+        self.assertEqual(self.mocks['_on_form_success'].called, False)
+        self.mocks['_on_form_fail'].assert_called_once_with(form)
+
+    def test_on_form_success_on_empty_game_entity_id(self):
+        form = MagicMock()
+        form.borrow.gameentity.gamecopy.game.name = 'one'
+        form.new_borrow.gameentity.gamecopy.game.name = 'two'
+        form.fields = {
+            'game_entity_id': MagicMock(),
+        }
+        form.fields['game_entity_id'].return_value = False
+        self.add_mock_object(self.controller, 'add_flashmsg')
+        self.add_mock_object(self.controller, 'redirect')
+
+    def test_on_form_fail_with_form_message(self):
+        form = MagicMock()
+        game_entity_id = MagicMock()
+        form.fields = {'game_entity_id': game_entity_id}
+        self.add_mock_object(self.controller, 'add_flashmsg')
+        self.add_mock('KonwentorMessage')
+
+        self.controller._on_form_fail(form)
+
+        self.mocks['KonwentorMessage'].assert_called_once_with(
+            form.message.return_value)
+        form.message.assert_called_once_with()
+
+        self.add_flashmsg(
+            self.mocks['KonwentorMessage'].return_value.return_value,
+            'danger')
+
+    def test_on_form_fail_with_value_message(self):
+        form = MagicMock()
+        game_entity_id = MagicMock()
+        form.fields = {'game_entity_id': game_entity_id}
+        self.add_mock_object(self.controller, 'add_flashmsg')
+        self.add_mock('KonwentorMessage')
+        form.message = False
+
+        self.controller._on_form_fail(form)
+
+        self.mocks['KonwentorMessage'].assert_called_once_with(
+            game_entity_id.get_value_error.return_value)
+        game_entity_id.get_value_error.assert_called_once_with()
+
+        self.add_flashmsg(
+            self.mocks['KonwentorMessage'].return_value.return_value,
+            'danger')
+
+    def test_on_form_success_with_empty_game_entity_id(self):
+        game_entity_id = MagicMock()
+        form = MagicMock()
+        form.fields = {
+            'game_entity_id': game_entity_id,
+        }
+        game_entity_id.get_value.return_value = False
+        form.borrow.gameentity.gamecopy.game.name = 'first'
+        self.add_mock_object(self.controller, 'add_flashmsg')
+        self.add_mock_object(self.controller, 'redirect')
+
+        self.controller._on_form_success(form)
+
+        game_entity_id.get_value.assert_called_once_with(default=False)
+
+        message = 'Gra "first" została zwrócona.'
+        self.mocks['add_flashmsg'].assert_called_once_with(message, 'info')
+        self.mocks['redirect'].assert_called_once_with('gameborrow:list', True)
+
+    def test_on_form_success_with_game_entity_id(self):
+        game_entity_id = MagicMock()
+        form = MagicMock()
+        form.fields = {
+            'game_entity_id': game_entity_id,
+        }
+        game_entity_id.get_value.return_value = True
+        form.borrow.gameentity.gamecopy.game.name = 'first'
+        form.new_borrow.gameentity.gamecopy.game.name = 'second'
+        self.add_mock_object(self.controller, 'add_flashmsg')
+        self.add_mock_object(self.controller, 'redirect')
+
+        self.controller._on_form_success(form)
+
+        game_entity_id.get_value.assert_called_once_with(default=False)
+
+        message = ('Gra "first" została zwrócona, a "second" została'
+                   ' pożyczona.')
+        self.mocks['add_flashmsg'].assert_called_once_with(message, 'info')
+        self.mocks['redirect'].assert_called_once_with('gameborrow:list', True)
 
 
 class SqlGameBorrowListControllerTests(SqlControllerTestCase):

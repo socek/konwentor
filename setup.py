@@ -2,12 +2,11 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'hatak==0.2.5',
+    'hatak==0.2.6',
     'waitress',
     'psycopg2',
     'uwsgi',
     'coverage',
-    'formskit>=0.5.1',
 
     'hatak_logging',
     'hatak_jinja2',
@@ -18,7 +17,7 @@ install_requires = [
     'hatak_debugtoolbar',
     'hatak_toster>=0.2.1',
     'hatak_statics>=0.2.3',
-    'hatak_formskit>=0.2',
+    'hatak_formskit>=0.2.2',
     'hatak_flashmsg',
     'hatak_auth>=0.2',
 ]

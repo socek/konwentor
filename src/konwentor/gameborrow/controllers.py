@@ -5,11 +5,13 @@ from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy.orm.exc import NoResultFound
 
 from hatak.controller import Controller, JsonController
+from haplugin.formskit.helpers import FormWidget
 
-from .forms import GameBorrowAddForm
+from .forms import GameBorrowAddForm, GameBorrowReturnForm
 from .models import GameBorrow, make_hash_document
 from konwentor.gamecopy.controllers import GameCopyControllerBase
 from konwentor.gamecopy.models import GameEntity
+from konwentor.application.translations import KonwentorMessage
 
 
 class GameBorrowAddController(Controller):
@@ -46,9 +48,8 @@ class GameBorrowListController(GameCopyControllerBase):
         if not self.verify_convent():
             return
 
-        self.data['convent'] = self.get_convent()
-        self.data['borrows'] = self.get_borrows(self.data['convent'])
-        self.data['logs'] = self.generate_log(self.data['convent'])
+        self.process_form()
+        self.prepere_template()
 
     def get_borrows(self, convent):
         return (
@@ -65,6 +66,56 @@ class GameBorrowListController(GameCopyControllerBase):
             .filter(GameEntity.convent == convent)
             .filter(GameBorrow.is_borrowed.is_(False))
             .all())
+
+    def process_form(self):
+        form = GameBorrowReturnForm(self.request)
+        form.set_value('convent_id', self.session['convent_id'])
+
+        if form():
+            self._on_form_success(form)
+
+        if form.success is False:
+            self._on_form_fail(form)
+
+    def _on_form_success(self, form):
+        game_entity_id = form.fields['game_entity_id']
+
+        if game_entity_id.get_value(default=False):
+            message = (
+                'Gra "{game}" została zwrócona, a "{second_game}" została'
+                ' pożyczona.'
+                .format(
+                    game=form.borrow.gameentity.gamecopy.game.name,
+                    second_game=form.new_borrow.gameentity.gamecopy.game.name,
+                )
+            )
+        else:
+            message = 'Gra "{game}" została zwrócona.'.format(
+                game=form.borrow.gameentity.gamecopy.game.name,
+            )
+
+        self.add_flashmsg(message, 'info')
+        self.redirect('gameborrow:list', True)
+
+    def _on_form_fail(self, form):
+        game_entity_id = form.fields['game_entity_id']
+
+        if form.message:
+            message = KonwentorMessage(form.message())
+        else:
+            message = KonwentorMessage(game_entity_id.get_value_error())
+
+        self.add_flashmsg(message(), 'danger')
+
+    def prepere_template(self):
+        self.data['convent'] = self.get_convent()
+        self.data['borrows'] = self.get_borrows(self.data['convent'])
+        self.data['logs'] = self.generate_log(self.data['convent'])
+        for borrow in self.data['borrows']:
+            form = GameBorrowReturnForm(self.request)
+            form.set_value('game_borrow_id', borrow.id)
+            form.set_value('convent_id', self.session['convent_id'])
+            borrow.form = FormWidget(self.request, form)
 
 
 class GameBorrowReturnController(Controller):

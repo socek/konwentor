@@ -1,5 +1,5 @@
 {% from "table.jinja2" import table with context %}
-{% from "modal.jinja2" import modal %}
+{% from "modal.jinja2" import modal, modal_form %}
 
 {% macro header() -%}
     <tr>
@@ -27,12 +27,16 @@
             <td>
                 {% if user.has_access_to_route('gameborrow:return') -%}
                     {% macro  title() %}Sprawdź dane!{% endmacro %}
-                    {% macro  btn() %}<a href="{{route('gameborrow:return', obj_id=borrow.id)}}" class="btn btn-success">Zgadza się!</a>{% endmacro %}
-                    {% call modal("return_modal_" ~ borrow.id, "btn-xs btn-warning", "Zwrócono", title, btn) %}
+                    {% macro  btn() %}
+                        {{borrow.form.submit('Zgadza się!', base_cls='btn')}}
+                    {% endmacro %}
+                    {% call modal_form("return_modal_" ~ borrow.id, "btn-xs btn-warning", "Zwrócono", title, btn, borrow.form) %}
+                        {{borrow.form.hidden('game_borrow_id')}}
                         <ul>
                             <li><strong>Gra</strong>: {{borrow.gameentity.gamecopy.game.name}}</li>
                             <li><strong>Właściciel</strong>: {{borrow.gameentity.gamecopy.owner.name}}</li>
                             <li><strong>Wypożyczający</strong>: {{borrow.name}} {{borrow.surname}}</li>
+                            <li>{{borrow.form.select('game_entity_id')}}</li>
                         </ul>
                     {% endcall %}
                 {%- endif %}

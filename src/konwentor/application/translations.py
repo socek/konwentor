@@ -8,6 +8,8 @@ class KonwentorMessage(Message):
         'NotEmpty': 'Te pole nie może być puste.',
         'IsDigit': 'Ten element musi być liczbą.',
         'CSRF token do not match!': 'Token CSRF się nie zgadza.',
+        'InList': 'Nie można znaleźć podanego elementu.',
+        'GameNameInList': 'Nie znaleziono wybranej gry "{value.value}".',
     }
 
     def translate(self):

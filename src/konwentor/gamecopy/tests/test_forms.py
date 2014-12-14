@@ -21,7 +21,7 @@ class GameCopyAddFormTest(FormTestCase):
         self.query.return_value.filter_by.return_value.all.return_value = [
             example_model]
 
-        data = self.form.get_objects(self)
+        data = list(self.form.get_objects(self)())
 
         self.assertEqual({
             'label': '(Wybierz)',
@@ -44,7 +44,7 @@ class GameCopyAddFormTest(FormTestCase):
         self.query.return_value.filter_by.return_value.all.return_value = [
             example_model]
 
-        data = self.form.get_objects(self, True)
+        data = list(self.form.get_objects(self, True)())
 
         self.assertEqual({
             'label': '(Wybierz)',
