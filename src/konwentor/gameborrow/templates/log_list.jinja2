@@ -10,7 +10,6 @@
         <th>Nazwisko</th>
         <th>Czas zabrania</th>
         <th>Czas oddania</th>
-        <th>Dokument</th>
     </tr>
 {%- endmacro %}
 
@@ -28,7 +27,6 @@
             <td>{{borrow.surname}}</td>
             <td>{{borrow.borrowed_timestamp.strftime ("%Y-%m-%d %H:%M:%S")}}</td>
             <td>{{borrow.get_return_timestamp()}}</td>
-            <td>{{borrow.document_number}} ({{borrow.document_type}})</td>
         </tr>
     {% endcall %}
 {% endmacro %}
