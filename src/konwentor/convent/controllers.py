@@ -37,7 +37,7 @@ class ConventAdd(Controller):
     def make(self):
         form = self.add_form(ConventAddForm)
 
-        if form() is True:
+        if form.validate() is True:
             self.redirect('convent:list')
 
 
@@ -54,7 +54,7 @@ class ConventEditController(Controller):
         form.set_value('id', convent.id)
         form.set_value('name', convent.name)
 
-        if form() is True:
+        if form.validate() is True:
             self.redirect('convent:list')
 
     def get_convent(self):
@@ -80,7 +80,7 @@ class ConventDelete(Controller):
         form = self.add_form(ConventDeleteForm)
         form.set_value('obj_id', self.matchdict['obj_id'])
 
-        if form() is True:
+        if form.validate() is True:
             self.redirect('convent:list')
 
     def verify_convent_id(self):

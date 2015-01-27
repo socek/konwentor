@@ -21,20 +21,7 @@ class GameBorrowAddControllerTests(ControllerTestCase):
         self.form = self.mocks['add_form'].return_value
 
     def test_make(self):
-        self.form.return_value = False
-
-        self.controller.make()
-
-        self.assertEqual(
-            self.mocks['get_game_entity'].return_value,
-            self.data['game_entity'])
-        self.form.set_value('game_entity_id', self.data['game_entity'].id)
-        self.form.assert_called_once_with()
-        self.assertEqual(0, self.mocks['add_flashmsg'].call_count)
-        self.assertEqual(0, self.mocks['redirect'].call_count)
-
-    def test_make_on_form(self):
-        self.form.return_value = True
+        self.form.validate.return_value = False
 
         self.controller.make()
 
@@ -44,7 +31,22 @@ class GameBorrowAddControllerTests(ControllerTestCase):
         self.form.set_value.assert_called_once_with(
             'game_entity_id',
             self.data['game_entity'].id)
-        self.form.assert_called_once_with()
+        self.form.validate.assert_called_once_with()
+        self.assertEqual(0, self.mocks['add_flashmsg'].call_count)
+        self.assertEqual(0, self.mocks['redirect'].call_count)
+
+    def test_make_on_form(self):
+        self.form.validate.return_value = True
+
+        self.controller.make()
+
+        self.assertEqual(
+            self.mocks['get_game_entity'].return_value,
+            self.data['game_entity'])
+        self.form.set_value.assert_called_once_with(
+            'game_entity_id',
+            self.data['game_entity'].id)
+        self.form.validate.assert_called_once_with()
         self.mocks['add_flashmsg'].assert_called_once_with(
             'Gra została wypożyczona.', 'success')
         self.mocks['redirect'].assert_called_once_with('gamecopy:list')
@@ -148,7 +150,7 @@ class GameBorrowListControllerTests(ControllerTestCase):
         self.add_mock_object(self.controller, '_on_form_success')
         self.add_mock_object(self.controller, '_on_form_fail')
         form = self.mocks['GameBorrowReturnForm'].return_value
-        form.success = form.return_value = None
+        form.success = form.validate.return_value = None
 
         self.controller.process_form()
 
@@ -156,7 +158,7 @@ class GameBorrowListControllerTests(ControllerTestCase):
             self.request)
         form.set_value.assert_called_once_with(
             'convent_id', self.session['convent_id'])
-        form.assert_called_once_with()
+        form.validate.assert_called_once_with()
 
         self.assertEqual(self.mocks['_on_form_success'].called, False)
         self.assertEqual(self.mocks['_on_form_fail'].called, False)
@@ -166,7 +168,7 @@ class GameBorrowListControllerTests(ControllerTestCase):
         self.add_mock_object(self.controller, '_on_form_success')
         self.add_mock_object(self.controller, '_on_form_fail')
         form = self.mocks['GameBorrowReturnForm'].return_value
-        form.success = form.return_value = True
+        form.success = form.validate.return_value = True
 
         self.controller.process_form()
 
@@ -174,7 +176,7 @@ class GameBorrowListControllerTests(ControllerTestCase):
             self.request)
         form.set_value.assert_called_once_with(
             'convent_id', self.session['convent_id'])
-        form.assert_called_once_with()
+        form.validate.assert_called_once_with()
 
         self.mocks['_on_form_success'].assert_called_once_with(form)
         self.assertEqual(self.mocks['_on_form_fail'].called, False)
@@ -184,7 +186,7 @@ class GameBorrowListControllerTests(ControllerTestCase):
         self.add_mock_object(self.controller, '_on_form_success')
         self.add_mock_object(self.controller, '_on_form_fail')
         form = self.mocks['GameBorrowReturnForm'].return_value
-        form.success = form.return_value = False
+        form.success = form.validate.return_value = False
 
         self.controller.process_form()
 
@@ -192,7 +194,7 @@ class GameBorrowListControllerTests(ControllerTestCase):
             self.request)
         form.set_value.assert_called_once_with(
             'convent_id', self.session['convent_id'])
-        form.assert_called_once_with()
+        form.validate.assert_called_once_with()
 
         self.assertEqual(self.mocks['_on_form_success'].called, False)
         self.mocks['_on_form_fail'].assert_called_once_with(form)

@@ -25,7 +25,7 @@ class GameBorrowAddController(Controller):
         form = self.add_form(GameBorrowAddForm)
         form.set_value('game_entity_id', self.data['game_entity'].id)
 
-        if form():
+        if form.validate():
             self.add_flashmsg('Gra została wypożyczona.', 'success')
             self.redirect('gamecopy:list')
 
@@ -71,7 +71,7 @@ class GameBorrowListController(GameCopyControllerBase):
         form = GameBorrowReturnForm(self.request)
         form.set_value('convent_id', self.session['convent_id'])
 
-        if form():
+        if form.validate():
             self._on_form_success(form)
 
         if form.success is False:

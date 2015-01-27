@@ -113,12 +113,12 @@ class GameCopyAddControllerTests(ControllerTestCase):
     def test_form_not_submitted(self):
         """Controller should create form after verify_convent check."""
         form = self.mocks['add_form'].return_value
-        form.return_value = None
+        form.validate.return_value = None
 
         self.controller.make()
 
         self.mocks['add_form'].assert_called_once_with(GameCopyAddForm)
-        form.assert_called_once_with()
+        form.validate.assert_called_once_with()
         form.parse_dict({
             'count': 1,
             'user_id': self.user.id,
@@ -133,12 +133,12 @@ class GameCopyAddControllerTests(ControllerTestCase):
             'convent_id': 2
         }
         form = self.mocks['add_form'].return_value
-        form.return_value = True
+        form.validate.return_value = True
 
         self.controller.make()
 
         self.mocks['add_form'].assert_called_once_with(GameCopyAddForm)
-        form.assert_called_once_with()
+        form.validate.assert_called_once_with()
         form.parse_dict.assert_called_once_with({
             'count': 1,
             'user_id': -1,

@@ -73,24 +73,24 @@ class ConventAddTests(ControllerTestCase):
     def test_make_success(self):
         """ConventAdd should add ConventAddForm form and redirect to
         convent:list if the form is successed"""
-        self.form.return_value = True
+        self.form.validate.return_value = True
 
         self.controller.make()
 
         self.mocks['add_form'].assert_called_once_with(ConventAddForm)
         self.mocks['redirect'].assert_called_once_with('convent:list')
-        self.form.assert_called_once_with()
+        self.form.validate.assert_called_once_with()
 
     def test_make_fail(self):
         """ConventAdd should add ConventAddForm form  and do nothing
         if the form is failed or not used"""
-        self.form.return_value = False
+        self.form.validate.return_value = False
 
         self.controller.make()
 
         self.mocks['add_form'].assert_called_once_with(ConventAddForm)
         self.assertFalse(self.mocks['redirect'].called)
-        self.form.assert_called_once_with()
+        self.form.validate.assert_called_once_with()
 
 
 class ConventEditControllerTests(ControllerTestCase):
@@ -112,11 +112,11 @@ class ConventEditControllerTests(ControllerTestCase):
     def test_make_success(self):
         """ConventEdit should add ConventEditForm form and redirect to
         convent:list if the form is successed"""
-        self.form.return_value = True
+        self.form.validate.return_value = True
 
         self.controller.make()
 
-        self.form.assert_called_once_with()
+        self.form.validate.assert_called_once_with()
         self.form.set_value.assert_has_calls([
             call('id', self.convent.id),
             call('name', self.convent.name),
@@ -127,11 +127,11 @@ class ConventEditControllerTests(ControllerTestCase):
     def test_make_fail(self):
         """ConventEdit should add ConventAddForm form  and do nothing
         if the form is failed or not used"""
-        self.form.return_value = False
+        self.form.validate.return_value = False
 
         self.controller.make()
 
-        self.form.assert_called_once_with()
+        self.form.validate.assert_called_once_with()
         self.form.set_value.assert_has_calls([
             call('id', self.convent.id),
             call('name', self.convent.name),
@@ -169,8 +169,10 @@ class ConventDeleteTests(ControllerTestCase):
     prefix_from = ConventDelete
 
     def test_make_success(self):
-        """make should verify convent_id, proccess form and redirect if form
-        was successed."""
+        """
+        .make should verify convent_id, proccess form and redirect if form was
+        successed.
+        """
         self.add_mock_object(
             self.controller,
             'verify_convent_id',
@@ -187,13 +189,13 @@ class ConventDeleteTests(ControllerTestCase):
             'obj_id': 'my obj id',
         }
         form = self.mocks['add_form'].return_value
-        form.return_value = True
+        form.validate.return_value = True
 
         self.controller.make()
 
         self.mocks['verify_convent_id'].assert_called_once_with()
         self.mocks['add_form'].assert_called_once_with(ConventDeleteForm)
-        form.assert_called_once_with()
+        form.validate.assert_called_once_with()
         form.set_value.assert_called_once_with(
             'obj_id', 'my obj id')
         self.mocks['redirect'].assert_called_once_with('convent:list')
@@ -216,7 +218,7 @@ class ConventDeleteTests(ControllerTestCase):
             'obj_id': 'my obj id',
         }
         form = self.mocks['add_form'].return_value
-        form.return_value = False
+        form.validate.return_value = False
 
         self.controller.make()
 
@@ -224,7 +226,7 @@ class ConventDeleteTests(ControllerTestCase):
         self.mocks['add_form'].assert_called_once_with(ConventDeleteForm)
         form.set_value.assert_called_once_with(
             'obj_id', 'my obj id')
-        form.assert_called_once_with()
+        form.validate.assert_called_once_with()
 
 
 class SqlConventDeleteTests(SqlControllerTestCase):

@@ -1,12 +1,12 @@
 from datetime import datetime
 
 from formskit import Field
-from formskit.field_convert import ToInt
+from formskit.converters import ToInt
 from formskit.formvalidators import FormValidator
 from formskit.validators import NotEmpty, IsDigit, InList
 from sqlalchemy.orm.exc import NoResultFound
 
-from haplugin.formskit import PostForm
+from konwentor.application.translations import KonwentorForm
 
 from .models import GameBorrow
 from konwentor.game.models import Game
@@ -14,7 +14,7 @@ from konwentor.gamecopy.models import GameEntity, GameCopy
 from konwentor.auth.models import User
 
 
-class GameBorrowAddForm(PostForm):
+class GameBorrowAddForm(KonwentorForm):
 
     def create_form(self):
         self.add_field(
@@ -75,7 +75,7 @@ class GameBorrowAddForm(PostForm):
             self.message = 'Ta gra nie ma już wolnych kopii.'
             return False
 
-    def submit(self):
+    def on_success(self):
         data = self.get_data_dict(True)
         element = GameBorrow()
         element.assign_request(self.request)
@@ -97,7 +97,7 @@ class GameBorrowAddForm(PostForm):
             .one())
 
 
-class GameBorrowReturnForm(PostForm):
+class GameBorrowReturnForm(KonwentorForm):
 
     def create_form(self):
         self.add_field(
@@ -147,7 +147,7 @@ class GameBorrowReturnForm(PostForm):
                     owner=game.User.name),
             }
 
-    def submit(self):
+    def on_success(self):
         self.return_game()
         self.borrow_next()
         self.db.flush()

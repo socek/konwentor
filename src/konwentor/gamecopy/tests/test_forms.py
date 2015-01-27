@@ -80,7 +80,7 @@ class GameCopyAddFormTest(FormTestCase):
             'convent_id': 5,
             'count': 2,
         })
-        self.form.submit()
+        self.form.on_success()
 
         self.mocks['Game'].get_or_create.assert_called_once_with(
             self.db, name='1', is_active=True)
@@ -168,7 +168,7 @@ class GameCopyAddFormSqlTestCase(SqlFormTestCase):
             self.form.fields['count'].get_name(): ['5', ],
         }
 
-        self.form()
+        self.form.validate()
         self.db.flush()
 
         entity = (

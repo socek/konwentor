@@ -57,7 +57,7 @@ class GameBorrowAddFormTest(FormTestCase):
             'document_type': ['ccs'],
             'document_number': ['wer'],
         })
-        self.form.submit()
+        self.form.on_success()
 
         element = self.mocks['GameBorrow'].return_value
 
@@ -130,7 +130,7 @@ class GameBorrowReturnFormTest(FormTestCase):
         self.add_mock_object(self.form, 'return_game')
         self.add_mock_object(self.form, 'borrow_next')
 
-        self.form.submit()
+        self.form.on_success()
 
         self.mocks['return_game'].assert_called_once_with()
         self.mocks['borrow_next'].assert_called_once_with()

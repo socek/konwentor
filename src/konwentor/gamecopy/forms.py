@@ -1,7 +1,7 @@
 from formskit.validators import NotEmpty, IsDigit
-from formskit.field_convert import ToInt
+from formskit.converters import ToInt
 
-from haplugin.formskit import PostForm
+from konwentor.application.translations import KonwentorForm
 from konwentor.auth.models import User
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
@@ -9,7 +9,7 @@ from konwentor.game.models import Game
 from .models import GameCopy, GameEntity
 
 
-class GameCopyAddForm(PostForm):
+class GameCopyAddForm(KonwentorForm):
 
     def create_form(self):
         field = self.add_field(
@@ -60,7 +60,7 @@ class GameCopyAddForm(PostForm):
                 }
         return generator
 
-    def submit(self):
+    def on_success(self):
         data = self.get_data_dict(True)
         game = self.get_or_create_game(data['game_name'])
         user = User.get_by_id(self.db, data['user_id'])

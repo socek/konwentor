@@ -1,7 +1,8 @@
-from formskit.messages import Message
+from formskit.translation import Translation
+from haplugin.formskit.models import PostForm
 
 
-class KonwentorMessage(Message):
+class KonwentorMessage(Translation):
     _translations = {
         'PasswordMustMatch': 'Email i/lub hasło są błedne.',
         'EmailMustExists': 'Email i/lub hasło są błedne.',
@@ -14,3 +15,7 @@ class KonwentorMessage(Message):
 
     def translate(self):
         return self._translations[self.text]
+
+
+class KonwentorForm(PostForm):
+    translation_class = KonwentorMessage

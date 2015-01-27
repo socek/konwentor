@@ -41,7 +41,8 @@ def upgrade():
             'update game_borrows set stats_hash=\'{0}\' where id={1};'.format(
                 hashed, result[0])
         )
-    connection.execute(pending_sql)
+    if pending_sql != '':
+        connection.execute(pending_sql)
 
     op.drop_column('game_borrows', 'document_type')
     op.drop_column('game_borrows', 'document_number')

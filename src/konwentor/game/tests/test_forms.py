@@ -51,7 +51,7 @@ class SqlGameAddFormTests(SqlFormTestCase):
             'type_description': ['type description'],
             'difficulty': ['difficulty'],
         })
-        self.form.submit()
+        self.form.on_success()
 
         self.db.flush()
         game = self.query(Game).filter_by(name='my dynamic name').one()
@@ -86,7 +86,7 @@ class SqlGameDeleteFormTests(SqlFormTestCase, GameFactoryMixin):
 
         try:
             self.form.set_value('obj_id', self.game.id)
-            self.form.submit()
+            self.form.on_success()
 
             self.db.flush()
             self.assertRaises(
@@ -117,7 +117,7 @@ class SqlGameEditFormTests(SqlFormTestCase, GameFactoryMixin):
                 self.form.fields['difficulty'].get_name(): [
                     'difficulty'],
             })
-            assert self.form() is True
+            assert self.form.validate() is True
 
             self.db.flush()
             game = self.query(Game).filter_by(id=self.game.id).one()

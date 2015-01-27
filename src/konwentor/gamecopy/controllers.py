@@ -51,7 +51,7 @@ class GameCopyAddController(GameCopyControllerBase):
 
         form = self.prepere_form()
 
-        if form():
+        if form.validate():
             self.add_flashmsg('Dodano grę.', 'info')
             self.session['last_convent_id'] = form.get_value('convent_id')
             self.session['last_user_id'] = form.get_value('user_id')

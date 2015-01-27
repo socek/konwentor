@@ -32,7 +32,7 @@ class GameAddForm(PostForm):
         except NoResultFound:
             return True
 
-    def submit(self):
+    def on_success(self):
         element = Game()
         data = self.get_data_dict(True)
         self.set_values(element, data)
@@ -59,7 +59,7 @@ class GameEditForm(GameAddForm):
 
         self.add_form_validator(IdExists(Game))
 
-    def submit(self):
+    def on_success(self):
         data = self.get_data_dict(True)
         self.set_values(self.model, data)
         self.db.commit()
@@ -82,7 +82,7 @@ class GameDeleteForm(PostForm):
     def create_form(self):
         self.add_field('obj_id', validators=[NotEmpty()])
 
-    def submit(self):
+    def on_success(self):
         data = self.get_data_dict(True)
         _id = data['obj_id']
         element = self.db.query(Game).filter_by(id=_id).one()

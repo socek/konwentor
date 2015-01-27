@@ -15,7 +15,7 @@ class ConventAddFormTest(FormTestCase):
         self.form._parse_raw_data({
             self.form.fields['name'].get_name(): ['myname'],
         })
-        self.form.submit()
+        self.form.on_success()
 
         self.mocks['Convent'].create.assert_called_once_with(
             self.db, name='myname')
@@ -30,7 +30,7 @@ class ConventDeleteFormTest(FormTestCase):
         self.form._parse_raw_data({
             self.form.fields['obj_id'].get_name(): ['123'],
         })
-        self.form.submit()
+        self.form.on_success()
 
         self.mocks['Convent'].get_by_id.assert_called_once_with(
             self.db, 123)
@@ -68,7 +68,7 @@ class ConventEditFormTest(FormTestCase):
         self.form.model = MagicMock()
         self.form._parse_raw_data({})
 
-        self.form.submit()
+        self.form.on_success()
 
         self.assertEqual('myname', self.form.model.name)
         self.db.commit.assert_called_once_with()
