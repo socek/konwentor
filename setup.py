@@ -17,9 +17,9 @@ install_requires = [
     'hatak_debugtoolbar',
     'hatak_toster>=0.2.1',
     'hatak_statics>=0.2.3',
-    'hatak_formskit>=0.2.3',
+    'hatak_formskit>=0.2.3.1',
     'hatak_flashmsg',
-    'hatak_auth>=0.2.2',
+    'hatak_auth>=0.2.2.1',
 ]
 dependency_links = [
 
