@@ -7,7 +7,6 @@ from haplugin.sql import SqlPlugin
 from haplugin.alembic import AlembicPlugin
 from haplugin.beaker import BeakerPlugin
 from haplugin.debugtoolbar import DebugtoolbarPlugin
-from haplugin.toster import TosterPlugin
 from haplugin.statics import StaticPlugin
 from haplugin.flashmsg import FlashMessagePlugin
 from haplugin.auth import AuthPlugin
@@ -17,7 +16,6 @@ from haplugin.formskit import FormPlugin
 
 from konwentor.menu.plugin import MenuPlugin
 
-from konwentor.application.tests.fixtures import Fixtures
 from .routes import make_routes
 
 
@@ -34,4 +32,3 @@ main.add_plugin(MenuPlugin())
 main.add_plugin(FlashMessagePlugin())
 main.add_plugin(FormPlugin(FormWidget))
 main.add_plugin(StaticPlugin())
-main.add_plugin(TosterPlugin(Fixtures))

@@ -1,4 +1,6 @@
-from haplugin.toster import Fixtures as Base
+from pytest import fixture
+
+from haplugin.sql.fixtures import BaseFixtures
 
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
@@ -7,9 +9,9 @@ from konwentor.gameborrow.models import GameBorrow
 from konwentor.auth.models import User
 
 
-class Fixtures(Base):
+class Fixtures(BaseFixtures):
 
-    def __call__(self):
+    def make_all(self):
         self.create_users()
         self.create_convents()
         self.create_games()
@@ -145,3 +147,9 @@ class Fixtures(Base):
         )
         obj.settings = self.application.settings
         obj.set_document('paszport', '123')
+
+
+@fixture(scope="session")
+def fixtures(db, app):
+    print("Creating fixtures...")
+    return Fixtures(db, app).create_all()
