@@ -1,4 +1,4 @@
-venv
+venv_konwentor
 *.py[cod]
 
 # C extensions
@@ -46,3 +46,4 @@ local.py
 *.flag
 flags
 data/*
+TODO
