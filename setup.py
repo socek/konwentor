@@ -3,24 +3,26 @@ from setuptools import setup, find_packages
 
 install_requires = [
     'hatak==0.2.7.8',
-    'waitress',
-    'psycopg2',
-    'uwsgi',
     'coverage',
-
     'hatak_logging',
     'hatak_jinja2',
     'hatak_haml',
-    'hatak_sql>=0.1.6',
-    'hatak_alembic',
+    'hatak_sql>=0.1.12',
+    'hatak_alembic>=0.1.2',
     'hatak_beaker',
     'hatak_debugtoolbar',
-    'hatak_statics>=0.2.3',
-    'hatak_formskit>=0.2.3.1',
+    'hatak_statics',
+    'hatak_formskit>=0.2.3.2',
     'hatak_flashmsg',
-    'hatak_auth>=0.2.2.1',
+    'waitress',
+    # 'uwsgi',
     'pytest',
     'pytest-cov',
+    'coverage==3.7.1',
+    'hatak_auth>=0.2.2.2',
+    'ipdb',
+    'psycopg2',
+    'SQLAlchemy==0.9.8',
 ]
 dependency_links = [
 

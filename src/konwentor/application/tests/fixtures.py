@@ -1,6 +1,4 @@
-from pytest import fixture
-
-from haplugin.sql.fixtures import BaseFixtures
+from haplugin.sql.fixtures import FixtureGenerator
 
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
@@ -9,7 +7,33 @@ from konwentor.gameborrow.models import GameBorrow
 from konwentor.auth.models import User
 
 
-class Fixtures(BaseFixtures):
+class Fixtures(FixtureGenerator):
+    users = [
+        {
+            'name': 'first',
+            'email': 'first@gmail.com',
+            'password': 'simplepass',
+            'permissions': [('base', 'view'), ('game', 'edit')]
+        },
+        {
+            'name': 'second',
+            'email': 'second@gmail.com',
+            'password': 'simplepass',
+            'permissions': [('base', 'view'), ('game', 'edit')]
+        },
+        {
+            'name': 'third',
+            'email': 'third@gmail.com',
+            'password': 'simplepass',
+            'permissions': [('base', 'view'), ('game', 'edit')]
+        },
+        {
+            'name': 'dynamic1',
+            'email': 'dynamic1@gmail.com',
+            'password': 'simplepass',
+            'permissions': [('base', 'view'), ('game', 'edit')]
+        },
+    ]
 
     def make_all(self):
         self.create_users()
@@ -20,11 +44,13 @@ class Fixtures(BaseFixtures):
         self.create_borrows()
 
     def create_users(self):
-        self._create(User, name='first')
-        self._create(User, name='second')
-        self._create(User, name='third')
-
-        self._create(User, name='dynamic1')
+        for userdata in self.users:
+            password = userdata.pop('password')
+            permissions = userdata.pop('permissions')
+            user = self._create(User, **userdata)
+            user.set_password(password)
+            for perm in permissions:
+                user.add_permission(self.db, *perm)
 
     def create_convents(self):
         self._create(Convent, name='first')
@@ -147,9 +173,3 @@ class Fixtures(BaseFixtures):
         )
         obj.settings = self.application.settings
         obj.set_document('paszport', '123')
-
-
-@fixture(scope="session")
-def fixtures(db, app):
-    print("Creating fixtures...")
-    return Fixtures(db, app).create_all()

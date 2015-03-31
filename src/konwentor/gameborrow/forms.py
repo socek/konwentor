@@ -1,9 +1,10 @@
 from datetime import datetime
 
 from formskit import Field
+from formskit.field import AvalibleValue
 from formskit.converters import ToInt
 from formskit.formvalidators import FormValidator
-from formskit.validators import NotEmpty, IsDigit, InList
+from formskit.validators import NotEmpty, IsDigit, IsValueInAvalibleValues
 from sqlalchemy.orm.exc import NoResultFound
 
 from konwentor.application.translations import KonwentorForm
@@ -107,8 +108,8 @@ class GameBorrowReturnForm(KonwentorForm):
         field = self.add_field(
             'game_entity_id',
             label='Wypożycza',
-            validators=[InList(self.get_entity_ids, 'GameNameInList')])
-        field.data = self.get_game_names_for_select
+            validators=[IsValueInAvalibleValues()])
+        field.set_avalible_values(self.get_game_names_for_select)
         self.add_field(
             'convent_id',
             validators=[NotEmpty(), IsDigit()],
@@ -130,22 +131,15 @@ class GameBorrowReturnForm(KonwentorForm):
                 yield game
 
     def get_entity_ids(self):
-        yield ''
+        yield AvalibleValue('', '(nie wypożycza)')
         for game in self.get_avalible_games():
-            yield str(game.GameEntity.id)
-
-    def get_game_names_for_select(self):
-        yield {
-            'value': '',
-            'label': '(nie wypożycza)'
-        }
-        for game in self.get_avalible_games():
-            yield {
-                'value': game.GameEntity.id,
-                'label': '{owner} - {name}'.format(
+            yield AvalibleValue(
+                game.GameEntity.id,
+                '{owner} - {name}'.format(
                     name=game.name,
-                    owner=game.User.name),
-            }
+                    owner=game.User.name
+                ),
+            )
 
     def on_success(self):
         self.return_game()
