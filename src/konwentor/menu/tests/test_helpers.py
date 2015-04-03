@@ -1,31 +1,39 @@
-from haplugin.toster import TestCase
+from pytest import fixture, yield_fixture
+from mock import patch
+
+from hatak.testing import RequestFixture
+
 from ..helpers import MenuWidget
 
 
-class MenuWidgetTests(TestCase):
-    prefix_from = MenuWidget
+class TestMenuWidget(RequestFixture):
 
-    def setUp(self):
-        super().setUp()
-        self.highlited = 'highlited'
-        self.widget = self.prefix_from(self.request, self.highlited)
-        self.widget.data = {'menu': []}
+    @fixture
+    def widget(self, request):
+        self.highlighted = 'highlited'
+        widget = MenuWidget(request, self.highlighted)
+        widget.data = {'menu': []}
+        return widget
 
-    def test_init(self):
-        self.assertEqual(self.highlited, self.widget.highlighted)
+    @yield_fixture
+    def MenuObject(self):
+        patcher = patch('konwentor.menu.helpers.MenuObject', auto_spec=True)
+        with patcher as mock:
+            yield mock
 
-    def test_add_menu(self):
-        """add_menu should create MenuObject and append it to the .data['menu']
+    def test_init(self, widget):
+        assert widget.highlighted == self.highlighted
+
+    def test_add_menu(self, widget, MenuObject):
         """
-        self.add_mock('MenuObject', auto_spec=True)
-        result = self.widget.add_menu('arg')
+        add_menu should create MenuObject and append it to the .data['menu']
+        """
+        result = widget.add_menu('arg')
 
-        self.assertEqual(self.mocks['MenuObject'].return_value, result)
-        self.mocks['MenuObject'].assert_called_once_with(self.widget, 'arg')
-        self.assertEqual(
-            [result],
-            self.widget.data['menu'])
+        assert result == MenuObject.return_value
+        MenuObject.assert_called_once_with(widget, 'arg')
+        assert widget.data['menu'] == [result]
 
-    def test_make(self):
+    def test_make(self, widget):
         """Sanity check."""
-        self.widget.make()
+        widget.make()

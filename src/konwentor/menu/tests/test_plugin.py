@@ -1,52 +1,52 @@
-from haplugin.toster import TestCase
-from mock import MagicMock
+from pytest import yield_fixture
+from mock import patch
+
+from hatak.testing import PluginFixture, ControllerPluginFixture
 
 from ..helpers import MenuWidget
 from ..plugin import MenuPlugin, MenuControllerPlugin
 
 
-class MenuPluginTests(TestCase):
+class TestMenuPlugin(PluginFixture):
     prefix_from = MenuPlugin
 
-    def setUp(self):
-        super().setUp()
-        self.plugin = self.prefix_from()
+    def _get_plugin_class(self):
+        return MenuPlugin
 
-    def test_add_controller_plugins(self):
+    @yield_fixture
+    def add_controller_plugin(self, plugin):
+        with patch.object(plugin, 'add_controller_plugin') as mock:
+            yield mock
+
+    def test_add_controller_plugins(self, plugin, add_controller_plugin):
         """add_controller_plugins should add MenuControllerPlugin to plugins"""
-        self.add_mock_object(self.plugin, 'add_controller_plugin')
+        plugin.add_controller_plugins()
 
-        self.plugin.add_controller_plugins()
-
-        self.mocks['add_controller_plugin'].assert_called_once_with(
-            MenuControllerPlugin)
+        add_controller_plugin.assert_called_once_with(MenuControllerPlugin)
 
 
-class MenuControllerPluginTests(TestCase):
-    prefix_from = MenuControllerPlugin
+class TestMenuControllerPlugin(ControllerPluginFixture):
 
-    def setUp(self):
-        super().setUp()
-        self.controller = MagicMock()
-        self.parent = MagicMock()
-        self.plugin = self.prefix_from(self.parent, self.controller)
+    def _get_plugin_class(self):
+        return MenuControllerPlugin
 
-    def test_make_helpers_success(self):
-        """make_helpers should add MenuWidget to helpers if
-        controller.menu_highlighted is specyfied."""
-        self.add_mock_object(self.plugin, 'add_helper')
-        self.controller.menu_highlighted = 'something'
+    def test_make_helpers_success(self, plugin, add_helper, controller):
+        """
+        make_helpers should add MenuWidget to helpers if
+        controller.menu_highlighted is specyfied.
+        """
+        controller.menu_highlighted = 'something'
 
-        self.plugin.make_helpers()
+        plugin.make_helpers()
 
-        self.mocks['add_helper'].assert_called_once_with(
-            'menu', MenuWidget, 'something')
+        add_helper.assert_called_once_with('menu', MenuWidget, 'something')
 
-    def test_make_helpers_fail(self):
-        """make_helpers should do nothing if controller.menu_highlighted is not
-        specyfied."""
-        self.add_mock_object(self.plugin, 'add_helper')
-        del(self.controller.menu_highlighted)
+    def test_make_helpers_fail(self, plugin, add_helper, controller):
+        """
+        make_helpers should do nothing if controller.menu_highlighted is not
+        specyfied.
+        """
+        del(controller.menu_highlighted)
 
-        self.plugin.make_helpers()
-        self.assertEqual(0, self.mocks['add_helper'].call_count)
+        plugin.make_helpers()
+        assert not add_helper.called
