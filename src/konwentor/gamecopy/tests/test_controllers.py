@@ -1,8 +1,9 @@
-from mock import MagicMock, call
+from pytest import fixture, yield_fixture, raises
+from mock import MagicMock, call, patch
 from sqlalchemy.orm.exc import NoResultFound
 
-from haplugin.toster import ControllerTestCase, SqlControllerTestCase
-from haplugin.toster.fixtures import fixtures
+from hatak.testing import ControllerFixture
+from haplugin.sql.testing import DatabaseFixture
 
 from ..controllers import EndController
 from ..controllers import GameCopyAddController, GameCopyToBoxController
@@ -11,133 +12,151 @@ from konwentor.convent.helpers import ConventWidget
 from konwentor.gamecopy.forms import GameCopyAddForm
 
 
-class GameCopyControllerBaseTests(ControllerTestCase):
-    prefix_from = GameCopyControllerBase
+class LocalFixtures(ControllerFixture, DatabaseFixture):
 
-    def test_verify_convent_false(self):
-        """verify_convent should return False when convent_id is not in
-        session"""
-        self.add_mock_object(self.controller, 'add_flashmsg', autospec=True)
-        self.add_mock_object(self.controller, 'redirect', autospec=True)
-        self.controller.session = {}
+    @fixture
+    def add_flashmsg(self, request):
+        return request.add_flashmsg
 
-        self.assertEqual(False, self.controller.verify_convent())
-        self.mocks['add_flashmsg'].assert_called_once_with(
+    @fixture
+    def session(self, request):
+        request.session = {}
+        return request.session
+
+    @yield_fixture
+    def verify_convent(self, controller):
+        with patch.object(controller, 'verify_convent') as mock:
+            mock.return_value = True
+            yield mock
+
+    @yield_fixture
+    def get_convent(self, controller):
+        with patch.object(controller, 'get_convent', autospec=True) as mock:
+            yield mock
+
+
+class TestGameCopyControllerBase(LocalFixtures):
+
+    def _get_controller_class(self):
+        return GameCopyControllerBase
+
+    @yield_fixture
+    def add_helper(self, controller):
+        with patch.object(controller, 'add_helper', autospec=True) as mock:
+            yield mock
+
+    def test_verify_convent_false(
+        self,
+        controller,
+        add_flashmsg,
+        redirect,
+        session
+    ):
+        """
+        verify_convent should return False when convent_id is not in
+        session
+        """
+        assert controller.verify_convent() is False
+        add_flashmsg.assert_called_once_with(
             'Proszę wybrać konwent.', 'danger')
-        self.mocks['redirect'].assert_called_once_with('convent:list')
+        redirect.assert_called_once_with('convent:list')
 
-    def test_verify_convent_true(self):
+    def test_verify_convent_true(self, controller, session):
         """verify_convent should return True when convent_id is in session"""
-        self.controller.session = {
-            'convent_id': 1,
-        }
+        session['convent_id'] = 1
 
-        self.assertEqual(True, self.controller.verify_convent())
+        assert controller.verify_convent() is True
 
-    def test_make_helpers(self):
+    def test_make_helpers(self, controller, add_helper, get_convent):
         """make_helpers should add ConventWidget helper"""
-        self.add_mock_object(self.controller, 'add_helper', autospec=True)
-        self.add_mock_object(self.controller, 'get_convent', autospec=True)
+        controller.make_helpers()
 
-        self.controller.make_helpers()
-
-        self.mocks['add_helper'].assert_called_once_with(
+        add_helper.assert_called_once_with(
             'convent',
             ConventWidget,
-            self.mocks['get_convent'].return_value,
+            get_convent.return_value,
         )
 
 
-class GameCopyControllerBaseSqlTests(SqlControllerTestCase):
-    prefix_from = GameCopyControllerBase
+class TestGameCopyControllerBaseSql(LocalFixtures):
 
-    def test_get_convent(self):
+    def _get_controller_class(self):
+        return GameCopyControllerBase
+
+    def test_get_convent(self, controller, fixtures, session):
         """get_convent should return convent which id is saved in session."""
         convent = fixtures['Convent']['first']
-        self.controller.session = {
-            'convent_id': convent.id,
-        }
+        session['convent_id'] = convent.id,
 
-        result = self.controller.get_convent()
+        assert controller.get_convent() == convent
 
-        self.assertEqual(convent, result)
-
-    def test_get_convent_on_inactive_convent(self):
+    def test_get_convent_on_inactive_convent(
+        self,
+        add_flashmsg,
+        redirect,
+        fixtures,
+        session,
+        controller
+    ):
         """get_convent should raise NoResultFound when convent is inactive"""
-        self.add_mock_object(self.controller, 'add_flashmsg')
-        self.add_mock_object(self.controller, 'redirect')
 
         convent = fixtures['Convent']['inactive']
-        self.controller.session = {
-            'convent_id': convent.id,
-        }
+        session['convent_id'] = convent.id,
 
-        self.assertRaises(EndController, self.controller.get_convent)
-        self.mocks['add_flashmsg'].assert_called_once_with(
+        with raises(EndController):
+            controller.get_convent()
+
+        add_flashmsg.assert_called_once_with(
             'Proszę wybrać konwent.', 'danger')
-        self.mocks['redirect'].assert_called_once_with('convent:list')
+        redirect.assert_called_once_with('convent:list')
 
 
-class GameCopyListControllerTestCase(SqlControllerTestCase):
-    prefix_from = GameCopyListController
+class TestGameCopyAddController(LocalFixtures):
 
-    def test_get_games(self):
-        """get_games should return list of games avalible on convent"""
-        convent = fixtures['Convent']['first']
-        result = self.controller.get_games(convent)
+    def _get_controller_class(self):
+        return GameCopyAddController
 
-        self.assertEqual(3, len(result))
-        for element in result:
-            self.assertEqual(convent, element.GameEntity.convent)
-
-
-class GameCopyAddControllerTests(ControllerTestCase):
-    prefix_from = GameCopyAddController
-
-    def setUp(self):
-        super().setUp()
-        self.add_mock_object(self.controller, 'verify_convent')
-        self.mocks['verify_convent'].return_value = True
-        self.add_mock_object(self.controller, 'add_form')
-        self.add_mock_object(self.controller, 'add_flashmsg')
-
-    def test_verify_convent(self):
+    def test_verify_convent(self, verify_convent, controller, add_form):
         """Controller should do nothing if verify_convent fails"""
-        self.mocks['verify_convent'].return_value = False
+        verify_convent.return_value = False
 
-        self.controller.make()
+        controller.make()
 
-        self.mocks['verify_convent'].assert_called_once_with()
-        self.assertEqual(0, self.mocks['add_form'].call_count)
+        verify_convent.assert_called_once_with()
+        assert not add_form.called
 
-    def test_form_not_submitted(self):
+    def test_form_not_submitted(
+        self,
+        add_form,
+        controller,
+        add_flashmsg,
+        verify_convent
+    ):
         """Controller should create form after verify_convent check."""
-        form = self.mocks['add_form'].return_value
+        form = add_form.return_value
         form.validate.return_value = None
 
-        self.controller.make()
+        controller.make()
 
-        self.mocks['add_form'].assert_called_once_with(GameCopyAddForm)
+        add_form.assert_called_once_with(GameCopyAddForm)
         form.validate.assert_called_once_with()
         form.parse_dict({
             'count': 1,
             'user_id': self.user.id,
             'convent_id': self.session['convent_id'],
         })
-        self.assertEqual(0, self.mocks['add_flashmsg'].call_count)
+        assert not add_flashmsg.called
 
-    def test_form_submitted(self):
-        self.session = self.controller.session = {
-            'last_convent_id': 1,
-            'last_user_id': -1,
-            'convent_id': 2
-        }
-        form = self.mocks['add_form'].return_value
+    def test_form_submitted(self, controller, session, add_form, add_flashmsg):
+        session['last_convent_id'] = 1
+        session['last_user_id'] = -1
+        session['convent_id'] = 2
+        form = add_form.return_value
         form.validate.return_value = True
 
-        self.controller.make()
+        controller.make()
 
-        self.mocks['add_form'].assert_called_once_with(GameCopyAddForm)
+        add_form.assert_called_once_with(GameCopyAddForm)
         form.validate.assert_called_once_with()
         form.parse_dict.assert_called_once_with({
             'count': 1,
@@ -145,131 +164,173 @@ class GameCopyAddControllerTests(ControllerTestCase):
             'convent_id': 1,
         })
 
-        self.mocks['add_flashmsg'].assert_called_once_with(
+        add_flashmsg.assert_called_once_with(
             'Dodano grę.', 'info')
 
         form.get_value.assert_has_calls([
             call('convent_id'),
             call('user_id'),
         ])
-        self.assertEqual(
-            form.get_value.return_value,
-            self.session['last_convent_id'],
-        )
-        self.assertEqual(
-            form.get_value.return_value,
-            self.session['last_user_id'],
-        )
+        assert session['last_convent_id'] == form.get_value.return_value
+        assert session['last_user_id'] == form.get_value.return_value
 
 
-class GameCopyListControllerTests(ControllerTestCase):
-    prefix_from = GameCopyListController
+class TestGameCopyListController(LocalFixtures):
 
-    def setUp(self):
-        super().setUp()
-        self.add_mock_object(self.controller, 'verify_convent')
-        self.mocks['verify_convent'].return_value = True
+    @fixture
+    def game(self):
+        return MagicMock()
 
-    def test_verify_convent(self):
+    @yield_fixture
+    def get_games(self, controller, game):
+        patcher = patch.object(controller, 'get_games', return_value=[game])
+        with patcher as mock:
+            yield mock
+
+    @yield_fixture
+    def GameEntityWidget(self):
+        with patch('konwentor.gamecopy.controllers.GameEntityWidget') as mock:
+            yield mock
+
+    def _get_controller_class(self):
+        return GameCopyListController
+
+    def test_get_games(self, fixtures, controller):
+        """get_games should return list of games avalible on convent"""
+        convent = fixtures['Convent']['first']
+        result = controller.get_games(convent)
+
+        assert len(result) == 3
+        for element in result:
+            assert element.GameEntity.convent == convent
+
+    def test_verify_convent(self, verify_convent, controller, data):
         """Controller should do nothing if verify_convent fails"""
-        self.mocks['verify_convent'].return_value = False
+        verify_convent.return_value = False
 
-        self.controller.make()
+        controller.make()
 
-        self.mocks['verify_convent'].assert_called_once_with()
-        self.assertEqual({}, self.data)
+        verify_convent.assert_called_once_with()
+        assert data == {}
 
-    def test_normal(self):
-        game = MagicMock()
-        self.add_mock_object(self.controller, 'get_convent')
-        self.add_mock_object(self.controller, 'get_games', return_value=[game])
-        self.add_mock('GameEntityWidget')
+    def test_normal(
+        self,
+        verify_convent,
+        controller,
+        get_convent,
+        GameEntityWidget,
+        data,
+        request,
+        game,
+        get_games
+    ):
+        controller.make()
 
-        self.controller.make()
-
-        self.mocks['verify_convent'].assert_called_once_with()
-        self.assertEqual({
-            'convent': self.mocks['get_convent'].return_value,
-            'games': [self.mocks['GameEntityWidget'].return_value],
-        }, self.data)
-        self.mocks['get_games'].assert_called_once_with(
-            self.mocks['get_convent'].return_value)
-        self.mocks['GameEntityWidget'].assert_called_once_with(
-            self.request,
-            game)
+        verify_convent.assert_called_once_with()
+        assert data == {
+            'convent': get_convent.return_value,
+            'games': [GameEntityWidget.return_value],
+        }
+        get_games.assert_called_once_with(get_convent.return_value)
+        GameEntityWidget.assert_called_once_with(request, game)
 
 
-class GameCopyToBoxControllerTests(ControllerTestCase):
-    prefix_from = GameCopyToBoxController
+class TestGameCopyToBoxController(LocalFixtures):
 
-    def setUp(self):
-        super().setUp()
-        self.add_mock_object(self.controller, 'verify_convent')
-        self.add_mock_object(self.controller, 'redirect')
-        self.add_mock_object(self.controller, 'add_flashmsg')
+    def _get_controller_class(self):
+        return GameCopyToBoxController
 
-    def test_make_bad_convent_id(self):
-        """GameCopyToBoxController should verify convent and do nothing if it
-        fails"""
-        self.mocks['verify_convent'].return_value = False
+    @yield_fixture
+    def move_to_box(self, controller):
+        with patch.object(controller, 'move_to_box') as mock:
+            yield mock
 
-        self.controller.make()
+    @yield_fixture
+    def get_game_entity(self, controller):
+        with patch.object(controller, 'get_game_entity') as mock:
+            yield mock
 
-        self.mocks['verify_convent'].assert_called_once_with()
-        self.assertEqual(0, self.mocks['add_flashmsg'].call_count)
-        self.assertEqual(0, self.mocks['redirect'].call_count)
+    def test_make_bad_convent_id(
+        self,
+        controller,
+        verify_convent,
+        add_flashmsg,
+        redirect
+    ):
+        """
+        GameCopyToBoxController should verify convent and do nothing if it
+        fails.
+        """
+        verify_convent.return_value = False
 
-    def test_make(self):
-        """GameCopyToBoxController should verify convent, move game copy to box
-        and redirect to gamecopy:list"""
-        self.add_mock_object(self.controller, 'move_to_box')
-        self.mocks['verify_convent'].return_value = True
+        controller.make()
 
-        self.controller.make()
+        verify_convent.assert_called_once_with()
+        assert not add_flashmsg.called
+        assert not redirect.called
 
-        self.mocks['verify_convent'].assert_called_once_with()
+    def test_make(
+        self,
+        controller,
+        verify_convent,
+        add_flashmsg,
+        redirect,
+        move_to_box
+    ):
+        """
+        GameCopyToBoxController should verify convent, move game copy to box
+        and redirect to gamecopy:list
+        """
+        verify_convent.return_value = True
 
-        self.mocks['move_to_box'].assert_called_once_with()
-        self.mocks['add_flashmsg'].assert_called_once_with(
+        controller.make()
+
+        verify_convent.assert_called_once_with()
+
+        move_to_box.assert_called_once_with()
+        add_flashmsg.assert_called_once_with(
             'Gra została schowana.', 'success')
-        self.mocks['redirect'].assert_called_once_with('gamecopy:list')
+        redirect.assert_called_once_with('gamecopy:list')
 
-    def test_move_to_box(self):
+    def test_move_to_box(
+        self,
+        controller,
+        verify_convent,
+        add_flashmsg,
+        redirect,
+        get_game_entity,
+        get_convent
+    ):
         """move_to_box should get entity, move it to box and commit to db."""
-        self.add_mock_object(self.controller, 'get_game_entity')
-        self.add_mock_object(self.controller, 'get_convent')
+        controller.move_to_box()
 
-        self.controller.move_to_box()
-
-        self.mocks['get_convent'].assert_called_once_with()
-        convent = self.mocks['get_convent'].return_value
-        self.mocks['get_game_entity'].assert_called_once_with(convent)
-        entity = self.mocks['get_game_entity'].return_value
+        get_convent.assert_called_once_with()
+        convent = get_convent.return_value
+        get_game_entity.assert_called_once_with(convent)
+        entity = get_game_entity.return_value
         entity.move_to_box.assert_called_once_with()
         self.db.commit.assert_called_once_with()
 
-
-class SqlGameCopyToBoxControllerTests(SqlControllerTestCase):
-    prefix_from = GameCopyToBoxController
-
-    def test_get_game_entity(self):
-        """get_game_entity should return return GameEntity which id is provided
-        by matchdict and convent do match."""
+    def test_get_game_entity(self, fixtures, controller):
+        """
+        get_game_entity should return return GameEntity which id is provided
+        by matchdict and convent do match.
+        """
         entity = fixtures['GameEntity'][0]
         convent = entity.convent
         self.matchdict['obj_id'] = entity.id
 
-        result = self.controller.get_game_entity(convent)
+        assert controller.get_game_entity(convent) == entity
 
-        self.assertEqual(entity, result)
-
-    def test_game_entity_when_convent_does_not_match(self):
+    def test_game_entity_when_convent_does_not_match(
+        self,
+        fixtures,
+        controller
+    ):
         """get_game_entity should raises () when convent does not match"""
         entity = fixtures['GameEntity'][0]
         convent = fixtures['Convent']['second']
         self.matchdict['obj_id'] = entity.id
 
-        self.assertRaises(
-            NoResultFound,
-            self.controller.get_game_entity,
-            convent)
+        with raises(NoResultFound):
+            controller.get_game_entity(convent)

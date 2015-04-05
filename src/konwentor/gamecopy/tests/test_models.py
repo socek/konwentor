@@ -1,51 +1,53 @@
 from mock import MagicMock
-from haplugin.toster import ModelTestCase
+from pytest import fixture
 
 from ..models import GameEntity
 
 
-class GameEntityTests(ModelTestCase):
+class TestGameEntity(object):
     prefix_from = GameEntity
 
-    def setUp(self):
-        super().setUp()
-        self.model.borrows = [
+    @fixture
+    def model(self):
+        model = GameEntity()
+        model.borrows = [
             MagicMock(),
             MagicMock(),
             MagicMock(),
         ]
-        self.model.borrows[0].is_borrowed = True
-        self.model.borrows[1].is_borrowed = True
-        self.model.borrows[2].is_borrowed = False
+        model.borrows[0].is_borrowed = True
+        model.borrows[1].is_borrowed = True
+        model.borrows[2].is_borrowed = False
+        return model
 
-    def test_active_borrows(self):
+    def test_active_borrows(self, model):
         """active_borrows_len should return list of active borrows"""
-        data = list(self.model.active_borrows())
-        self.assertEqual([
-            self.model.borrows[0],
-            self.model.borrows[1],
-        ], data)
+        data = list(model.active_borrows())
+        assert data == [
+            model.borrows[0],
+            model.borrows[1],
+        ]
 
-    def test_active_borrows_len(self):
+    def test_active_borrows_len(self, model):
         """active_borrows_len should return lenght of active borrows."""
-        self.assertEqual(2, self.model.active_borrows_len())
+        assert model.active_borrows_len() == 2
 
-    def test_is_avalible(self):
+    def test_is_avalible(self, model):
         """is_avalible should return True if there is free game"""
-        self.model.count = 3
+        model.count = 3
 
-        self.assertEqual(True, self.model.is_avalible())
+        assert model.is_avalible() is True
 
-    def test_is_avalible_false(self):
+    def test_is_avalible_false(self, model):
         """is_avalible should return False if there is no free game"""
-        self.model.count = 2
+        model.count = 2
 
-        self.assertEqual(False, self.model.is_avalible())
+        assert model.is_avalible() is False
 
-    def test_move_to_box(self):
+    def test_move_to_box(self, model):
         """move_to_box should set is_in_box state to True"""
-        self.model.is_in_box = False
+        model.is_in_box = False
 
-        self.model.move_to_box()
+        model.move_to_box()
 
-        self.assertEqual(True, self.model.is_in_box)
+        assert model.is_in_box is True

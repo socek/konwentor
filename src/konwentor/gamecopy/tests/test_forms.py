@@ -1,7 +1,8 @@
-from mock import MagicMock, create_autospec
+from pytest import yield_fixture
+from mock import MagicMock, create_autospec, patch
 
-from haplugin.toster import FormTestCase, SqlFormTestCase
-from haplugin.toster.fixtures import fixtures
+from haplugin.formskit.testing import FormFixture
+from haplugin.sql.testing import DatabaseFixture
 
 from ..forms import GameCopyAddForm
 from ..models import GameCopy, GameEntity
@@ -10,181 +11,206 @@ from konwentor.convent.models import Convent
 from konwentor.game.models import Game
 
 
-class GameCopyAddFormTest(FormTestCase):
+class TestGameCopyAddForm(FormFixture, DatabaseFixture):
 
-    prefix_from = GameCopyAddForm
+    def _get_controller_class(self):
+        return GameCopyAddForm
 
-    def test_get_objects(self):
+    @yield_fixture
+    def Game(self):
+        with patch('konwentor.gamecopy.forms.Game') as mock:
+            yield mock
+
+    @yield_fixture
+    def User(self):
+        with patch('konwentor.gamecopy.forms.User') as mock:
+            yield mock
+
+    @yield_fixture
+    def Convent(self):
+        with patch('konwentor.gamecopy.forms.Convent') as mock:
+            yield mock
+
+    @yield_fixture
+    def GameCopy(self):
+        with patch('konwentor.gamecopy.forms.GameCopy') as mock:
+            yield mock
+
+    @yield_fixture
+    def GameEntity(self):
+        with patch('konwentor.gamecopy.forms.GameEntity') as mock:
+            yield mock
+
+    @yield_fixture
+    def create_gamecopy(self, form):
+        with patch.object(form, 'create_gamecopy', autospec=True) as mock:
+            yield mock
+
+    @yield_fixture
+    def create_gameentity(self, form):
+        with patch.object(form, 'create_gameentity', autospec=True) as mock:
+            yield mock
+
+    def test_get_objects(self, form, mquery):
         """get_objects should return list of dicts"""
-        self.query.return_value.filter_by.call_count = 0
+        mquery.return_value.filter_by.call_count = 0
         example_model = MagicMock()
-        self.query.return_value.filter_by.return_value.all.return_value = [
-            example_model]
+        mquery.return_value.filter_by.return_value.all.return_value = [
+            example_model
+        ]
 
-        data = list(self.form.get_objects(self)())
+        data = list(form.get_objects(self)())
 
-        self.assertEqual({
+        assert data[0] == {
             'label': '(Wybierz)',
             'value': '',
-        }, data[0])
+        }
 
-        self.assertEqual({
+        assert data[1] == {
             'label': example_model.name,
             'value': example_model.id,
-        }, data[1])
+        }
 
-        self.query.assert_called_with(self)
-        self.query.return_value.filter_by.assert_called_once_with()
-        self.query.return_value.filter_by.return_value.all.assert_called_with()
+        mquery.assert_called_with(self)
+        mquery.return_value.filter_by.assert_called_once_with()
+        mquery.return_value.filter_by.return_value.all.assert_called_with()
 
-    def test_get_objects_with_other(self):
+    def test_get_objects_with_other(self, form, mquery):
         """get_objects should return list of dicts"""
-        self.query.return_value.filter_by.call_count = 0
+        mquery.return_value.filter_by.call_count = 0
         example_model = MagicMock()
-        self.query.return_value.filter_by.return_value.all.return_value = [
+        mquery.return_value.filter_by.return_value.all.return_value = [
             example_model]
 
-        data = list(self.form.get_objects(self, True)())
+        data = list(form.get_objects(self, True)())
 
-        self.assertEqual({
+        assert data[0] == {
             'label': '(Wybierz)',
             'value': '',
-        }, data[0])
+        }
 
-        self.assertEqual({
+        assert data[1] == {
             'label': example_model.name,
             'value': example_model.id,
-        }, data[1])
+        }
 
-        self.assertEqual({
+        assert data[2] == {
             'label': '',
             'value': '-1',
-        }, data[2])
+        }
 
-        self.query.assert_called_with(self)
-        self.query.return_value.filter_by.assert_called_once_with()
-        self.query.return_value.filter_by.return_value.all.assert_called_with()
+        mquery.assert_called_with(self)
+        mquery.return_value.filter_by.assert_called_once_with()
+        mquery.return_value.filter_by.return_value.all.assert_called_with()
 
-    def test_submit(self):
+    def test_submit(
+        self,
+        form,
+        mquery,
+        Game,
+        User,
+        Convent,
+        create_gamecopy,
+        create_gameentity,
+        mdb,
+    ):
         """Submit should create gamecopy and gameentity (with count)."""
-        self.add_mock('Game')
-        self.add_mock('User')
-        self.add_mock('Convent')
-        self.add_mock_object(self.form, 'create_gamecopy', autospec=True)
-        self.add_mock_object(self.form, 'create_gameentity', autospec=True)
-        self.mocks['create_gameentity'].return_value.count = 3
+        create_gameentity.return_value.count = 3
 
-        self.form.parse_dict({
+        form.parse_dict({
             'game_name': '1',
             'user_id': 4,
             'convent_id': 5,
             'count': 2,
         })
-        self.form.on_success()
+        form.on_success()
 
-        self.mocks['Game'].get_or_create.assert_called_once_with(
-            self.db, name='1', is_active=True)
-        self.mocks['User'].get_by_id.assert_called_once_with(
-            self.db, 4)
-        self.mocks['Convent'].get_by_id.assert_called_once_with(
-            self.db, 5)
+        Game.get_or_create.assert_called_once_with(
+            mdb, name='1', is_active=True)
+        User.get_by_id.assert_called_once_with(mdb, 4)
+        Convent.get_by_id.assert_called_once_with(mdb, 5)
 
-        self.mocks['create_gamecopy'].assert_called_once_with(
-            self.mocks['Game'].get_or_create.return_value,
-            self.mocks['User'].get_by_id.return_value,
+        create_gamecopy.assert_called_once_with(
+            Game.get_or_create.return_value,
+            User.get_by_id.return_value,
         )
 
-        self.mocks['create_gameentity'].assert_called_once_with(
-            self.mocks['Convent'].get_by_id.return_value,
-            self.mocks['create_gamecopy'].return_value,
+        create_gameentity.assert_called_once_with(
+            Convent.get_by_id.return_value,
+            create_gamecopy.return_value,
         )
-        gameentity = self.mocks['create_gameentity'].return_value
+        gameentity = create_gameentity.return_value
 
-        self.assertEqual(gameentity.count, 5)
+        assert gameentity.count == 5
 
-        self.db.commit.assert_called_once_with()
-        self.db.rollback.assert_called_once_with()
+        mdb.commit.assert_called_once_with()
+        mdb.rollback.assert_called_once_with()
 
-    def test_create_gamecopy(self):
+    def test_create_gamecopy(self, form, GameCopy, mdb):
         """create_gamecopy should get or create GameCopy object."""
-        self.add_mock('GameCopy')
         game = create_autospec(Game())
         user = create_autospec(User())
 
-        result = self.form.create_gamecopy(game, user)
-        self.assertEqual(
-            self.mocks['GameCopy'].get_or_create.return_value, result)
-        self.mocks['GameCopy'].get_or_create.assert_called_once_with(
-            self.db,
+        result = form.create_gamecopy(game, user)
+        assert result == GameCopy.get_or_create.return_value
+        GameCopy.get_or_create.assert_called_once_with(
+            mdb,
             game=game,
             owner=user)
-        self.db.add.assert_called_once_with(result)
+        mdb.add.assert_called_once_with(result)
 
-    def test_create_gameentity(self):
+    def test_create_gameentity(self, form, mdb, GameEntity):
         """create_gameentity should create GameEntity."""
-        self.add_mock('GameEntity')
         convent = create_autospec(Convent())
         gamecopy = create_autospec(GameCopy())
 
-        gameentity = self.form.create_gameentity(convent, gamecopy)
-        self.assertEqual(
-            self.mocks['GameEntity'].get_or_create.return_value, gameentity)
-        self.mocks['GameEntity'].get_or_create.assert_called_once_with(
-            self.db,
+        gameentity = form.create_gameentity(convent, gamecopy)
+        assert gameentity == GameEntity.get_or_create.return_value
+        GameEntity.get_or_create.assert_called_once_with(
+            mdb,
             convent=convent,
             gamecopy=gamecopy)
-        self.db.add.assert_called_once_with(gameentity)
+        mdb.add.assert_called_once_with(gameentity)
 
-    def test_get_or_create_game(self):
-        """get_or_create_game should get game from db or create it if not found
+    def test_get_or_create_game(self, form, Game, mdb):
         """
-        self.add_mock('Game')
+        get_or_create_game should get game from mdb or create it if not found
+        """
+        result = form.get_or_create_game('myname')
 
-        result = self.form.get_or_create_game('myname')
+        game = Game.get_or_create.return_value
+        assert result == game
+        Game.get_or_create.assert_called_once_with(
+            mdb, name='myname', is_active=True)
 
-        game = self.mocks['Game'].get_or_create.return_value
-        self.assertEqual(game, result)
-        self.mocks['Game'].get_or_create.assert_called_once_with(
-            self.db, name='myname', is_active=True)
-
-
-class GameCopyAddFormSqlTestCase(SqlFormTestCase):
-
-    prefix_from = GameCopyAddForm
-
-    def test_success(self):
+    def test_success(self, form, fixtures, postdata, db, query):
         """GameCopyAddForm is creating data."""
-        self.form = self.prefix_from(self.request)
-
         game = fixtures['Game']['dynamic1']
         user = fixtures['User']['dynamic1']
         convent = fixtures['Convent']['dynamic1']
 
-        self.request.POST.dict_of_lists.return_value = {
-            self.form.form_name_value: [self.form.get_name(), ],
-            self.form.fields['game_name'].get_name(): [game.name, ],
-            self.form.fields['user_id'].get_name(): [str(user.id), ],
-            self.form.fields['convent_id'].get_name(): [str(convent.id), ],
-            self.form.fields['count'].get_name(): ['5', ],
-        }
+        postdata[form.fields['game_name'].get_name()] = [game.name, ]
+        postdata[form.fields['user_id'].get_name()] = [str(user.id), ]
+        postdata[form.fields['convent_id'].get_name()] = [str(convent.id), ]
+        postdata[form.fields['count'].get_name()] = ['5', ]
 
-        self.form.validate()
-        self.db.flush()
+        form.validate()
+        db.flush()
 
         entity = (
-            self.query(GameEntity)
+            query(GameEntity)
             .filter(GameEntity.convent == convent)
             .one()
         )
         copy = entity.gamecopy
 
-        self.assertEqual(5, entity.count)
-        self.assertEqual(game, copy.game)
-        self.assertEqual(user, copy.owner)
+        assert entity.count == 5
+        assert copy.game == game
+        assert copy.owner == user
 
         try:
-            self.db.delete(copy)
-            self.db.delete(entity)
-            self.db.commit()
+            db.delete(copy)
+            db.delete(entity)
+            db.commit()
         finally:
-            self.db.rollback()
+            db.rollback()
