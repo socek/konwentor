@@ -1,229 +1,233 @@
-from mock import MagicMock, call
+from mock import patch, MagicMock, call
+from pytest import raises, yield_fixture, fixture
+from sqlalchemy.orm.exc import NoResultFound
 
-from haplugin.toster import FormTestCase, SqlFormTestCase, TestCase
-from haplugin.toster import SqlTestCase
-from haplugin.toster.fixtures import fixtures
+from haplugin.sql.testing import DatabaseFixture
+from haplugin.formskit.testing import FormFixture
+
 from sqlalchemy.orm.exc import NoResultFound
 
 from ..forms import GameBorrowAddForm, GameBorrowReturnForm
 from ..forms import IsGameBorrowExisting
 
 
-class GameBorrowAddFormTest(FormTestCase):
-    prefix_from = GameBorrowAddForm
+class LocalFixtures(FormFixture, DatabaseFixture):
 
-    def setUp(self):
-        super().setUp()
-        self.add_mock_object(self.form, 'get_entity')
-        self.entity = self.mocks['get_entity'].return_value
+    @yield_fixture
+    def GameBorrow(self):
+        patcher = patch('konwentor.gameborrow.forms.GameBorrow')
+        with patcher as mock:
+            yield mock
 
-    def test_get_avalible_documents(self):
-        elements = self.form.get_avalible_documents()
-        self.assertEqual({
+
+class TestGameBorrowAddForm(LocalFixtures):
+
+    def _get_controller_class(self):
+        return GameBorrowAddForm
+
+    @yield_fixture
+    def get_entity(self, form):
+        with patch.object(form, 'get_entity') as mock:
+            yield mock
+
+    @fixture
+    def entity(self, get_entity):
+        return get_entity.return_value
+
+    def test_get_avalible_documents(self, form):
+        elements = form.get_avalible_documents()
+        assert elements[0] == {
             'label': '(Wybierz)',
             'value': '',
-        }, elements[0])
+        }
 
-    def test_overal_validation(self):
+    def test_overal_validation(self, form, entity, get_entity):
         """overalValidation should return GameEntity.is_avalible"""
-        self.entity.is_avalible.return_value = True
+        entity.is_avalible.return_value = True
 
-        self.assertEqual(
-            True,
-            self.form.overal_validation({'game_entity_id': ['1']}))
+        assert form.overal_validation({'game_entity_id': ['1']}) is True
+        get_entity.assert_called_once_with('1')
 
-        self.mocks['get_entity'].assert_called_once_with('1')
-
-    def test_overal_validation_false(self):
+    def test_overal_validation_false(self, form, entity, get_entity):
         """overalValidation should return GameEntity.is_avalible"""
-        self.entity.is_avalible.return_value = False
+        entity.is_avalible.return_value = False
 
-        self.assertEqual(
-            False,
-            self.form.overal_validation({'game_entity_id': ['1']}))
+        assert form.overal_validation({'game_entity_id': ['1']}) is False
 
-        self.mocks['get_entity'].assert_called_once_with('1')
-        self.assertEqual(
-            'Ta gra nie ma już wolnych kopii.',
-            self.form.message)
+        get_entity.assert_called_once_with('1')
+        assert form.message == 'Ta gra nie ma już wolnych kopii.'
 
-    def test_submit(self):
-        self.add_mock('GameBorrow')
-
-        self.form.parse_dict({
+    def test_submit(self, form, GameBorrow, mdb):
+        form.parse_dict({
             'game_entity_id': [12],
             'name': ['sds'],
             'surname': ['zxc'],
             'document_type': ['ccs'],
             'document_number': ['wer'],
         })
-        self.form.on_success()
+        form.on_success()
 
-        element = self.mocks['GameBorrow'].return_value
+        element = GameBorrow.return_value
 
-        self.assertEqual(12, element.game_entity_id)
-        self.assertEqual('sds', element.name)
-        self.assertEqual('zxc', element.surname)
-        self.assertEqual(True, element.is_borrowed)
+        assert element.game_entity_id == 12
+        assert element.name == 'sds'
+        assert element.surname == 'zxc'
+        assert element.is_borrowed is True
         element.set_document.assert_called_once_with('ccs', 'wer')
 
-        self.db.add.assert_called_once_with(element)
-        self.db.commit.assert_called_once_with()
+        mdb.add.assert_called_once_with(element)
+        mdb.commit.assert_called_once_with()
 
-
-class SqlGameBorrowAddFormTest(SqlFormTestCase):
-    prefix_from = GameBorrowAddForm
-
-    def test_get_entity(self):
+    def test_get_entity(self, form, fixtures):
         _id = fixtures['GameEntity'][0].id
-        entity = self.form.get_entity(_id)
+        entity = form.get_entity(_id)
 
-        self.assertEqual(
-            fixtures['GameEntity'][0],
-            entity)
+        assert entity == fixtures['GameEntity'][0]
 
 
-class SqlGameBorrowReturnFormTest(SqlFormTestCase):
-    prefix_from = GameBorrowReturnForm
+class TestGameBorrowReturnForm(LocalFixtures):
 
-    def test_get_avalible_games(self):
-        self.form.set_value('convent_id', fixtures['Convent']['first'].id)
+    def _get_controller_class(self):
+        return GameBorrowReturnForm
 
-        result = list(self.form.get_avalible_games())
+    def test_get_avalible_games(self, form, fixtures):
+        form.set_value('convent_id', fixtures['Convent']['first'].id)
 
-        self.assertEqual(2, len(result))
-        self.assertEqual(2, result[0].GameEntity.id)
-        self.assertEqual(3, result[1].GameEntity.id)
+        result = list(form.get_avalible_games())
 
+        assert len(result) == 2
+        assert result[0].GameEntity.id == 2
+        assert result[1].GameEntity.id == 3
 
-class GameBorrowReturnFormTest(FormTestCase):
-    prefix_from = GameBorrowReturnForm
+    @yield_fixture
+    def get_avalible_games(self, form, obj):
+        patcher = patch.object(form, 'get_avalible_games')
+        with patcher as mock:
+            mock.return_value = [obj]
+            yield mock
 
-    def setUp(self):
-        super().setUp()
-        self.add_mock_object(self.form, 'get_avalible_games')
-        self.obj = MagicMock()
-        self.obj.name = 'name'
-        self.obj.User.name = 'owner'
-        self.mocks['get_avalible_games'].return_value = [self.obj]
+    @yield_fixture
+    def return_game(self, form):
+        patcher = patch.object(form, 'return_game')
+        with patcher as mock:
+            yield mock
 
-    def test_get_entity_ids(self):
-        self.assertEqual(
-            ['', str(self.obj.GameEntity.id)],
-            list(self.form.get_entity_ids()))
+    @yield_fixture
+    def borrow_next(self, form):
+        patcher = patch.object(form, 'borrow_next')
+        with patcher as mock:
+            yield mock
 
-    def test_get_game_names_for_select(self):
-        self.assertEqual(
-            [
-                {
-                    'value': '',
-                    'label': '(nie wypożycza)'
-                },
-                {
-                    'value': self.obj.GameEntity.id,
-                    'label': 'owner - name'
-                }
-            ],
-            list(self.form.get_game_names_for_select()))
+    @yield_fixture
+    def get_value(self, form):
+        patcher = patch.object(form, 'get_value')
+        with patcher as mock:
+            yield mock
 
-    def test_submit(self):
-        self.add_mock_object(self.form, 'return_game')
-        self.add_mock_object(self.form, 'borrow_next')
+    @yield_fixture
+    def datetime(self):
+        patcher = patch('konwentor.gameborrow.forms.datetime')
+        with patcher as mock:
+            yield mock
 
-        self.form.on_success()
+    @fixture
+    def obj(self):
+        obj = MagicMock()
+        obj.name = 'name'
+        obj.User.name = 'owner'
+        return obj
 
-        self.mocks['return_game'].assert_called_once_with()
-        self.mocks['borrow_next'].assert_called_once_with()
-        self.form.db.flush.assert_called_once_with()
-        self.form.db.commit.assert_called_once_with()
+    def test_get_entity_ids(self, obj, form, get_avalible_games):
+        data = list(form.get_entity_ids())
+        assert data[0].value == ''
+        assert data[0].label == '(nie wypożycza)'
+        assert data[1].value == obj.GameEntity.id
+        assert data[1].label == 'owner - name'
 
-    def test_return_game(self):
-        self.add_mock('datetime')
-        self.form.borrow = MagicMock()
+    def test_submit(self, form, return_game, borrow_next):
+        form.on_success()
 
-        self.form.return_game()
+        return_game.assert_called_once_with()
+        borrow_next.assert_called_once_with()
+        form.db.flush.assert_called_once_with()
+        form.db.commit.assert_called_once_with()
 
-        self.assertEqual(False, self.form.borrow.is_borrowed)
-        self.assertEqual(
-            self.mocks['datetime'].utcnow.return_value,
-            self.form.borrow.return_timestamp)
+    def test_return_game(
+        self,
+        form,
+        datetime
+    ):
+        form.borrow = MagicMock()
 
-    def test_borrow_next_whit_empty_game_entity_id(self):
-        self.add_mock_object(self.form, 'get_value')
-        self.mocks['get_value'].return_value = None
+        form.return_game()
 
-        self.form.borrow_next()
+        assert form.borrow.is_borrowed is False
+        assert form.borrow.return_timestamp == datetime.utcnow.return_value
 
-        self.mocks['get_value'].assert_called_once_with('game_entity_id')
+    def test_borrow_next_whit_empty_game_entity_id(self, form, get_value):
+        get_value.return_value = None
 
-    def test_borrow_next(self):
-        self.add_mock_object(self.form, 'get_value')
-        borrow = self.form.borrow = MagicMock()
-        self.mocks['get_value'].return_value = 123
-        self.add_mock('GameBorrow')
-        self.add_mock('datetime')
+        form.borrow_next()
 
-        self.form.borrow_next()
+        get_value.assert_called_once_with('game_entity_id')
 
-        self.mocks['get_value'].assert_has_calls([
+    def test_borrow_next(self, form, get_value, GameBorrow, datetime):
+        borrow = form.borrow = MagicMock()
+        get_value.return_value = 123
+
+        form.borrow_next()
+
+        get_value.assert_has_calls([
             call('game_entity_id'),
             call('game_entity_id'),
         ])
-        self.mocks['GameBorrow'].assert_called_once_with()
-        obj = self.mocks['GameBorrow'].return_value
-        self.assertEqual(obj, self.form.new_borrow)
+        GameBorrow.assert_called_once_with()
+        obj = GameBorrow.return_value
+        assert obj == form.new_borrow
 
         obj.assign_request.assert_called_once_with(self.request)
-        self.assertEqual(123, obj.game_entity_id)
-        self.assertEqual(borrow.name, obj.name)
-        self.assertEqual(obj.surname, borrow.surname)
-        self.assertEqual(obj.stats_hash, borrow.stats_hash)
-        self.assertEqual(obj.is_borrowed, True)
-        self.assertEqual(
-            self.mocks['datetime'].utcnow.return_value,
-            obj.borrowed_timestamp)
-        self.form.db.add.assert_called_once_with(obj)
+        assert obj.game_entity_id == 123
+        assert borrow.name == obj.name
+        assert obj.surname == borrow.surname
+        assert obj.stats_hash == borrow.stats_hash
+        assert obj.is_borrowed is True
+        assert obj.borrowed_timestamp == datetime.utcnow.return_value
+        form.db.add.assert_called_once_with(obj)
 
 
-class IsGameBorrowExistingTest(TestCase):
-    prefix_from = IsGameBorrowExisting
+class TestIsGameBorrowExisting(LocalFixtures):
 
-    def setUp(self):
-        super().setUp()
-        self.validator = self.prefix_from()
-        self.form = MagicMock()
-        self.validator.set_form(self.form)
-        self.add_mock_object(self.validator, 'get_borrow')
+    def _get_controller_class(self):
+        return MagicMock()
 
-    def test_validate_fail(self):
-        self.mocks['get_borrow'].side_effect = NoResultFound
+    @fixture
+    def validator(self, form):
+        obj = IsGameBorrowExisting()
+        obj.set_form(form)
+        return obj
 
-        self.assertEqual(False, self.validator.validate())
-        self.form.get_value.assert_called_once_with('game_borrow_id')
-        self.mocks['get_borrow'].assert_called_once_with(
-            self.form.get_value.return_value)
+    @yield_fixture
+    def get_borrow(self, validator):
+        patcher = patch.object(validator, 'get_borrow')
+        with patcher as mock:
+            yield mock
 
-    def test_validate_success(self):
-        self.assertEqual(True, self.validator.validate())
-        self.form.get_value.assert_called_once_with('game_borrow_id')
-        self.mocks['get_borrow'].assert_called_once_with(
-            self.form.get_value.return_value)
-        self.assertEqual(
-            self.mocks['get_borrow'].return_value,
-            self.form.borrow)
+    def test_validate_fail(self, get_borrow, validator, form):
+        get_borrow.side_effect = NoResultFound
 
+        assert validator.validate() is False
+        form.get_value.assert_called_once_with('game_borrow_id')
+        get_borrow.assert_called_once_with(form.get_value.return_value)
 
-class SqlIsGameBorrowExistingTest(SqlTestCase):
-    prefix_from = IsGameBorrowExisting
+    def test_validate_success(self, get_borrow, validator, form):
+        assert validator.validate() is True
+        form.get_value.assert_called_once_with('game_borrow_id')
+        get_borrow.assert_called_once_with(
+            form.get_value.return_value)
+        assert form.borrow == get_borrow.return_value
 
-    def setUp(self):
-        super().setUp()
-        self.validator = self.prefix_from()
-        self.form = MagicMock()
-        self.validator.set_form(self.form)
-        self.form.query = self.db.query
+    def test_get_borrow(self, validator, fixtures, form, db):
+        form.query = db.query
+        borrow = validator.get_borrow(fixtures['GameBorrow'][0].id)
 
-    def test_get_borrow(self):
-        borrow = self.validator.get_borrow(fixtures['GameBorrow'][0].id)
-
-        self.assertEqual(borrow, fixtures['GameBorrow'][0])
+        assert borrow == fixtures['GameBorrow'][0]
