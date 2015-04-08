@@ -109,7 +109,7 @@ class GameBorrowReturnForm(KonwentorForm):
             'game_entity_id',
             label='Wypożycza',
             validators=[IsValueInAvalibleValues()])
-        field.set_avalible_values(self.get_game_names_for_select)
+        field.set_avalible_values(self.get_entity_ids)
         self.add_field(
             'convent_id',
             validators=[NotEmpty(), IsDigit()],

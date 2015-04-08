@@ -5,7 +5,6 @@ from ..models import GameEntity
 
 
 class TestGameEntity(object):
-    prefix_from = GameEntity
 
     @fixture
     def model(self):

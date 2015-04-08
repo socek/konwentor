@@ -1,34 +1,48 @@
-from hatak.testing import ControllerFixture, DatabaseFixture
-from mock import patch, MagicMock
-from pyramid.httpexceptions import HTTPNotFound
 from pytest import fixture, raises, yield_fixture
+from mock import patch, MagicMock
 from sqlalchemy.orm.exc import NoResultFound
+from pyramid.httpexceptions import HTTPNotFound
 
-from konwentor.application.tests.fixtures import Fixtures
+from haplugin.sql.testing import DatabaseFixture
+from hatak.testing import ControllerFixture
+
 from ..controllers import GameListController, GameAddController, GameDelete
 from ..controllers import GameEditController
 from ..forms import GameDeleteForm, GameAddForm, GameEditForm
 
 
-class TestGameListController(ControllerFixture):
+class LocalFixtures(ControllerFixture, DatabaseFixture):
 
-    def get_controller_class(self):
-        return GameListController
-
-    @yield_fixture()
+    @yield_fixture
     def get_games(self, controller):
         with patch.object(controller, 'get_games') as mock:
             yield mock
 
-    @yield_fixture()
+    @yield_fixture
     def add_game_forms(self, controller):
         with patch.object(controller, 'add_game_forms') as mock:
             yield mock
 
-    @yield_fixture()
+    @yield_fixture
     def add_form(self, controller):
         with patch.object(controller, 'add_form') as mock:
             yield mock
+
+    @yield_fixture
+    def get_element(self, controller):
+        patcher = patch.object(controller, 'get_element')
+        with patcher as mock:
+            yield mock
+
+    @fixture
+    def form(self, add_form):
+        return add_form.return_value
+
+
+class TestGameListController(LocalFixtures):
+
+    def _get_controller_class(self):
+        return GameListController
 
     def test_make(self, controller, data, get_games, add_game_forms):
         controller.make()
@@ -56,155 +70,180 @@ class TestGameListController(ControllerFixture):
         form.set_value.assert_called_once_with('obj_id', 10)
         form.validate.assert_called_once_with()
 
+    def test_get_games(self, controller, fixtures):
+        """get_games should return all games"""
+        games = controller.get_games()
 
-# class GameListSqlControllerTests(SqlControllerTestCase):
-#     prefix_from = GameListController
-
-#     def test_get_games(self):
-#         """get_games should return all games"""
-#         games = self.controller.get_games()
-
-#         self.assertEqual(
-#             [
-#                 fixtures['Game']['first'],
-#                 fixtures['Game']['second'],
-#                 fixtures['Game']['third'],
-#                 fixtures['Game']['dynamic1'],
-#             ],
-#             games)
+        assert games == [
+            fixtures['Game']['first'],
+            fixtures['Game']['second'],
+            fixtures['Game']['third'],
+            fixtures['Game']['dynamic1'],
+        ]
 
 
-# class GameAddControllerTests(ControllerTestCase):
-#     prefix_from = GameAddController
+class TestGameAddController(LocalFixtures):
 
-#     def setUp(self):
-#         super().setUp()
-#         self.add_mock_object(self.controller, 'add_form')
-#         self.add_mock_object(self.controller, 'redirect')
-#         self.form = add_form.return_value
+    def _get_controller_class(self):
+        return GameAddController
 
-#     def test_make(self):
-#         self.form.validate.return_value = False
+    def test_make(self, controller, form, add_form, redirect):
+        form.validate.return_value = False
 
-#         self.controller.make()
+        controller.make()
 
-#         add_form.assert_called_once_with(GameAddForm)
-#         self.assertEqual(0, self.mocks['redirect'].call_count)
+        add_form.assert_called_once_with(GameAddForm)
+        assert not redirect.called
 
-#     def test_make_on_post(self):
-#         self.form.validate.return_value = True
+    def test_make_on_post(self, controller, form, add_form, redirect):
+        form.validate.return_value = True
 
-#         self.controller.make()
+        controller.make()
 
-#         add_form.assert_called_once_with(GameAddForm)
-#         self.mocks['redirect'].assert_called_once_with('game:list')
+        add_form.assert_called_once_with(GameAddForm)
+        redirect.assert_called_once_with('game:list')
 
 
-# class GameDeleteControllerTests(ControllerTestCase):
-#     prefix_from = GameDelete
+class TestGameDeleteController(LocalFixtures):
 
-#     def setUp(self):
-#         super().setUp()
-#         self.add_mock_object(self.controller, 'add_form')
-#         self.add_mock_object(self.controller, 'redirect')
-#         self.form = add_form.return_value
+    def _get_controller_class(self):
+        return GameDelete
 
-#     def test_make(self):
-#         self.add_mock_object(self.controller, 'get_element')
-#         self.form.validate.return_value = False
-#         self.matchdict['obj_id'] = 15
+    def test_make(
+        self,
+        controller,
+        form,
+        matchdict,
+        add_form,
+        redirect,
+        get_element,
+    ):
+        form.validate.return_value = False
+        matchdict['obj_id'] = 15
 
-#         self.controller.make()
+        controller.make()
 
-#         self.mocks['get_element'].assert_called_once_with()
-#         add_form.assert_called_once_with(GameDeleteForm)
-#         self.form.set_value('obj_id', 15)
-#         self.form.validate.assert_called_once_with()
-#         self.assertEqual(0, self.mocks['redirect'].call_count)
+        get_element.assert_called_once_with()
+        add_form.assert_called_once_with(GameDeleteForm)
+        form.set_value('obj_id', 15)
+        form.validate.assert_called_once_with()
+        assert not redirect.called
 
-#     def test_make_on_post(self):
-#         self.add_mock_object(self.controller, 'get_element')
-#         self.form.validate.return_value = True
-#         self.matchdict['obj_id'] = 15
+    def test_make_on_post(
+        self,
+        controller,
+        form,
+        matchdict,
+        add_form,
+        redirect,
+        get_element,
+    ):
+        form.validate.return_value = True
+        matchdict['obj_id'] = 15
 
-#         self.controller.make()
+        controller.make()
 
-#         self.mocks['get_element'].assert_called_once_with()
-#         add_form.assert_called_once_with(GameDeleteForm)
-#         self.form.set_value.assert_called_once_with('obj_id', 15)
-#         self.form.validate.assert_called_once_with()
-#         self.mocks['redirect'].assert_called_once_with('game:list')
+        get_element.assert_called_once_with()
+        add_form.assert_called_once_with(GameDeleteForm)
+        form.set_value.assert_called_once_with('obj_id', 15)
+        form.validate.assert_called_once_with()
+        redirect.assert_called_once_with('game:list')
 
-#     def test_get_element_on_error(self):
-#         """get_element should raise HTTPNotFound exception when no Game found
-#         """
-#         self.query.side_effect = NoResultFound()
-#         self.assertRaises(HTTPNotFound, self.controller.get_element)
+    def test_get_element_on_error(self, controller, mdb):
+        """
+        get_element should raise HTTPNotFound exception when no Game found
+        """
+        mdb.query.side_effect = NoResultFound()
+        with raises(HTTPNotFound):
+            controller.get_element()
 
+    def test_get_element(self, controller, matchdict, fixtures, data):
+        matchdict['obj_id'] = fixtures['Game']['first'].id
 
-# class GameDeleteSqlControllerTests(SqlControllerTestCase):
-#     prefix_from = GameDelete
+        controller.get_element()
 
-#     def test_get_element(self):
-#         self.matchdict = self.controller.matchdict = {}
-#         self.matchdict['obj_id'] = fixtures['Game']['first'].id
-
-#         self.controller.get_element()
-
-#         obj = self.data['element']
-#         self.assertEqual(fixtures['Game']['first'], obj)
+        obj = data['element']
+        assert obj == fixtures['Game']['first']
 
 
-# class GameEditControllerTests(ControllerTestCase):
-#     prefix_from = GameEditController
+class TestGameEditController(LocalFixtures):
 
-#     def setUp(self):
-#         super().setUp()
-#         self.matchdict['obj_id'] = '10'
-#         self.add_mock_object(self.controller, 'add_form', auto_spec=True)
-#         self.form = add_form.return_value
-#         self.add_mock_object(self.controller, 'redirect', auto_spec=True)
-#         self.add_mock_object(self.controller, 'get_game')
-#         self.game = self.mocks['get_game'].return_value
-#         self.defaults = {
-#             'id': self.game.id,
-#             'name': self.game.name,
-#             'players_description': self.game.players_description,
-#             'time_description': self.game.time_description,
-#             'type_description': self.game.type_description,
-#             'difficulty': self.game.difficulty,
-#         }
+    def _get_controller_class(self):
+        return GameEditController
 
-#     def test_make_success(self):
-#         """
-#         GameEdit should add GameEditForm form and redirect to
-#         game:list if the form is successed
-#         """
-#         self.form.validate.return_value = True
+    @fixture
+    def matchdict(self):
+        data = super().matchdict()
+        data['obj_id'] = '10'
+        return data
 
-#         self.controller.make()
+    @yield_fixture
+    def get_game(self, controller):
+        patcher = patch.object(controller, 'get_game')
+        with patcher as mock:
+            yield mock
 
-#         self.form.parse_dict.assert_called_once_with(self.defaults)
-#         self.form.validate.assert_called_once_with()
-#         add_form.assert_called_once_with(GameEditForm)
-#         self.mocks['redirect'].assert_called_once_with('game:list')
+    @fixture
+    def game(self, get_game):
+        return get_game.return_value
 
-#     def test_make_fail(self):
-#         """GameEdit should add GameAddForm form  and do nothing
-#         if the form is failed or not used"""
-#         self.form.validate.return_value = False
+    @fixture
+    def defaults(self, game):
+        return {
+            'id': game.id,
+            'name': game.name,
+            'players_description': game.players_description,
+            'time_description': game.time_description,
+            'type_description': game.type_description,
+            'difficulty': game.difficulty,
+        }
 
-#         self.controller.make()
+    def test_make_success(
+        self,
+        controller,
+        form,
+        add_form,
+        redirect,
+        defaults,
+    ):
+        """
+        GameEdit should add GameEditForm form and redirect to
+        game:list if the form is successed
+        """
+        form.validate.return_value = True
 
-#         self.form.parse_dict.assert_called_once_with(self.defaults)
-#         self.form.validate.assert_called_once_with()
-#         add_form.assert_called_once_with(GameEditForm)
-#         self.assertFalse(self.mocks['redirect'].called)
+        controller.make()
+
+        form.parse_dict.assert_called_once_with(defaults)
+        form.validate.assert_called_once_with()
+        add_form.assert_called_once_with(GameEditForm)
+        redirect.assert_called_once_with('game:list')
+
+    def test_make_fail(
+        self,
+        form,
+        controller,
+        add_form,
+        redirect,
+        defaults,
+    ):
+        """
+        GameEdit should add GameAddForm form  and do nothing
+        if the form is failed or not used.
+        """
+        form.validate.return_value = False
+
+        controller.make()
+
+        form.parse_dict.assert_called_once_with(defaults)
+        form.validate.assert_called_once_with()
+        add_form.assert_called_once_with(GameEditForm)
+        assert not redirect.called
 
 
 class TestsSqlGameEditCntroller(ControllerFixture, DatabaseFixture):
 
-    def get_controller_class(self):
+    def _get_controller_class(self):
         return GameEditController
 
     def test_get_game_when_game_exists(
@@ -222,7 +261,12 @@ class TestsSqlGameEditCntroller(ControllerFixture, DatabaseFixture):
         assert game == data['game']
         assert game == result
 
-    def test_get_game_when_game_not_exists(self, matchdict, controller):
+    def test_get_game_when_game_not_exists(
+        self,
+        matchdict,
+        controller,
+        fixtures,
+    ):
         matchdict['obj_id'] = '1231231231231124'
 
         with raises(HTTPNotFound):
