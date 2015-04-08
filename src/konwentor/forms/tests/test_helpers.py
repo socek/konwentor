@@ -1,25 +1,18 @@
-from mock import MagicMock
-
-from haplugin.formskit.tests.test_helpers import FormWidgetTestCase as Base
+from haplugin.formskit.testing import FormWidgetFixture
 
 from ..helpers import FormWidget
 
 
-class FormWidgetTestCase(Base):
-    prefix_from = FormWidget
+class TestFormWidget(FormWidgetFixture):
 
-    def setUp(self):
-        super().setUp()
-        self.form = MagicMock()
+    def _get_widget_class(self):
+        return FormWidget
 
-        self.widget = FormWidget(self.request, self.form)
-        self.add_mock_object(self.widget, 'render_for', autospec=True)
+    def test_combobox(self, request, widget, form, render_for):
+        self._input_test(render_for, widget, form, 'combobox')
 
-    def test_combobox(self):
-        self._input_test('combobox')
-
-        self.request.add_js_link.assert_called_once_with('/js/combobox.js')
-        self.request.add_js.assert_called_once_with(
+        request.add_js_link.assert_called_once_with('/js/combobox.js')
+        request.add_js.assert_called_once_with(
             '''$(document).ready(function() {
                 $("#%s").combobox();
-                });''' % (self.widget.get_id('myname')))
+                });''' % (widget.get_id('myname')))
