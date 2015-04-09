@@ -1,11 +1,9 @@
 from mock import patch, MagicMock, call
-from pytest import raises, yield_fixture, fixture
+from pytest import yield_fixture, fixture
 from sqlalchemy.orm.exc import NoResultFound
 
 from haplugin.sql.testing import DatabaseFixture
 from haplugin.formskit.testing import FormFixture
-
-from sqlalchemy.orm.exc import NoResultFound
 
 from ..forms import GameBorrowAddForm, GameBorrowReturnForm
 from ..forms import IsGameBorrowExisting

@@ -1,74 +1,81 @@
-from haplugin.toster import FormTestCase, SqlFormTestCase
-from haplugin.toster.fixtures import fixtures
-from mock import MagicMock
+from pytest import yield_fixture
+from mock import MagicMock, patch
+
+from haplugin.sql.testing import DatabaseFixture
+from haplugin.formskit.testing import FormFixture
 
 from konwentor.convent.forms import ConventAddForm, ConventDeleteForm
 from konwentor.convent.forms import ConventEditForm
 
 
-class ConventAddFormTest(FormTestCase):
+class LocalFixtures(FormFixture, DatabaseFixture):
 
-    prefix_from = ConventAddForm
+    @yield_fixture
+    def Convent(self):
+        patcher = patch('konwentor.convent.forms.Convent')
+        with patcher as mock:
+            yield mock
 
-    def test_submit(self):
-        self.add_mock('Convent')
-        self.form._parse_raw_data({
-            self.form.fields['name'].get_name(): ['myname'],
-        })
-        self.form.on_success()
-
-        self.mocks['Convent'].create.assert_called_once_with(
-            self.db, name='myname')
-
-
-class ConventDeleteFormTest(FormTestCase):
-
-    prefix_from = ConventDeleteForm
-
-    def test_submit(self):
-        self.add_mock('Convent')
-        self.form._parse_raw_data({
-            self.form.fields['obj_id'].get_name(): ['123'],
-        })
-        self.form.on_success()
-
-        self.mocks['Convent'].get_by_id.assert_called_once_with(
-            self.db, 123)
-        convent = self.mocks['Convent'].get_by_id.return_value
-        self.assertEqual(False, convent.is_active)
-        self.db.commit.assert_called_once_with()
-
-
-class SqlConventEditFormTest(SqlFormTestCase):
-
-    prefix_from = ConventEditForm
-
-    def test_id_exists_validator_success(self):
+    @yield_fixture
+    def get_value(self, form, fixtures):
         convent_id = fixtures['Convent']['first'].id
-        self.add_mock_object(
-            self.form, 'get_value', return_value=str(convent_id))
-        self.form.form_validators[0].validate()
-
-        self.mocks['get_value'].assert_called_once_with('id')
-        self.assertEqual(fixtures['Convent']['first'], self.form.model)
-
-    def test_id_exists_validator_fail(self):
-        self.add_mock_object(
-            self.form, 'get_value', return_value='1234566')
-        self.assertEqual(False, self.form.form_validators[0].validate())
+        patcher = patch.object(form, 'get_value', return_value=str(convent_id))
+        with patcher as mock:
+            yield mock
 
 
-class ConventEditFormTest(FormTestCase):
-    prefix_from = ConventEditForm
+class TestConventAddForm(LocalFixtures):
 
-    def test_submit(self):
-        self.add_mock_object(
-            self.form, 'get_value', return_value='myname')
+    def _get_controller_class(self):
+        return ConventAddForm
 
-        self.form.model = MagicMock()
-        self.form._parse_raw_data({})
+    def test_submit(self, form, Convent, mdb):
+        form._parse_raw_data({
+            form.fields['name'].get_name(): ['myname'],
+        })
+        form.on_success()
 
-        self.form.on_success()
+        Convent.create.assert_called_once_with(mdb, name='myname')
 
-        self.assertEqual('myname', self.form.model.name)
-        self.db.commit.assert_called_once_with()
+
+class TestConventDeleteForm(LocalFixtures):
+
+    def _get_controller_class(self):
+        return ConventDeleteForm
+
+    def test_submit(self, form, Convent, mdb):
+        form._parse_raw_data({
+            form.fields['obj_id'].get_name(): ['123'],
+        })
+        form.on_success()
+
+        Convent.get_by_id.assert_called_once_with(
+            mdb, 123)
+        convent = Convent.get_by_id.return_value
+        assert convent.is_active is False
+        mdb.commit.assert_called_once_with()
+
+
+class TestConventEditForm(LocalFixtures):
+
+    def _get_controller_class(self):
+        return ConventEditForm
+
+    def test_id_exists_validator_success(self, form, get_value, fixtures):
+        form.form_validators[0].validate()
+
+        get_value.assert_called_once_with('id')
+        assert fixtures['Convent']['first'], form.model
+
+    def test_id_exists_validator_fail(self, form, fixtures):
+        form._parse_raw_data({'id': ['1239032']})
+        assert form.form_validators[0].validate() is False
+
+    def test_submit(self, form, mdb):
+        form.model = MagicMock()
+        form._parse_raw_data({'name': ['myname']})
+
+        form.on_success()
+
+        assert form.model.name == 'myname'
+        mdb.commit.assert_called_once_with()

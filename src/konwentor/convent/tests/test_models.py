@@ -1,75 +1,80 @@
+from pytest import raises
 from mock import MagicMock
-from haplugin.toster import ModelTestCase
+
+from hatak.testing import ModelFixture
 
 from ..models import Convent
 
 
-class ConventTests(ModelTestCase):
-    prefix_from = Convent
+class TestConvent(ModelFixture):
 
-    def test_states(self):
+    def _get_model_class(self):
+        return Convent
+
+    def test_states(self, model):
         """Getting and settings states"""
-        self.model.state = 'running'
-        self.assertEqual('running', self.model.state)
+        model.state = 'running'
+        assert model.state == 'running'
 
-    def test_state_fail(self):
+    def test_state_fail(self, model):
         """Setting invalid state should raise runtimeerror"""
         def method():
-            self.model.state = 'invalid'
+            model.state = 'invalid'
 
-        self.assertRaises(RuntimeError, method)
+        with raises(RuntimeError):
+            method()
 
-    def test_is_user_able_to_start_true(self):
+    def test_is_user_able_to_start_true(self, model):
         """is_user_able_to_start should return True if state is not started and
         user has access to convent:start controller."""
-        self.model.state = 'not started'
+        model.state = 'not started'
         user = MagicMock()
         user.has_access_to_route.return_value = True
 
-        self.assertEqual(True, self.model.is_user_able_to_start(user))
+        assert model.is_user_able_to_start(user) is True
         user.has_access_to_route.assert_called_once_with('convent:start')
 
-    def test_is_user_able_to_start_when_state_is_running(self):
+    def test_is_user_able_to_start_when_state_is_running(self, model):
         """is_user_able_to_start should return False if state is running"""
-        self.model.state = 'running'
+        model.state = 'running'
         user = MagicMock()
         user.has_access_to_route.return_value = True
 
-        self.assertEqual(False, self.model.is_user_able_to_start(user))
+        assert model.is_user_able_to_start(user) is False
 
-    def test_is_user_able_to_start_when_user_has_no_access(self):
+    def test_is_user_able_to_start_when_user_has_no_access(self, model):
         """is_user_able_to_start should return False user has no access to
         convent:start"""
-        self.model.state = 'not started'
+        model.state = 'not started'
         user = MagicMock()
         user.has_access_to_route.return_value = False
 
-        self.assertEqual(False, self.model.is_user_able_to_start(user))
+        assert model.is_user_able_to_start(user) is False
         user.has_access_to_route.assert_called_once_with('convent:start')
 
-    def test_is_user_able_to_end_true(self):
+    def test_is_user_able_to_end_true(self, model):
         """is_user_able_to_end should return True if state is running and
         user has access to convent:start controller."""
-        self.model.state = 'running'
+        model.state = 'running'
         user = MagicMock()
         user.has_access_to_route.return_value = True
 
-        self.assertEqual(True, self.model.is_user_able_to_end(user))
+        assert model.is_user_able_to_end(user) is True
         user.has_access_to_route.assert_called_once_with('convent:end')
 
-    def test_is_user_able_to_end_when_state_is_ended(self):
+    def test_is_user_able_to_end_when_state_is_ended(self, model):
         """is_user_able_to_start should return False if state is ended"""
-        self.model.state = 'ended'
+        model.state = 'ended'
         user = MagicMock()
         user.has_access_to_route.return_value = True
 
-        self.assertEqual(False, self.model.is_user_able_to_end(user))
+        assert model.is_user_able_to_end(user) is False
 
-    def test_is_user_able_to_end_when_user_has_no_access(self):
+    def test_is_user_able_to_end_when_user_has_no_access(self, model):
         """is_user_able_to_start should return False if state is ended"""
-        self.model.state = 'running'
+        model.state = 'running'
         user = MagicMock()
         user.has_access_to_route.return_value = False
 
-        self.assertEqual(False, self.model.is_user_able_to_end(user))
+        assert model.is_user_able_to_end(user) is False
         user.has_access_to_route.assert_called_once_with('convent:end')
