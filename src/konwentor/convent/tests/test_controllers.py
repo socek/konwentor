@@ -2,21 +2,15 @@ from pytest import fixture, yield_fixture, raises
 from mock import MagicMock, call, patch
 from pyramid.httpexceptions import HTTPNotFound
 
-from hatak.testing import ControllerFixture
-from haplugin.sql.testing import DatabaseFixture
-
 from ..controllers import ConventDelete, ChooseConventController
 from ..controllers import ConventEditController
 from ..controllers import ConventListController, ConventAdd
 from ..controllers import EndConventController, StartConventController
 from ..forms import ConventAddForm, ConventDeleteForm, ConventEditForm
+from konwentor.application.testing import ControllerFixture
 
 
-class LocalFixtures(ControllerFixture, DatabaseFixture):
-
-    @fixture
-    def form(self, add_form):
-        return add_form.return_value
+class LocalFixtures(ControllerFixture):
 
     @yield_fixture
     def verify_convent_id(self, controller):
@@ -226,18 +220,6 @@ class TestConventDelete(LocalFixtures):
 
     def _get_controller_class(self):
         return ConventDelete
-
-    @yield_fixture
-    def add_form(self, controller):
-        patcher = patch.object(controller, 'add_form', auto_spec=True)
-        with patcher as mock:
-            yield mock
-
-    @yield_fixture
-    def redirect(self, controller):
-        patcher = patch.object(controller, 'redirect', auto_spec=True)
-        with patcher as mock:
-            yield mock
 
     def test_make_success(
         self,

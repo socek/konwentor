@@ -2,17 +2,16 @@ from pytest import fixture, yield_fixture, raises
 from mock import MagicMock, call, patch
 from sqlalchemy.orm.exc import NoResultFound
 
-from hatak.testing import ControllerFixture
-from haplugin.sql.testing import DatabaseFixture
 
 from ..controllers import EndController
 from ..controllers import GameCopyAddController, GameCopyToBoxController
 from ..controllers import GameCopyControllerBase, GameCopyListController
 from konwentor.convent.helpers import ConventWidget
 from konwentor.gamecopy.forms import GameCopyAddForm
+from konwentor.application.testing import ControllerFixture
 
 
-class LocalFixtures(ControllerFixture, DatabaseFixture):
+class LocalFixtures(ControllerFixture):
 
     @fixture
     def add_flashmsg(self, request):

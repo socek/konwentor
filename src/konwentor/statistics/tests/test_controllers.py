@@ -1,10 +1,8 @@
 from pytest import fixture, yield_fixture
 from mock import patch
 
-from hatak.testing import ControllerFixture
-from haplugin.sql.testing import DatabaseFixture
-
 from ..controllers import StatisticsController
+from konwentor.application.testing import ControllerFixture
 
 
 class TestStatisticsController(ControllerFixture):
@@ -24,7 +22,7 @@ class TestStatisticsController(ControllerFixture):
         assert result['value'] == 3
 
 
-class TestStatisticsSqls(ControllerFixture, DatabaseFixture):
+class TestStatisticsSqls(ControllerFixture):
 
     @fixture(autouse=True)
     def setUp(self, fixtures, data):

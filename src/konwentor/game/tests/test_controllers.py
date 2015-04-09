@@ -3,15 +3,13 @@ from mock import patch, MagicMock
 from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
 
-from haplugin.sql.testing import DatabaseFixture
-from hatak.testing import ControllerFixture
-
 from ..controllers import GameListController, GameAddController, GameDelete
 from ..controllers import GameEditController
 from ..forms import GameDeleteForm, GameAddForm, GameEditForm
+from konwentor.application.testing import ControllerFixture
 
 
-class LocalFixtures(ControllerFixture, DatabaseFixture):
+class LocalFixtures(ControllerFixture):
 
     @yield_fixture
     def get_games(self, controller):
@@ -21,11 +19,6 @@ class LocalFixtures(ControllerFixture, DatabaseFixture):
     @yield_fixture
     def add_game_forms(self, controller):
         with patch.object(controller, 'add_game_forms') as mock:
-            yield mock
-
-    @yield_fixture
-    def add_form(self, controller):
-        with patch.object(controller, 'add_form') as mock:
             yield mock
 
     @yield_fixture
@@ -241,7 +234,7 @@ class TestGameEditController(LocalFixtures):
         assert not redirect.called
 
 
-class TestsSqlGameEditCntroller(ControllerFixture, DatabaseFixture):
+class TestsSqlGameEditCntroller(LocalFixtures):
 
     def _get_controller_class(self):
         return GameEditController

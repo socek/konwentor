@@ -2,15 +2,12 @@ from mock import patch
 from pytest import raises, yield_fixture
 from sqlalchemy.orm.exc import NoResultFound
 
-from haplugin.sql.testing import DatabaseFixture
-from haplugin.formskit.testing import FormFixture
-
-
 from ..forms import GameAddForm, GameDeleteForm, GameEditForm
 from ..models import Game
+from konwentor.application.testing import FormFixture
 
 
-class LocalFixtures(FormFixture, DatabaseFixture):
+class LocalFixtures(FormFixture):
 
     @yield_fixture
     def validate_uniqe_name(self, form):
@@ -21,7 +18,7 @@ class LocalFixtures(FormFixture, DatabaseFixture):
 
 class TestGameAddForm(LocalFixtures):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return GameAddForm
 
     def test_overal_validation_success(self, validate_uniqe_name, form):
@@ -87,7 +84,7 @@ class GameFactoryMixin(object):
 
 class TestGameDeleteForm(LocalFixtures, GameFactoryMixin):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return GameDeleteForm
 
     def test_submit(self, db, form):
@@ -107,7 +104,7 @@ class TestGameDeleteForm(LocalFixtures, GameFactoryMixin):
 
 class TestGameEditForm(LocalFixtures, GameFactoryMixin):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return GameEditForm
 
     def test_submit(self, db, form, postdata):

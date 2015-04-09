@@ -2,14 +2,12 @@ from mock import patch, MagicMock, call
 from pytest import yield_fixture, fixture
 from sqlalchemy.orm.exc import NoResultFound
 
-from haplugin.sql.testing import DatabaseFixture
-from haplugin.formskit.testing import FormFixture
-
 from ..forms import GameBorrowAddForm, GameBorrowReturnForm
 from ..forms import IsGameBorrowExisting
+from konwentor.application.testing import FormFixture
 
 
-class LocalFixtures(FormFixture, DatabaseFixture):
+class LocalFixtures(FormFixture):
 
     @yield_fixture
     def GameBorrow(self):
@@ -20,7 +18,7 @@ class LocalFixtures(FormFixture, DatabaseFixture):
 
 class TestGameBorrowAddForm(LocalFixtures):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return GameBorrowAddForm
 
     @yield_fixture
@@ -85,7 +83,7 @@ class TestGameBorrowAddForm(LocalFixtures):
 
 class TestGameBorrowReturnForm(LocalFixtures):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return GameBorrowReturnForm
 
     def test_get_avalible_games(self, form, fixtures):
@@ -195,7 +193,7 @@ class TestGameBorrowReturnForm(LocalFixtures):
 
 class TestIsGameBorrowExisting(LocalFixtures):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return MagicMock()
 
     @fixture

@@ -1,19 +1,17 @@
 from pytest import yield_fixture
 from mock import MagicMock, create_autospec, patch
 
-from haplugin.formskit.testing import FormFixture
-from haplugin.sql.testing import DatabaseFixture
-
 from ..forms import GameCopyAddForm
 from ..models import GameCopy, GameEntity
 from konwentor.auth.models import User
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
+from konwentor.application.testing import FormFixture
 
 
-class TestGameCopyAddForm(FormFixture, DatabaseFixture):
+class TestGameCopyAddForm(FormFixture):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return GameCopyAddForm
 
     @yield_fixture
@@ -51,11 +49,11 @@ class TestGameCopyAddForm(FormFixture, DatabaseFixture):
         with patch.object(form, 'create_gameentity', autospec=True) as mock:
             yield mock
 
-    def test_get_objects(self, form, mquery):
+    def test_get_objects(self, form, query):
         """get_objects should return list of dicts"""
-        mquery.return_value.filter_by.call_count = 0
+        query.return_value.filter_by.call_count = 0
         example_model = MagicMock()
-        mquery.return_value.filter_by.return_value.all.return_value = [
+        query.return_value.filter_by.return_value.all.return_value = [
             example_model
         ]
 
@@ -71,15 +69,15 @@ class TestGameCopyAddForm(FormFixture, DatabaseFixture):
             'value': example_model.id,
         }
 
-        mquery.assert_called_with(self)
-        mquery.return_value.filter_by.assert_called_once_with()
-        mquery.return_value.filter_by.return_value.all.assert_called_with()
+        query.assert_called_with(self)
+        query.return_value.filter_by.assert_called_once_with()
+        query.return_value.filter_by.return_value.all.assert_called_with()
 
-    def test_get_objects_with_other(self, form, mquery):
+    def test_get_objects_with_other(self, form, query):
         """get_objects should return list of dicts"""
-        mquery.return_value.filter_by.call_count = 0
+        query.return_value.filter_by.call_count = 0
         example_model = MagicMock()
-        mquery.return_value.filter_by.return_value.all.return_value = [
+        query.return_value.filter_by.return_value.all.return_value = [
             example_model]
 
         data = list(form.get_objects(self, True)())
@@ -99,14 +97,14 @@ class TestGameCopyAddForm(FormFixture, DatabaseFixture):
             'value': '-1',
         }
 
-        mquery.assert_called_with(self)
-        mquery.return_value.filter_by.assert_called_once_with()
-        mquery.return_value.filter_by.return_value.all.assert_called_with()
+        query.assert_called_with(self)
+        query.return_value.filter_by.assert_called_once_with()
+        query.return_value.filter_by.return_value.all.assert_called_with()
 
     def test_submit(
         self,
         form,
-        mquery,
+        query,
         Game,
         User,
         Convent,

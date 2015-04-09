@@ -1,14 +1,12 @@
 from pytest import yield_fixture
 from mock import MagicMock, patch
 
-from haplugin.sql.testing import DatabaseFixture
-from haplugin.formskit.testing import FormFixture
-
 from konwentor.convent.forms import ConventAddForm, ConventDeleteForm
 from konwentor.convent.forms import ConventEditForm
+from konwentor.application.testing import FormFixture
 
 
-class LocalFixtures(FormFixture, DatabaseFixture):
+class LocalFixtures(FormFixture):
 
     @yield_fixture
     def Convent(self):
@@ -26,7 +24,7 @@ class LocalFixtures(FormFixture, DatabaseFixture):
 
 class TestConventAddForm(LocalFixtures):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return ConventAddForm
 
     def test_submit(self, form, Convent, mdb):
@@ -40,7 +38,7 @@ class TestConventAddForm(LocalFixtures):
 
 class TestConventDeleteForm(LocalFixtures):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return ConventDeleteForm
 
     def test_submit(self, form, Convent, mdb):
@@ -58,7 +56,7 @@ class TestConventDeleteForm(LocalFixtures):
 
 class TestConventEditForm(LocalFixtures):
 
-    def _get_controller_class(self):
+    def _get_form_class(self):
         return ConventEditForm
 
     def test_id_exists_validator_success(self, form, get_value, fixtures):

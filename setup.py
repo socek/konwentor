@@ -15,14 +15,13 @@ install_requires = [
     'hatak_formskit>=0.2.3.3',
     'hatak_flashmsg',
     'waitress',
-    # 'uwsgi',
+    'uwsgi',
     'pytest',
     'pytest-cov',
     'coverage==3.7.1',
     'hatak_auth>=0.2.2.2',
     'ipdb',
     'psycopg2',
-    'SQLAlchemy==0.9.8',
 ]
 dependency_links = [
 

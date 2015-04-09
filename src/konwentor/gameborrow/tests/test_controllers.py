@@ -2,16 +2,15 @@ from pytest import fixture, yield_fixture, raises
 from mock import MagicMock, call, patch
 from pyramid.httpexceptions import HTTPNotFound
 
-from hatak.testing import ControllerFixture
-from haplugin.sql.testing import DatabaseFixture
 
 from ..controllers import GameBorrowAddController, GameBorrowListController
 from ..controllers import GameBorrowReturnController, ShowPersonHint
 from konwentor.gameborrow.models import make_hash_document
 from konwentor.application.init import main
+from konwentor.application.testing import ControllerFixture
 
 
-class LocalFixtures(ControllerFixture, DatabaseFixture):
+class LocalFixtures(ControllerFixture):
 
     @yield_fixture
     def get_game_entity(self, controller):
