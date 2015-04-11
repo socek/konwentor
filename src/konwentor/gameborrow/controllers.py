@@ -10,7 +10,6 @@ from haplugin.formskit.helpers import FormWidget
 from .forms import GameBorrowAddForm, GameBorrowReturnForm
 from .models import GameBorrow, make_hash_document
 from konwentor.gamecopy.controllers import GameCopyControllerBase
-from konwentor.gamecopy.models import GameEntity
 from konwentor.application.translations import KonwentorMessage
 
 
@@ -31,10 +30,7 @@ class GameBorrowAddController(Controller):
 
     def get_game_entity(self):
         try:
-            return (
-                self.query(GameEntity)
-                .filter_by(id=self.matchdict['obj_id'])
-                .one())
+            return self.driver.GameEntity.get_by_id(self.matchdict['obj_id'])
         except NoResultFound:
             raise HTTPNotFound()
 
@@ -52,20 +48,10 @@ class GameBorrowListController(GameCopyControllerBase):
         self.prepere_template()
 
     def get_borrows(self, convent):
-        return (
-            self.db.query(GameBorrow)
-            .join(GameEntity)
-            .filter(GameEntity.convent == convent)
-            .filter(GameBorrow.is_borrowed.is_(True))
-            .all())
+        return self.driver.GameBorrow.get_borrowed_for_convent(convent)
 
     def generate_log(self, convent):
-        return (
-            self.db.query(GameBorrow)
-            .join(GameEntity)
-            .filter(GameEntity.convent == convent)
-            .filter(GameBorrow.is_borrowed.is_(False))
-            .all())
+        return self.driver.GameBorrow.get_returned_for_convent(convent)
 
     def process_form(self):
         form = GameBorrowReturnForm(self.request)
@@ -140,10 +126,7 @@ class GameBorrowReturnController(Controller):
 
     def get_borrow(self):
         try:
-            return (
-                self.query(GameBorrow)
-                .filter_by(id=self.matchdict['obj_id'])
-                .one())
+            return self.driver.GameBorrow.get_by_id(self.matchdict['obj_id'])
         except NoResultFound:
             raise HTTPNotFound()
 
@@ -183,12 +166,4 @@ class ShowPersonHint(JsonController):
         return obj
 
     def get_game_borrow_by_stat_hash(self, hashed):
-        return (
-            self.db.query(
-                GameBorrow.name,
-                GameBorrow.surname,
-            )
-            .filter(GameBorrow.stats_hash == hashed)
-            .order_by(GameBorrow.borrowed_timestamp.desc())
-            .first()
-        )
+        return self.driver.GameBorrow.get_by_hash_view(hashed)

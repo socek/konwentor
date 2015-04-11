@@ -92,10 +92,7 @@ class GameBorrowAddForm(KonwentorForm):
         self.db.commit()
 
     def get_entity(self, entity_id):
-        return (
-            self.db.query(GameEntity)
-            .filter_by(id=entity_id)
-            .one())
+        return self.driver.GameEntity.get_by_id(entity_id)
 
 
 class GameBorrowReturnForm(KonwentorForm):
@@ -118,14 +115,8 @@ class GameBorrowReturnForm(KonwentorForm):
         self.add_form_validator(IsGameBorrowExisting())
 
     def get_avalible_games(self):
-        query = (
-            self.query(Game.name, GameEntity, User)
-            .join(GameCopy)
-            .join(GameEntity)
-            .join(User)
-            .filter(GameEntity.convent_id == self.get_value('convent_id'))
-            .order_by(User.name, Game.name)
-        )
+        query = self.driver.Game.get_avalible_games_view(
+            self.get_value('convent_id'))
         for game in query:
             if game.GameEntity.is_avalible():
                 yield game
@@ -179,7 +170,4 @@ class IsGameBorrowExisting(FormValidator):
             return False
 
     def get_borrow(self, id_):
-        return (
-            self.form.query(GameBorrow)
-            .filter_by(id=id_)
-            .one())
+        return self.form.driver.GameBorrow.get_by_id(id_)

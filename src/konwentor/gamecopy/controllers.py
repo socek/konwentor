@@ -4,7 +4,6 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from konwentor.auth.models import User
 from konwentor.convent.helpers import ConventWidget
-from konwentor.convent.models import Convent
 from konwentor.game.models import Game
 
 from .forms import GameCopyAddForm
@@ -23,10 +22,7 @@ class GameCopyControllerBase(Controller):
 
     def get_convent(self):
         try:
-            return (
-                self.query(Convent)
-                .filter_by(id=self.session['convent_id'], is_active=True)
-                .one())
+            return self.driver.Convent.get_active(self.session['convent_id'])
         except NoResultFound:
             self.add_flashmsg('Proszę wybrać konwent.', 'danger')
             self.redirect('convent:list')
@@ -93,19 +89,7 @@ class GameCopyListController(GameCopyControllerBase):
         ]
 
     def get_games(self, convent):
-        return (
-            self.query(
-                GameEntity,
-                Game,
-                Game.name,
-                User.name.label('author_name'))
-            .join(GameCopy).join(Game).join(User)
-            .filter(
-                and_(
-                    GameEntity.convent_id == convent.id,
-                    Game.is_active.is_(True),
-                ))
-            .all())
+        return self.driver.Game.get_game_list_view(convent)
 
 
 class GameCopyToBoxController(GameCopyControllerBase):
@@ -127,11 +111,6 @@ class GameCopyToBoxController(GameCopyControllerBase):
         self.db.commit()
 
     def get_game_entity(self, convent):
-        return (
-            self.query(GameEntity)
-            .filter(and_(
-                GameEntity.convent_id == convent.id,
-                GameEntity.id == self.matchdict['obj_id'],
-            ))
-            .one()
+        return self.driver.GameEntity.get_for_convent_and_id(
+            convent, self.matchdict['obj_id']
         )

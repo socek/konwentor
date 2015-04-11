@@ -1,5 +1,4 @@
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy import and_
 from formskit.validators import NotEmpty, IsDigit
 
 from haplugin.formskit import PostForm
@@ -27,7 +26,7 @@ class GameAddForm(PostForm):
 
     def validate_uniqe_name(self, name):
         try:
-            self.query(Game).filter_by(name=name).one()
+            self.driver.Game.get_by_name(name)
             return False
         except NoResultFound:
             return True
@@ -66,12 +65,7 @@ class GameEditForm(GameAddForm):
 
     def validate_uniqe_name(self, name):
         try:
-            self.query(Game).filter(
-                and_(
-                    Game.name == name,
-                    Game.id != self.model.id,
-                )
-            ).one()
+            self.driver.Game.get_by_name_and_not_id(self.model.id, name)
             return False
         except NoResultFound:
             return True
@@ -84,7 +78,7 @@ class GameDeleteForm(PostForm):
 
     def on_success(self):
         data = self.get_data_dict(True)
-        _id = data['obj_id']
-        element = self.db.query(Game).filter_by(id=_id).one()
+        id_ = data['obj_id']
+        element = self.driver.Game.get_by_id(id_)
         element.is_active = False
         self.db.commit()

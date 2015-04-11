@@ -87,7 +87,7 @@ class TestGameDeleteForm(LocalFixtures, GameFactoryMixin):
     def _get_form_class(self):
         return GameDeleteForm
 
-    def test_submit(self, db, form):
+    def test_submit(self, db, form, driver):
         """GameDeleteForm should delete game"""
         self.create_game(db)
 
@@ -97,7 +97,7 @@ class TestGameDeleteForm(LocalFixtures, GameFactoryMixin):
 
             db.flush()
             with raises(NoResultFound):
-                db.query(Game).filter_by(id=self.game.id, is_active=True).one()
+                driver.Game.get_active(self.game.id)
         finally:
             self.delete_game(db)
 

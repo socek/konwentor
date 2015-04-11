@@ -142,11 +142,12 @@ class TestGameDeleteController(LocalFixtures):
         form.validate.assert_called_once_with()
         redirect.assert_called_once_with('game:list')
 
-    def test_get_element_on_error(self, controller, mdb):
+    def test_get_element_on_error(self, controller, matchdict, request):
         """
         get_element should raise HTTPNotFound exception when no Game found
         """
-        mdb.query.side_effect = NoResultFound()
+        request.driver.Game.get_active.side_effect = NoResultFound
+        matchdict['obj_id'] = '21354'
         with raises(HTTPNotFound):
             controller.get_element()
 

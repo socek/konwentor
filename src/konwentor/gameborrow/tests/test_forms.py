@@ -222,8 +222,8 @@ class TestIsGameBorrowExisting(LocalFixtures):
             form.get_value.return_value)
         assert form.borrow == get_borrow.return_value
 
-    def test_get_borrow(self, validator, fixtures, form, db):
-        form.query = db.query
+    def test_get_borrow(self, validator, fixtures, form, request):
+        form.driver = request.driver
         borrow = validator.get_borrow(fixtures['GameBorrow'][0].id)
 
         assert borrow == fixtures['GameBorrow'][0]

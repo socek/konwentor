@@ -49,15 +49,16 @@ class TestGameCopyAddForm(FormFixture):
         with patch.object(form, 'create_gameentity', autospec=True) as mock:
             yield mock
 
-    def test_get_objects(self, form, query):
+    def test_get_objects(self, form, request):
         """get_objects should return list of dicts"""
-        query.return_value.filter_by.call_count = 0
+        driver = request.driver
+        driver.self.get_objects.call_count = 0
         example_model = MagicMock()
-        query.return_value.filter_by.return_value.all.return_value = [
+        driver.self.get_objects.return_value.all.return_value = [
             example_model
         ]
 
-        data = list(form.get_objects(self)())
+        data = list(form.get_objects('self')())
 
         assert data[0] == {
             'label': '(Wybierz)',
@@ -69,18 +70,18 @@ class TestGameCopyAddForm(FormFixture):
             'value': example_model.id,
         }
 
-        query.assert_called_with(self)
-        query.return_value.filter_by.assert_called_once_with()
-        query.return_value.filter_by.return_value.all.assert_called_with()
+        driver.self.get_objects.assert_called_with()
 
-    def test_get_objects_with_other(self, form, query):
+    def test_get_objects_with_other(self, form, request):
         """get_objects should return list of dicts"""
-        query.return_value.filter_by.call_count = 0
+        driver = request.driver
+        driver.self.get_objects.call_count = 0
         example_model = MagicMock()
-        query.return_value.filter_by.return_value.all.return_value = [
-            example_model]
+        driver.self.get_objects.return_value.all.return_value = [
+            example_model
+        ]
 
-        data = list(form.get_objects(self, True)())
+        data = list(form.get_objects('self', True, something=True)())
 
         assert data[0] == {
             'label': '(Wybierz)',
@@ -97,9 +98,7 @@ class TestGameCopyAddForm(FormFixture):
             'value': '-1',
         }
 
-        query.assert_called_with(self)
-        query.return_value.filter_by.assert_called_once_with()
-        query.return_value.filter_by.return_value.all.assert_called_with()
+        driver.self.get_objects.assert_called_with(something=True)
 
     def test_submit(
         self,

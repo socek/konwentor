@@ -1,9 +1,4 @@
-from sqlalchemy import func, desc, distinct, and_
-
-from konwentor.game.models import Game
-from konwentor.gameborrow.models import GameBorrow
 from konwentor.gamecopy.controllers import GameCopyControllerBase
-from konwentor.gamecopy.models import GameEntity, GameCopy
 
 
 class StatisticsController(GameCopyControllerBase):
@@ -29,11 +24,7 @@ class StatisticsController(GameCopyControllerBase):
         self.add_all_copies()
 
     def get_borrows(self):
-        return (
-            self.db.query(GameBorrow)
-            .join(GameEntity)
-            .filter(GameEntity.convent == self.data['convent'])
-            .all())
+        return self.driver.GameBorrow.get_for_convent(self.data['convent'])
 
     def add_all_borrows(self):
         self.data['statistics'].append({
@@ -42,65 +33,31 @@ class StatisticsController(GameCopyControllerBase):
         })
 
     def add_all_people(self):
-        peoples = (
-            self.query(GameBorrow.stats_hash)
-            .group_by(GameBorrow.stats_hash)
-            .join(GameEntity)
-            .filter(GameEntity.convent == self.data['convent'])
-        )
+        peoples = self.driver.GameBorrow.get_people_for_convent(
+            self.data['convent'])
         self.data['statistics'].append({
             'name': 'Ilość różnych osób',
             'value': peoples.count(),
         })
 
     def add_top_games(self):
-        self.data['games'] = (
-            self.db
-            .query(
-                func.count(GameBorrow.id).label('borrows'),
-                Game.name)
-            .join(GameEntity)
-            .join(GameCopy)
-            .join(Game)
-            .group_by(Game.id)
-            .order_by(desc('borrows'))
-            .filter(GameEntity.convent == self.data['convent'])
-            .all())
+        self.data['games'] = self.driver.Game.top_games_view(
+            self.data['convent'])
 
     def add_top_people(self):
-        self.data['peoples'] = (
-            self.query(
-                func.max(GameBorrow.name).label('name'),
-                func.min(GameBorrow.surname).label('surname'),
-                func.count(GameBorrow.id).label('borrows'),)
-            .join(GameEntity)
-            .group_by(GameBorrow.stats_hash)
-            .order_by(desc('borrows'))
-            .filter(GameEntity.convent == self.data['convent'])
-            .all()
-        )
+        self.data['peoples'] = self.driver.GameBorrow.peoples_view(
+            self.data['convent'])
 
     def add_all_games(self):
-        games = (
-            self.query(func.count(distinct(Game.id)))
-            .join(GameCopy)
-            .join(GameEntity)
-            .filter(
-                and_(
-                    GameEntity.convent == self.data['convent'],
-                    Game.is_active.is_(True),
-                ))
-            .scalar())
+        games = self.driver.Game.games_count_for_convent_view(
+            self.data['convent'])
         self.data['statistics'].append({
             'name': 'Różnych gier',
             'value': games,
         })
 
     def add_all_copies(self):
-        copies = (
-            self.query(func.sum(GameEntity.count))
-            .filter(GameEntity.convent == self.data['convent'])
-            .scalar())
+        copies = self.driver.GameCopy.count_for_convent(self.data['convent'])
         self.data['statistics'].append({
             'name': 'Sztuk gier',
             'value': copies,

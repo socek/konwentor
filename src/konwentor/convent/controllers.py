@@ -25,7 +25,7 @@ class ConventListController(Controller):
         ]
 
     def get_convents(self):
-        return self.query(Convent).filter_by(is_active=True).all()
+        return self.driver.Convent.get_actives().all()
 
 
 class ConventAdd(Controller):
@@ -60,10 +60,7 @@ class ConventEditController(Controller):
     def get_convent(self):
         try:
             obj_id = int(self.matchdict['obj_id'])
-            self.data['convent'] = (
-                self.query(Convent)
-                .filter_by(id=obj_id, is_active=True)
-                .one())
+            self.data['convent'] = self.driver.Convent.get_active(obj_id)
             return self.data['convent']
         except NoResultFound:
             raise HTTPNotFound()
@@ -85,10 +82,8 @@ class ConventDelete(Controller):
 
     def verify_convent_id(self):
         try:
-            self.data['convent'] = (
-                self.query(Convent)
-                .filter_by(id=self.matchdict['obj_id'], is_active=True)
-                .one())
+            self.data['convent'] = self.driver.Convent.get_active(
+                self.matchdict['obj_id'])
         except NoResultFound:
             raise HTTPNotFound()
 

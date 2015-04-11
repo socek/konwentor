@@ -18,7 +18,7 @@ class GameListController(Controller):
         self.add_game_forms()
 
     def get_games(self):
-        return self.db.query(Game).filter_by(is_active=True).all()
+        return self.driver.Game.get_actives().all()
 
     def add_game_forms(self):
         for game in self.data['objects']:
@@ -59,10 +59,7 @@ class GameEditController(Controller):
     def get_game(self):
         try:
             obj_id = int(self.matchdict['obj_id'])
-            self.data['game'] = (
-                self.query(Game)
-                .filter_by(id=obj_id, is_active=True)
-                .one())
+            self.data['game'] = self.driver.Game.get_active(obj_id)
             return self.data['game']
         except NoResultFound:
             raise HTTPNotFound()
@@ -97,9 +94,7 @@ class GameDelete(Controller):
 
     def get_element(self):
         try:
-            self.data['element'] = (
-                self.query(Game)
-                .filter_by(id=self.matchdict['obj_id'])
-                .one())
+            self.data['element'] = self.driver.Game.get_active(
+                self.matchdict['obj_id'])
         except NoResultFound:
             raise HTTPNotFound()

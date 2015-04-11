@@ -16,7 +16,7 @@ class GameCopyAddForm(KonwentorForm):
             'game_name',
             label='Gra',
             validators=[NotEmpty()])
-        field.data = self.get_objects(Game, is_active=True)
+        field.data = self.get_objects('Game', is_active=True)
 
         self.add_field(
             'confirmation',
@@ -27,14 +27,14 @@ class GameCopyAddForm(KonwentorForm):
             label='Właściciel',
             validators=[NotEmpty(), IsDigit()],
             convert=ToInt())
-        field.data = self.get_objects(User)
+        field.data = self.get_objects('User')
 
         field = self.add_field(
             'convent_id',
             label='Konwent',
             validators=[NotEmpty(), IsDigit()],
             convert=ToInt())
-        field.data = self.get_objects(Convent, is_active=True)
+        field.data = self.get_objects('Convent', is_active=True)
 
         self.add_field(
             'count',
@@ -42,13 +42,14 @@ class GameCopyAddForm(KonwentorForm):
             validators=[NotEmpty(), IsDigit()],
             convert=ToInt())
 
-    def get_objects(self, cls, other=False, **kwargs):
+    def get_objects(self, driver_name, other=False, **kwargs):
         def generator():
             yield {
                 'label': '(Wybierz)',
                 'value': '',
             }
-            for obj in self.db.query(cls).filter_by(**kwargs).all():
+            driver = getattr(self.driver, driver_name)
+            for obj in driver.get_objects(**kwargs).all():
                 yield {
                     'label': obj.name,
                     'value': obj.id,

@@ -15,7 +15,16 @@ from haplugin.flashmsg import FlashMessagePlugin
 
 # Drivers
 from .tests.fixtures import Fixtures
+from konwentor.convent.driver import ConventDriver
+from konwentor.game.driver import GameDriver
+from konwentor.gameborrow.driver import GameBorrowDriver
+from konwentor.gamecopy.driver import GameCopyDriver, GameEntityDriver
 sql = SqlPlugin(Fixtures)
+sql.add_group(ConventDriver())
+sql.add_group(GameDriver())
+sql.add_group(GameBorrowDriver())
+sql.add_group(GameCopyDriver())
+sql.add_group(GameEntityDriver())
 
 # Internal plugins
 from konwentor.menu.plugin import MenuPlugin
