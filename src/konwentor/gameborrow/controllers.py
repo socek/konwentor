@@ -8,9 +8,8 @@ from hatak.controller import Controller, JsonController
 from haplugin.formskit.helpers import FormWidget
 
 from .forms import GameBorrowAddForm, GameBorrowReturnForm
-from .models import GameBorrow, make_hash_document
+from .models import make_hash_document
 from konwentor.gamecopy.controllers import GameCopyControllerBase
-from konwentor.application.translations import KonwentorMessage
 
 
 class GameBorrowAddController(Controller):
@@ -86,12 +85,12 @@ class GameBorrowListController(GameCopyControllerBase):
     def _on_form_fail(self, form):
         game_entity_id = form.fields['game_entity_id']
 
-        if form.message:
-            message = KonwentorMessage(form.message())
+        if form.messages:
+            message = form.messages[0]()
         else:
-            message = KonwentorMessage(game_entity_id.get_value_error())
+            message = game_entity_id.get_value_errors()[0]
 
-        self.add_flashmsg(message(), 'danger')
+        self.add_flashmsg(message, 'danger')
 
     def prepere_template(self):
         self.data['convent'] = self.get_convent()

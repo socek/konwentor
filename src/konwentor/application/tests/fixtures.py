@@ -13,7 +13,14 @@ class Fixtures(FixtureGenerator):
             'name': 'first',
             'email': 'first@gmail.com',
             'password': 'simplepass',
-            'permissions': [('base', 'view'), ('game', 'edit')]
+            'permissions': [
+                ('base', 'view'),
+                ('game', 'edit'),
+                ('convent', 'add'),
+                ('game', 'add'),
+                ('gameborrow', 'add'),
+                ('gamecopy', 'add'),
+            ]
         },
         {
             'name': 'second',

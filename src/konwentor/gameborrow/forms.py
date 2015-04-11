@@ -10,9 +10,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from konwentor.application.translations import KonwentorForm
 
 from .models import GameBorrow
-from konwentor.game.models import Game
-from konwentor.gamecopy.models import GameEntity, GameCopy
-from konwentor.auth.models import User
 
 
 class GameBorrowAddForm(KonwentorForm):
@@ -33,7 +30,7 @@ class GameBorrowAddForm(KonwentorForm):
             'document_type',
             label='Dokument',
             validators=[NotEmpty()])
-        field.data = self.get_avalible_documents
+        field.set_avalible_values(self.get_avalible_documents)
         self.add_field_object(field)
         self.add_field(
             'document_number',
@@ -105,7 +102,8 @@ class GameBorrowReturnForm(KonwentorForm):
         field = self.add_field(
             'game_entity_id',
             label='Wypożycza',
-            validators=[IsValueInAvalibleValues()])
+            validators=[IsValueInAvalibleValues()],
+            convert=ToInt())
         field.set_avalible_values(self.get_entity_ids)
         self.add_field(
             'convent_id',

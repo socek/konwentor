@@ -1,13 +1,9 @@
 from hatak.controller import Controller, EndController
-from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from konwentor.auth.models import User
 from konwentor.convent.helpers import ConventWidget
-from konwentor.game.models import Game
 
 from .forms import GameCopyAddForm
-from .models import GameEntity, GameCopy
 from .helpers import GameEntityWidget
 
 

@@ -352,42 +352,38 @@ class TestGameBorrowListController(LocalFixtures):
     def test_on_form_fail_with_form_message(
         self,
         controller,
-        KonwentorMessage,
     ):
         form = MagicMock()
         game_entity_id = MagicMock()
         form.fields = {'game_entity_id': game_entity_id}
+        msg = MagicMock()
+        form.messages = [msg]
 
         controller._on_form_fail(form)
 
-        KonwentorMessage.assert_called_once_with(
-            form.message.return_value)
-        form.message.assert_called_once_with()
-
+        msg.assert_called_once_with()
         self.add_flashmsg(
-            KonwentorMessage.return_value.return_value,
+            msg.return_value,
             'danger')
 
     def test_on_form_fail_with_value_message(
         self,
         controller,
-        KonwentorMessage,
         add_flashmsg,
     ):
         form = MagicMock()
         game_entity_id = MagicMock()
         form.fields = {'game_entity_id': game_entity_id}
+        game_entity_id.get_value_errors.return_value = ['str']
 
-        form.message = False
+        form.messages = []
 
         controller._on_form_fail(form)
 
-        KonwentorMessage.assert_called_once_with(
-            game_entity_id.get_value_error.return_value)
-        game_entity_id.get_value_error.assert_called_once_with()
+        game_entity_id.get_value_errors.assert_called_once_with()
 
         add_flashmsg.assert_called_once_with(
-            KonwentorMessage.return_value.return_value,
+            'str',
             'danger')
 
     def test_on_form_success_with_empty_game_entity_id(

@@ -12,7 +12,7 @@ install_requires = [
     'hatak_beaker',
     'hatak_debugtoolbar',
     'hatak_statics',
-    'hatak_formskit>=0.2.3.3',
+    'hatak_formskit>=0.2.3.4',
     'hatak_flashmsg',
     'waitress',
     'uwsgi',

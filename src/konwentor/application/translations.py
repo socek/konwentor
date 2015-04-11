@@ -11,6 +11,7 @@ class KonwentorMessage(Translation):
         'CSRF token do not match!': 'Token CSRF się nie zgadza.',
         'InList': 'Nie można znaleźć podanego elementu.',
         'GameNameInList': 'Nie znaleziono wybranej gry "{value.value}".',
+        'IsValueInAvalibleValues': 'Nie znaleziono podanej gry.'
     }
 
     def translate(self):

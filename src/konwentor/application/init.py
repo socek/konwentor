@@ -19,12 +19,15 @@ from konwentor.convent.driver import ConventDriver
 from konwentor.game.driver import GameDriver
 from konwentor.gameborrow.driver import GameBorrowDriver
 from konwentor.gamecopy.driver import GameCopyDriver, GameEntityDriver
+from konwentor.auth.driver import UserDriver, PermissionDriver
 sql = SqlPlugin(Fixtures)
 sql.add_group(ConventDriver())
 sql.add_group(GameDriver())
 sql.add_group(GameBorrowDriver())
 sql.add_group(GameCopyDriver())
 sql.add_group(GameEntityDriver())
+sql.add_group(UserDriver())
+sql.add_group(PermissionDriver())
 
 # Internal plugins
 from konwentor.menu.plugin import MenuPlugin
