@@ -49,12 +49,11 @@ class TestGameCopyAddForm(FormFixture):
         with patch.object(form, 'create_gameentity', autospec=True) as mock:
             yield mock
 
-    def test_get_objects(self, form, request):
+    def test_get_objects(self, form, mdriver):
         """get_objects should return list of dicts"""
-        driver = request.driver
-        driver.self.get_objects.call_count = 0
+        mdriver.self.get_objects.call_count = 0
         example_model = MagicMock()
-        driver.self.get_objects.return_value.all.return_value = [
+        mdriver.self.get_objects.return_value.all.return_value = [
             example_model
         ]
 
@@ -70,14 +69,13 @@ class TestGameCopyAddForm(FormFixture):
             'value': example_model.id,
         }
 
-        driver.self.get_objects.assert_called_with()
+        mdriver.self.get_objects.assert_called_with()
 
-    def test_get_objects_with_other(self, form, request):
+    def test_get_objects_with_other(self, form, mdriver):
         """get_objects should return list of dicts"""
-        driver = request.driver
-        driver.self.get_objects.call_count = 0
+        mdriver.self.get_objects.call_count = 0
         example_model = MagicMock()
-        driver.self.get_objects.return_value.all.return_value = [
+        mdriver.self.get_objects.return_value.all.return_value = [
             example_model
         ]
 
@@ -98,7 +96,7 @@ class TestGameCopyAddForm(FormFixture):
             'value': '-1',
         }
 
-        driver.self.get_objects.assert_called_with(something=True)
+        mdriver.self.get_objects.assert_called_with(something=True)
 
     def test_submit(
         self,

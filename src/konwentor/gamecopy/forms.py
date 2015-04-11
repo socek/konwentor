@@ -49,7 +49,6 @@ class GameCopyAddForm(KonwentorForm):
                 'value': '',
             }
             driver = getattr(self.driver, driver_name)
-            print(driver, kwargs)
             for obj in driver.get_objects(**kwargs).all():
                 yield {
                     'label': obj.name,
