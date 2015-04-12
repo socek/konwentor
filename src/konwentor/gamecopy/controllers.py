@@ -2,6 +2,7 @@ from hatak.controller import Controller, EndController
 from sqlalchemy.orm.exc import NoResultFound
 
 from konwentor.convent.helpers import ConventWidget
+from konwentor.gameborrow.sidemenu import SideMenuWidget
 
 from .forms import GameCopyAddForm
 from .helpers import GameEntityWidget
@@ -27,6 +28,7 @@ class GameCopyControllerBase(Controller):
     def make_helpers(self):
         super().make_helpers()
         self.add_helper('convent', ConventWidget, self.get_convent())
+        self.add_helper('sidemenu', SideMenuWidget, None)
 
 
 class GameCopyAddController(GameCopyControllerBase):

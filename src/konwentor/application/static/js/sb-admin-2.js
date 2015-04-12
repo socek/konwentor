@@ -1,6 +1,11 @@
 $(function() {
 
-    $('#side-menu').metisMenu();
+    $('#side-menu').metisMenu({
+        toggle: true
+    });
+    $('#top-menu').metisMenu({
+        toggle: false
+    });
 
 });
 

@@ -1,7 +1,7 @@
 from hatak.plugin import Plugin
 from hatak.controller import ControllerPlugin
 
-from .helpers import MenuWidget
+from .helpers import TopMenuWidget
 
 
 class MenuPlugin(Plugin):
@@ -15,7 +15,7 @@ class MenuControllerPlugin(ControllerPlugin):
     def make_helpers(self):
         try:
             self.add_helper(
-                'menu', MenuWidget, self.controller.menu_highlighted)
+                'topmenu', TopMenuWidget, self.controller.menu_highlighted)
         except AttributeError:
             # if no menu_highlighted is avalible, it means no menu will be
             # needed

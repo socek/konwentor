@@ -1,11 +1,11 @@
 from haplugin.jinja2 import Jinja2HelperSingle
 
-from .models import MenuObject
+from konwentor.menu.models import MenuObject
 
 
-class TopMenuWidget(Jinja2HelperSingle):
+class SideMenuWidget(Jinja2HelperSingle):
 
-    template = 'konwentor.menu:templates/main.jinja2'
+    template = 'konwentor.menu:templates/side.jinja2'
 
     def __init__(self, request, highlighted):
         super().__init__(request)
@@ -18,8 +18,6 @@ class TopMenuWidget(Jinja2HelperSingle):
 
     def make(self):
         self.data['menu'] = []
-        self.add_menu('Konwenty', 'convent:list', 'calendar')
-        self.add_menu('Gry', 'game:list', 'gamepad')
 
         submenu = self.add_menu('Na konwencie', None, 'star')
         submenu.add_child('Dodaj grę', 'gamecopy:add', 'magic')

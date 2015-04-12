@@ -10,6 +10,7 @@ from haplugin.formskit.helpers import FormWidget
 from .forms import GameBorrowAddForm, GameBorrowReturnForm
 from .models import make_hash_document
 from konwentor.gamecopy.controllers import GameCopyControllerBase
+from konwentor.gameborrow.sidemenu import SideMenuWidget
 
 
 class GameBorrowAddController(Controller):
@@ -32,6 +33,10 @@ class GameBorrowAddController(Controller):
             return self.driver.GameEntity.get_by_id(self.matchdict['obj_id'])
         except NoResultFound:
             raise HTTPNotFound()
+
+    def make_helpers(self):
+        super().make_helpers()
+        self.add_helper('sidemenu', SideMenuWidget, None)
 
 
 class GameBorrowListController(GameCopyControllerBase):
