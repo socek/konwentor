@@ -1,23 +1,26 @@
 from pytest import fixture, yield_fixture
-from mock import patch, MagicMock
+from mock import patch
 
 from hatak.testing import RequestFixture
 
-from ..helpers import TopMenuWidget, OnConventMenuObject
+from ..sidemenu import SideMenuWidget
 
 
-class TestTopMenuWidget(RequestFixture):
+class TestSideMenuWidget(RequestFixture):
 
     @fixture
     def widget(self, request):
         self.highlighted = 'highlited'
-        widget = TopMenuWidget(request, self.highlighted)
+        widget = SideMenuWidget(request, self.highlighted)
         widget.data = {'menu': []}
         return widget
 
     @yield_fixture
     def MenuObject(self):
-        patcher = patch('konwentor.menu.helpers.MenuObject', auto_spec=True)
+        patcher = patch(
+            'konwentor.gameborrow.sidemenu.MenuObject',
+            auto_spec=True
+        )
         with patcher as mock:
             yield mock
 
@@ -37,28 +40,3 @@ class TestTopMenuWidget(RequestFixture):
     def test_make(self, widget):
         """Sanity check."""
         widget.make()
-
-
-class TestOnConventMenuObject(object):
-
-    @fixture
-    def widget(self):
-        return MagicMock()
-
-    @fixture
-    def obj(self, widget):
-        return OnConventMenuObject(widget)
-
-    @fixture
-    def session(self, obj):
-        obj.session = {}
-        return obj.session
-
-    def test_is_avalible(self, obj, session):
-        """
-        .is_avalible should return True if convent_id is set in the session
-        """
-        assert obj.is_avalible() is False
-
-        session['convent_id'] = 'something'
-        assert obj.is_avalible() is True

@@ -3,7 +3,7 @@ from mock import patch
 
 from hatak.testing import PluginFixture, ControllerPluginFixture
 
-from ..helpers import MenuWidget
+from ..helpers import TopMenuWidget
 from ..plugin import MenuPlugin, MenuControllerPlugin
 
 
@@ -32,14 +32,15 @@ class TestMenuControllerPlugin(ControllerPluginFixture):
 
     def test_make_helpers_success(self, plugin, add_helper, controller):
         """
-        make_helpers should add MenuWidget to helpers if
+        make_helpers should add TopMenuWidget to helpers if
         controller.menu_highlighted is specyfied.
         """
         controller.menu_highlighted = 'something'
 
         plugin.make_helpers()
 
-        add_helper.assert_called_once_with('menu', MenuWidget, 'something')
+        add_helper.assert_called_once_with(
+            'topmenu', TopMenuWidget, 'something')
 
     def test_make_helpers_fail(self, plugin, add_helper, controller):
         """

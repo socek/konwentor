@@ -3,9 +3,7 @@
 {% from "modal.jinja2" import modal %}
 
 {% block page_head -%}
-    Gry {% if user.has_access_to_route('game:add') -%}
-        - <small><a href="{{route('game:add')}}">Dodaj</a></small>
-    {%- endif %}
+    Gry {{link.button('Dodaj', 'game:add')}}
 {%- endblock %}
 
 {% macro header() -%}

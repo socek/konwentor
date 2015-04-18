@@ -9,7 +9,7 @@ from haplugin.alembic import AlembicPlugin
 from haplugin.beaker import BeakerPlugin
 from haplugin.debugtoolbar import DebugtoolbarPlugin
 from haplugin.statics import StaticPlugin
-from haplugin.auth import AuthPlugin
+from konwentor.auth.plugin import KonwentorAuthPlugin
 from haplugin.formskit import FormPlugin
 from haplugin.flashmsg import FlashMessagePlugin
 
@@ -45,7 +45,7 @@ main.add_plugin(AlembicPlugin())
 main.add_plugin(BeakerPlugin())
 main.add_plugin(DebugtoolbarPlugin())
 main.add_plugin(StaticPlugin())
-main.add_plugin(AuthPlugin())
+main.add_plugin(KonwentorAuthPlugin())
 main.add_plugin(FormPlugin(FormWidget))
 main.add_plugin(MenuPlugin())
 main.add_plugin(FlashMessagePlugin())

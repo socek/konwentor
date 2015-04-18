@@ -4,11 +4,11 @@
             {% for object in menu %}
                 {% if object.is_visible() -%}
                     <li>
-                        <a {%- if object.is_highlited() %} class="active"{% endif %} href="{{object.get_url()}}">
+                        <a {{object.get_css_class()}} href="{{object.get_url()}}">
                             <i class="fa {{object.get_icon()}} fa-fw"></i> {{object.name}}
                             {%- if object.childs %}<span class="fa arrow"></span>{% endif -%}
                         </a>
-                        {% if object.childs -%}
+                        {% if object.is_avalible() and object.childs -%}
                             <ul class="nav nav-second-level collapse">
                                 {% for child in object.childs %}
                                     {% if child.is_visible() -%}

@@ -6,6 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from ..controllers import EndController
 from ..controllers import GameCopyAddController, GameCopyToBoxController
 from ..controllers import GameCopyControllerBase, GameCopyListController
+from konwentor.gameborrow.sidemenu import SideMenuWidget
 from konwentor.convent.helpers import ConventWidget
 from konwentor.gamecopy.forms import GameCopyAddForm
 from konwentor.application.testing import ControllerFixture
@@ -70,11 +71,18 @@ class TestGameCopyControllerBase(LocalFixtures):
         """make_helpers should add ConventWidget helper"""
         controller.make_helpers()
 
-        add_helper.assert_called_once_with(
-            'convent',
-            ConventWidget,
-            get_convent.return_value,
-        )
+        add_helper.assert_has_calls([
+            call(
+                'convent',
+                ConventWidget,
+                get_convent.return_value,
+            ),
+            call(
+                'sidemenu',
+                SideMenuWidget,
+                None,
+            )
+        ])
 
 
 class TestGameCopyControllerBaseSql(LocalFixtures):

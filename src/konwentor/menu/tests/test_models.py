@@ -80,3 +80,30 @@ class TestMenuObject(RequestFixture):
 
         assert model.childs == [MenuObject.return_value]
         MenuObject.assert_called_once_with(model.widget, 'something', kw='arg')
+
+    def test_get_css_class_when_not_avalible(self, model):
+        """
+        .get_css_class should return disabled class when MenuObject is disabled
+        """
+        def is_avalible():
+            return False
+        model.is_avalible = is_avalible
+
+        assert model.get_css_class() == 'class="disabled"'
+
+    def test_get_css_class_when_highlited(self, model):
+        """
+        .get_css_class should return active class when is highlighted
+        """
+        def is_highlited():
+            return True
+        model.is_highlited = is_highlited
+
+        assert model.get_css_class() == 'class="active"'
+
+    def test_get_css_class(self, model):
+        """
+        .get_css_class should return empty string when is not disabled and not
+        highlighted
+        """
+        assert model.get_css_class() == ''

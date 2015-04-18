@@ -391,3 +391,7 @@ div.custom-combobox ul {
 .navbar {
     min-height: 92px;
 }
+
+a.disabled {
+    color: grey;
+}

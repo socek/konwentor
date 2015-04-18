@@ -1,3 +1,6 @@
+from jinja2 import Markup
+
+
 class MenuObject(object):
 
     def __init__(self, widget, name, route, icon=None):
@@ -11,7 +14,7 @@ class MenuObject(object):
         self.childs = []
 
     def get_url(self):
-        if self.route:
+        if self.is_avalible() and self.route:
             return self.request.route_path(self.route)
         else:
             return '#'
@@ -28,5 +31,19 @@ class MenuObject(object):
         else:
             return True
 
+    def is_avalible(self):
+        return True
+
     def add_child(self, *args, **kwargs):
-        self.childs.append(MenuObject(self.widget, *args, **kwargs))
+        self.add_child_object(MenuObject(self.widget, *args, **kwargs))
+
+    def add_child_object(self, obj):
+        self.childs.append(obj)
+
+    def get_css_class(self):
+        if not self.is_avalible():
+            return Markup('class="disabled"')
+        elif self.is_highlited():
+            return Markup('class="active"')
+        else:
+            return ''

@@ -42,7 +42,6 @@ class TestHasAccessToRoute(object):
 
 
 class TestConventWidget(RequestFixture):
-    prefix_from = ConventWidget
 
     @fixture
     def convent(self):

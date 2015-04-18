@@ -1,13 +1,13 @@
-from pytest import fixture, yield_fixture, raises
 from mock import MagicMock, call, patch
 from pyramid.httpexceptions import HTTPNotFound
-
+from pytest import fixture, yield_fixture, raises
 
 from ..controllers import GameBorrowAddController, GameBorrowListController
 from ..controllers import GameBorrowReturnController, ShowPersonHint
-from konwentor.gameborrow.models import make_hash_document
 from konwentor.application.init import main
 from konwentor.application.testing import ControllerFixture
+from konwentor.gameborrow.models import make_hash_document
+from konwentor.gameborrow.sidemenu import SideMenuWidget
 
 
 class LocalFixtures(ControllerFixture):
@@ -193,6 +193,13 @@ class TestGameBorrowAddController(LocalFixtures):
 
         with raises(HTTPNotFound):
             controller.get_game_entity()
+
+    def test_make_helpers(self, controller, add_helper):
+        """
+        .make_helpers should add SideMenuWidget helper
+        """
+        controller.make_helpers()
+        add_helper.assert_called_once_with('sidemenu', SideMenuWidget, None)
 
 
 class TestGameBorrowListController(LocalFixtures):
