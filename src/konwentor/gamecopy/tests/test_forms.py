@@ -15,31 +15,6 @@ class TestGameCopyAddForm(FormFixture):
         return GameCopyAddForm
 
     @yield_fixture
-    def Game(self):
-        with patch('konwentor.gamecopy.forms.Game') as mock:
-            yield mock
-
-    @yield_fixture
-    def User(self):
-        with patch('konwentor.gamecopy.forms.User') as mock:
-            yield mock
-
-    @yield_fixture
-    def Convent(self):
-        with patch('konwentor.gamecopy.forms.Convent') as mock:
-            yield mock
-
-    @yield_fixture
-    def GameCopy(self):
-        with patch('konwentor.gamecopy.forms.GameCopy') as mock:
-            yield mock
-
-    @yield_fixture
-    def GameEntity(self):
-        with patch('konwentor.gamecopy.forms.GameEntity') as mock:
-            yield mock
-
-    @yield_fixture
     def create_gamecopy(self, form):
         with patch.object(form, 'create_gamecopy', autospec=True) as mock:
             yield mock
@@ -102,12 +77,10 @@ class TestGameCopyAddForm(FormFixture):
         self,
         form,
         query,
-        Game,
-        User,
-        Convent,
         create_gamecopy,
         create_gameentity,
         mdb,
+        mdriver,
     ):
         """Submit should create gamecopy and gameentity (with count)."""
         create_gameentity.return_value.count = 3
@@ -120,18 +93,18 @@ class TestGameCopyAddForm(FormFixture):
         })
         form.on_success()
 
-        Game.get_or_create.assert_called_once_with(
-            mdb, name='1', is_active=True)
-        User.get_by_id.assert_called_once_with(mdb, 4)
-        Convent.get_by_id.assert_called_once_with(mdb, 5)
+        mdriver.Game.get_or_create.assert_called_once_with(
+            name='1', is_active=True)
+        mdriver.User.get_by_id.assert_called_once_with(4)
+        mdriver.Convent.get_by_id.assert_called_once_with(5)
 
         create_gamecopy.assert_called_once_with(
-            Game.get_or_create.return_value,
-            User.get_by_id.return_value,
+            mdriver.Game.get_or_create.return_value,
+            mdriver.User.get_by_id.return_value,
         )
 
         create_gameentity.assert_called_once_with(
-            Convent.get_by_id.return_value,
+            mdriver.Convent.get_by_id.return_value,
             create_gamecopy.return_value,
         )
         gameentity = create_gameentity.return_value
@@ -141,42 +114,38 @@ class TestGameCopyAddForm(FormFixture):
         mdb.commit.assert_called_once_with()
         mdb.rollback.assert_called_once_with()
 
-    def test_create_gamecopy(self, form, GameCopy, mdb):
+    def test_create_gamecopy(self, form, mdb, mdriver):
         """create_gamecopy should get or create GameCopy object."""
         game = create_autospec(Game())
         user = create_autospec(User())
 
         result = form.create_gamecopy(game, user)
-        assert result == GameCopy.get_or_create.return_value
-        GameCopy.get_or_create.assert_called_once_with(
-            mdb,
+        assert result == mdriver.GameCopy.get_or_create.return_value
+        mdriver.GameCopy.get_or_create.assert_called_once_with(
             game=game,
             owner=user)
-        mdb.add.assert_called_once_with(result)
 
-    def test_create_gameentity(self, form, mdb, GameEntity):
+    def test_create_gameentity(self, form, mdriver):
         """create_gameentity should create GameEntity."""
         convent = create_autospec(Convent())
         gamecopy = create_autospec(GameCopy())
 
         gameentity = form.create_gameentity(convent, gamecopy)
-        assert gameentity == GameEntity.get_or_create.return_value
-        GameEntity.get_or_create.assert_called_once_with(
-            mdb,
+        assert gameentity == mdriver.GameEntity.get_or_create.return_value
+        mdriver.GameEntity.get_or_create.assert_called_once_with(
             convent=convent,
             gamecopy=gamecopy)
-        mdb.add.assert_called_once_with(gameentity)
 
-    def test_get_or_create_game(self, form, Game, mdb):
+    def test_get_or_create_game(self, form, mdb, mdriver):
         """
         get_or_create_game should get game from mdb or create it if not found
         """
         result = form.get_or_create_game('myname')
 
-        game = Game.get_or_create.return_value
+        game = mdriver.Game.get_or_create.return_value
         assert result == game
-        Game.get_or_create.assert_called_once_with(
-            mdb, name='myname', is_active=True)
+        mdriver.Game.get_or_create.assert_called_once_with(
+            name='myname', is_active=True)
 
     def test_success(self, form, fixtures, postdata, db, query):
         """GameCopyAddForm is creating data."""

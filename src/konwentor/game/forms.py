@@ -56,7 +56,7 @@ class GameEditForm(GameAddForm):
         super().create_form()
         self.add_field('id', validators=[NotEmpty(), IsDigit()])
 
-        self.add_form_validator(IdExists(Game))
+        self.add_form_validator(IdExists('Game'))
 
     def on_success(self):
         data = self.get_data_dict(True)

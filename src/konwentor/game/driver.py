@@ -13,7 +13,7 @@ class GameDriver(KonwentorDriver):
     model = Game
 
     def get_actives(self):
-        return self.get_all().filter_by(is_active=True)
+        return self.find_all().filter_by(is_active=True)
 
     def get_active(self, obj_id):
         return (

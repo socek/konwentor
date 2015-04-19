@@ -38,3 +38,8 @@ class Convent(Base):
             self.state == 'running'
             and user.has_access_to_route('convent:end')
         )
+
+    def __repr__(self):
+        data = super().__repr__()
+        name = self.name or ''
+        return '%s: %s' % (data, name)

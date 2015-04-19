@@ -79,7 +79,7 @@ class GameFactoryMixin(object):
         return self.game.id
 
     def delete_game(self, db):
-        Game.delete_by_id(db, self.game.id)
+        self.driver.Game.delete(self.game)
 
 
 class TestGameDeleteForm(LocalFixtures, GameFactoryMixin):
@@ -107,7 +107,7 @@ class TestGameEditForm(LocalFixtures, GameFactoryMixin):
     def _get_form_class(self):
         return GameEditForm
 
-    def test_submit(self, db, form, postdata):
+    def test_submit(self, db, driver, form, postdata):
         self.create_game(db)
         try:
             postdata[form.fields['name'].get_name()] = ['my mega name', ]

@@ -78,3 +78,13 @@ class TestConvent(ModelFixture):
 
         assert model.is_user_able_to_end(user) is False
         user.has_access_to_route.assert_called_once_with('convent:end')
+
+    def test_repr(self, model):
+        """repr should return name of model"""
+        model.name = 'my name'
+        model.id = 12
+        assert repr(model) == 'Convent (12): my name'
+
+    def test_repr_when_not_set(self, model):
+        """repr should return empty name when name is None"""
+        assert repr(model) == 'Convent (None): '

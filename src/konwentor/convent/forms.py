@@ -23,7 +23,7 @@ class ConventEditForm(ConventAddForm):
         super().create_form()
         self.add_field('id', validators=[NotEmpty(), IsDigit()])
 
-        self.add_form_validator(IdExists(Convent))
+        self.add_form_validator(IdExists('Convent'))
 
     def on_success(self):
         self.model.name = self.get_value('name')
@@ -50,9 +50,9 @@ class IdExists(FormValidator):
 
     def validate(self):
         id_ = self.form.get_value('id')
-        db = self.form.db
+        driver = getattr(self.form.driver, self.model_class)
         try:
-            self.form.model = self.model_class.get_by_id(db, id_)
+            self.form.model = driver.get_by_id(id_)
             return True
         except NoResultFound:
             return False

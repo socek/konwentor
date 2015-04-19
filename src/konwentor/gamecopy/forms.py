@@ -2,11 +2,6 @@ from formskit.validators import NotEmpty, IsDigit
 from formskit.converters import ToInt
 
 from konwentor.application.translations import KonwentorForm
-from konwentor.auth.models import User
-from konwentor.convent.models import Convent
-from konwentor.game.models import Game
-
-from .models import GameCopy, GameEntity
 
 
 class GameCopyAddForm(KonwentorForm):
@@ -64,11 +59,12 @@ class GameCopyAddForm(KonwentorForm):
     def on_success(self):
         data = self.get_data_dict(True)
         game = self.get_or_create_game(data['game_name'])
-        user = User.get_by_id(self.db, data['user_id'])
-        convent = Convent.get_by_id(self.db, data['convent_id'])
+        user = self.driver.User.get_by_id(data['user_id'])
+        convent = self.driver.Convent.get_by_id(data['convent_id'])
 
         gamecopy = self.create_gamecopy(game, user)
         gameentity = self.create_gameentity(convent, gamecopy)
+        self.db.flush()
         gameentity.count += data['count']
 
         try:
@@ -77,21 +73,17 @@ class GameCopyAddForm(KonwentorForm):
             self.db.rollback()
 
     def get_or_create_game(self, name):
-        return Game.get_or_create(self.db, name=name, is_active=True)
+        return self.driver.Game.get_or_create(name=name, is_active=True)
 
     def create_gamecopy(self, game, user):
-        gamecopy = GameCopy.get_or_create(
-            self.db,
+        gamecopy = self.driver.GameCopy.get_or_create(
             game=game,
             owner=user)
-        self.db.add(gamecopy)
         return gamecopy
 
     def create_gameentity(self, convent, gamecopy):
-        gameentity = GameEntity.get_or_create(
-            self.db,
+        gameentity = self.driver.GameEntity.get_or_create(
             convent=convent,
             gamecopy=gamecopy,
         )
-        self.db.add(gameentity)
         return gameentity

@@ -4,7 +4,6 @@ from konwentor.convent.models import Convent
 from konwentor.game.models import Game
 from konwentor.gamecopy.models import GameCopy, GameEntity
 from konwentor.gameborrow.models import GameBorrow
-from konwentor.auth.models import User
 
 
 class Fixtures(FixtureGenerator):
@@ -52,12 +51,7 @@ class Fixtures(FixtureGenerator):
 
     def create_users(self):
         for userdata in self.users:
-            password = userdata.pop('password')
-            permissions = userdata.pop('permissions')
-            user = self._create(User, **userdata)
-            user.set_password(password)
-            for perm in permissions:
-                user.add_permission(self.db, *perm)
+            self._create('Auth', **userdata)
 
     def create_convents(self):
         self._create(Convent, name='first')
