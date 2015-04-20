@@ -11,11 +11,15 @@ class ConventAddForm(PostForm):
 
     def create_form(self):
         self.add_field('name', label='Nazwa', validators=[NotEmpty()])
-        self.add_field('room', label='Pokój')
+        self.add_field('room', label='Pokoje')
 
     def on_success(self):
-        data = self.get_data_dict(True)
-        self.driver.Convent.create(name=data['name'])
+        data = self.get_data_dict(False)
+        convent = self.driver.Convent.create(name=data['name'][0])
+        rooms = data.get('room', [])
+        for room in rooms:
+            self.driver.Room.create(name=room, convent=convent)
+
         self.db.flush()
 
 

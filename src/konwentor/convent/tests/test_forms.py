@@ -30,11 +30,28 @@ class TestConventAddForm(LocalFixtures):
     def test_submit(self, form, Convent, mdb, mdriver):
         form._parse_raw_data({
             form.fields['name'].get_name(): ['myname'],
+            form.fields['room'].get_name(): ['room name'],
         })
         form.on_success()
 
         mdriver.Convent.create.assert_called_once_with(name='myname')
+        convent = mdriver.Convent.create.return_value
+        mdriver.Room.create(name='room name', convent=convent)
         mdb.flush.assert_called_once_with()
+
+    def test_live_submit(self, form, db, driver):
+        form._parse_raw_data({
+            form.fields['name'].get_name(): ['myname'],
+            form.fields['room'].get_name(): ['room name'],
+        })
+        form.on_success()
+
+        convent = driver.Convent.find_all().filter_by(name='myname').one()
+        assert convent.rooms[0].name == 'room name'
+
+        driver.Room.delete(convent.rooms[0])
+        driver.Convent.delete(convent)
+        db.flush()
 
 
 class TestConventDeleteForm(LocalFixtures):
