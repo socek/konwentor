@@ -27,13 +27,14 @@ class TestConventAddForm(LocalFixtures):
     def _get_form_class(self):
         return ConventAddForm
 
-    def test_submit(self, form, Convent, mdb):
+    def test_submit(self, form, Convent, mdb, mdriver):
         form._parse_raw_data({
             form.fields['name'].get_name(): ['myname'],
         })
         form.on_success()
 
-        Convent.create.assert_called_once_with(mdb, name='myname')
+        mdriver.Convent.create.assert_called_once_with(name='myname')
+        mdb.flush.assert_called_once_with()
 
 
 class TestConventDeleteForm(LocalFixtures):
