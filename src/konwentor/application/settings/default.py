@@ -68,3 +68,4 @@ def make_settings(settings, paths):
     settings['form_message'] = KonwentorMessage
 
     settings['personal_seed'] = 'asodijaoiwjwqeoijqwe'
+    settings['login_header'] = 'Konwentor'

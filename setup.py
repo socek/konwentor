@@ -7,7 +7,7 @@ install_requires = [
     'hatak_logging',
     'hatak_jinja2',
     'hatak_haml',
-    'hatak_sql>=0.1.14',
+    'hatak_sql>=0.1.15',
     'hatak_alembic>=0.1.3',
     'hatak_beaker',
     'hatak_debugtoolbar',
@@ -19,7 +19,7 @@ install_requires = [
     'pytest',
     'pytest-cov',
     'coverage==3.7.1',
-    'hatak_auth>=0.2.2.2',
+    'hatak_auth>=0.2.4',
     'ipdb',
     'psycopg2',
 ]
