@@ -18,7 +18,8 @@ class ConventAddForm(PostForm):
         convent = self.driver.Convent.create(name=data['name'][0])
         rooms = data.get('room', [])
         for room in rooms:
-            self.driver.Room.create(name=room, convent=convent)
+            if room.strip():
+                self.driver.Room.create(name=room, convent=convent)
 
         self.db.flush()
 

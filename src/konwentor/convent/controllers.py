@@ -3,7 +3,6 @@ from pyramid.httpexceptions import HTTPNotFound
 
 from hatak.controller import Controller
 
-from .models import Convent
 from .forms import ConventAddForm, ConventDeleteForm, ConventEditForm
 from .helpers import ConventWidget
 
@@ -36,6 +35,7 @@ class ConventAdd(Controller):
 
     def make(self):
         form = self.add_form(ConventAddForm)
+        form.set_value('room', 'Planszówki')
 
         if form.validate() is True:
             self.redirect('convent:list')

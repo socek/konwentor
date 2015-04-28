@@ -30,7 +30,7 @@ class TestConventAddForm(LocalFixtures):
     def test_submit(self, form, Convent, mdb, mdriver):
         form._parse_raw_data({
             form.fields['name'].get_name(): ['myname'],
-            form.fields['room'].get_name(): ['room name'],
+            form.fields['room'].get_name(): ['room name', ''],
         })
         form.on_success()
 

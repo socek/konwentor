@@ -9,10 +9,30 @@ class TestFormWidget(FormWidgetFixture):
         return FormWidget
 
     def test_combobox(self, request, widget, form, render_for):
-        self._input_test(render_for, widget, form, 'combobox')
+        self._input_test(
+            render_for,
+            widget, form,
+            'combobox',
+            prefix=None,
+        )
 
         request.add_js_link.assert_called_once_with('/js/combobox.js')
         request.add_js.assert_called_once_with(
             '''$(document).ready(function() {
                 $("#%s").combobox();
                 });''' % (widget.get_id('myname')))
+
+    def test_text_with_add(self, request, widget, form, render_for):
+        self._input_test(
+            render_for,
+            widget, form,
+            'text_with_add',
+            prefix=FormWidget.konwentor_prefix,
+        )
+
+        request.add_js_link.assert_called_once_with('/js/add_button.js')
+        request.add_js.assert_called_once_with('''
+            $(document).ready(function() {
+                $(".addroom").addroom();
+            });
+        ''')
