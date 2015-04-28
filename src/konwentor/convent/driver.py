@@ -16,3 +16,7 @@ class ConventDriver(KonwentorDriver):
             .filter_by(id=obj_id, is_active=True)
             .one()
         )
+
+    def get_convent_from_session(self, request):
+        id_ = request.session.get('convent_id', None)
+        return self.get_by_id(id_)

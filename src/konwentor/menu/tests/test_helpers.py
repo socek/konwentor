@@ -1,3 +1,4 @@
+from sqlalchemy.orm.exc import NoResultFound
 from pytest import fixture, yield_fixture
 from mock import patch, MagicMock
 
@@ -54,6 +55,12 @@ class TestOnConventMenuObject(object):
         obj.session = {}
         return obj.session
 
+    @yield_fixture
+    def add_child(self):
+        patcher = patch.object(OnConventMenuObject, 'add_child')
+        with patcher as mock:
+            yield mock
+
     def test_is_avalible(self, obj, session):
         """
         .is_avalible should return True if convent_id is set in the session
@@ -62,3 +69,30 @@ class TestOnConventMenuObject(object):
 
         session['convent_id'] = 'something'
         assert obj.is_avalible() is True
+
+    def test_creating_when_no_convent_set(self, widget, add_child):
+        """
+        Creating OnConventMenuObject should not add any childs when no
+        convent found.
+        """
+        driver = widget.request.driver.Convent
+        driver.get_convent_from_session.side_effect = NoResultFound
+
+        OnConventMenuObject(widget)
+
+        assert add_child.called is False
+
+    def test_creating(self, widget, add_child):
+        """
+        Creating OnConventMenuObject should add child for every room at convent
+        """
+        convent = MagicMock()
+        room = MagicMock()
+        room.name = 'room name'
+        convent.rooms = [room]
+        driver = widget.request.driver.Convent
+        driver.get_convent_from_session.return_value = convent
+
+        OnConventMenuObject(widget)
+
+        add_child.assert_called_once_with('room name', 'gamecopy:add', 'magic')

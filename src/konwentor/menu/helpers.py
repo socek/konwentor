@@ -1,3 +1,5 @@
+from sqlalchemy.orm.exc import NoResultFound
+
 from haplugin.jinja2 import Jinja2HelperSingle
 
 from .models import MenuObject
@@ -7,11 +9,15 @@ class OnConventMenuObject(MenuObject):
 
     def __init__(self, widget):
         super().__init__(widget, 'Na konwencie', None, 'star')
-
-        self.add_child('Dodaj grę', 'gamecopy:add', 'magic')
-        self.add_child('Lista gier', 'gamecopy:list', 'magic')
-        self.add_child('Lista wypożyczeń', 'gameborrow:list', 'magic')
-        self.add_child('Statystyki', 'statistics:all', 'magic')
+        try:
+            convent = self.request.driver.Convent.get_convent_from_session(
+                self.request
+            )
+            for room in convent.rooms:
+                self.add_child(room.name, 'gamecopy:add', 'magic')
+        except NoResultFound:
+            # do nothing if there is no convent_id set
+            pass
 
     def is_avalible(self):
         return 'convent_id' in self.session
