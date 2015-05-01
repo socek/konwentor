@@ -141,6 +141,7 @@ class TestConventEditController(LocalFixtures):
         convent:list if the form is successed.
         """
         form.validate.return_value = True
+        convent.rooms = [MagicMock(), MagicMock()]
 
         controller.make()
 
@@ -148,6 +149,8 @@ class TestConventEditController(LocalFixtures):
         form.set_value.assert_has_calls([
             call('id', convent.id),
             call('name', convent.name),
+            call('room', convent.rooms[0].name, 0),
+            call('room', convent.rooms[1].name, 1),
         ])
         add_form.assert_called_once_with(ConventEditForm)
         redirect.assert_called_once_with('convent:list')

@@ -21,7 +21,7 @@ class ConventAddForm(PostForm):
             if room.strip():
                 self.driver.Room.create(name=room, convent=convent)
 
-        self.db.flush()
+        self.db.commit()
 
 
 class ConventEditForm(ConventAddForm):
@@ -34,6 +34,10 @@ class ConventEditForm(ConventAddForm):
 
     def on_success(self):
         self.model.name = self.get_value('name')
+        for index, name in enumerate(self.get_values('room')):
+            if name.strip():
+                room = self.model.rooms[index]
+                room.name = name
         self.db.commit()
 
 

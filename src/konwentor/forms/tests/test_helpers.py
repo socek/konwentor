@@ -25,7 +25,8 @@ class TestFormWidget(FormWidgetFixture):
     def test_text_with_add(self, request, widget, form, render_for):
         self._input_test(
             render_for,
-            widget, form,
+            widget,
+            form,
             'text_with_add',
             prefix=FormWidget.konwentor_prefix,
         )

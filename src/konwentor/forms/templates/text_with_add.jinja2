@@ -2,13 +2,17 @@
     <label>{{label}}:</label>
     {% include '_error.jinja2' %}
 
-    <input
-        class="form-control"
-        value="{{value}}"
-        name="{{name}}"
-        id="{{id}}"
-        {%- if disabled %} disabled=disabled {% endif -%}
-        >
+    {% for value in values %}
+        <input
+            class="form-control"
+            value="{{value}}"
+            name="{{name}}"
+            {% if loop.first %}
+                id="{{id}}"
+            {% endif %}
+            {%- if disabled %} disabled=disabled {% endif -%}
+            >
+    {% endfor %}
     <button class="btn btn-warning addroom" {%- if disabled %} disabled=disabled {% endif -%} for="{{id}}">
         Dodaj pokój
     </button>

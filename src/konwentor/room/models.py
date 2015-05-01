@@ -12,7 +12,7 @@ class Room(Base):
 
     convent_id = Column(Integer, ForeignKey('convents.id'), nullable=False)
 
-    convent = relationship("Convent", backref='rooms')
+    convent = relationship("Convent", backref='rooms', order_by=id)
 
     def __repr__(self):
         data = super().__repr__()

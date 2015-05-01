@@ -37,7 +37,7 @@ class TestConventAddForm(LocalFixtures):
         mdriver.Convent.create.assert_called_once_with(name='myname')
         convent = mdriver.Convent.create.return_value
         mdriver.Room.create(name='room name', convent=convent)
-        mdb.flush.assert_called_once_with()
+        mdb.commit.assert_called_once_with()
 
     def test_live_submit(self, form, db, driver):
         form._parse_raw_data({
@@ -89,9 +89,15 @@ class TestConventEditForm(LocalFixtures):
 
     def test_submit(self, form, mdb):
         form.model = MagicMock()
-        form._parse_raw_data({'name': ['myname']})
+        form.model.rooms = [MagicMock(), MagicMock()]
+        form._parse_raw_data({
+            'name': ['myname'],
+            'room': ['room0', 'room1', '']
+        })
 
         form.on_success()
 
         assert form.model.name == 'myname'
+        assert form.model.rooms[0].name == 'room0'
+        assert form.model.rooms[1].name == 'room1'
         mdb.commit.assert_called_once_with()

@@ -53,6 +53,8 @@ class ConventEditController(Controller):
         form = self.add_form(ConventEditForm)
         form.set_value('id', convent.id)
         form.set_value('name', convent.name)
+        for index, room in enumerate(convent.rooms):
+            form.set_value('room', room.name, index)
 
         if form.validate() is True:
             self.redirect('convent:list')
