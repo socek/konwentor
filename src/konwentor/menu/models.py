@@ -3,19 +3,24 @@ from jinja2 import Markup
 
 class MenuObject(object):
 
-    def __init__(self, widget, name, route, icon=None):
+    def __init__(self, widget, name, route, icon=None, *args, **kwargs):
         self.widget = widget
         self.request = widget.request
         self.session = self.request.session
         self.highlighted = widget.highlighted
         self.name = name
         self.route = route
+        self.route_args = args, kwargs
         self.icon = icon
         self.childs = []
 
     def get_url(self):
         if self.is_avalible() and self.route:
-            return self.request.route_path(self.route)
+            return self.request.route_path(
+                self.route,
+                *self.route_args[0],
+                **self.route_args[1]
+            )
         else:
             return '#'
 

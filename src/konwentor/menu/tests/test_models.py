@@ -19,7 +19,14 @@ class TestMenuObject(RequestFixture):
         self.name = 'name'
         self.rotue = 'route'
         self.icon = 'icon'
-        return MenuObject(widget, self.name, self.route, self.icon)
+        return MenuObject(
+            widget,
+            self.name,
+            self.route,
+            self.icon,
+            'arg',
+            kw='arg'
+        )
 
     @yield_fixture
     def MenuObject(self):
@@ -33,6 +40,7 @@ class TestMenuObject(RequestFixture):
         assert model.highlighted == widget.highlighted
         assert model.name == self.name
         assert model.route == self.route
+        assert model.route_args == (('arg',), {'kw': 'arg'})
         assert model.icon == self.icon
         assert model.childs == []
 
@@ -40,7 +48,11 @@ class TestMenuObject(RequestFixture):
         """get_url should return route path if specyfied"""
         assert model.get_url() == request.route_path.return_value
 
-        self.request.route_path.assert_called_once_with(model.route)
+        self.request.route_path.assert_called_once_with(
+            model.route,
+            'arg',
+            kw='arg'
+        )
 
     def test_get_url_fail(self, model):
         """get_url should return '#' if route not specyfied"""
