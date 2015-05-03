@@ -233,7 +233,9 @@ class TestGameBorrowListController(LocalFixtures):
         get_borrows,
         generate_log,
         data,
+        session,
     ):
+        session['convent_id'] = 123
         verify_convent.return_value = True
 
         controller.make()
@@ -257,7 +259,9 @@ class TestGameBorrowListController(LocalFixtures):
         generate_log,
         data,
         request,
+        session,
     ):
+        session['convent_id'] = 123
         form = GameBorrowReturnForm.return_value
         borrow = MagicMock()
         get_borrows.return_value = [borrow]
@@ -275,7 +279,7 @@ class TestGameBorrowListController(LocalFixtures):
         GameBorrowReturnForm.assert_called_once_with(request)
         form.set_value.assert_has_calls([
             call('game_borrow_id', borrow.id),
-            call('convent_id', self.session['convent_id']),
+            call('convent_id', session['convent_id']),
         ])
 
     def test_process_form_on_empty(
@@ -289,7 +293,9 @@ class TestGameBorrowListController(LocalFixtures):
         request,
         _on_form_fail,
         _on_form_success,
+        session,
     ):
+        session['convent_id'] = 1234
         form = GameBorrowReturnForm.return_value
         form.success = form.validate.return_value = None
 
@@ -298,7 +304,7 @@ class TestGameBorrowListController(LocalFixtures):
         GameBorrowReturnForm.assert_called_once_with(
             request)
         form.set_value.assert_called_once_with(
-            'convent_id', self.session['convent_id'])
+            'convent_id', session['convent_id'])
         form.validate.assert_called_once_with()
 
         assert not _on_form_success.called
@@ -315,7 +321,9 @@ class TestGameBorrowListController(LocalFixtures):
         request,
         _on_form_fail,
         _on_form_success,
+        session,
     ):
+        session['convent_id'] = 1234
         form = GameBorrowReturnForm.return_value
         form.success = form.validate.return_value = True
 
@@ -324,7 +332,7 @@ class TestGameBorrowListController(LocalFixtures):
         GameBorrowReturnForm.assert_called_once_with(
             request)
         form.set_value.assert_called_once_with(
-            'convent_id', self.session['convent_id'])
+            'convent_id', session['convent_id'])
         form.validate.assert_called_once_with()
 
         _on_form_success.assert_called_once_with(form)
@@ -341,7 +349,9 @@ class TestGameBorrowListController(LocalFixtures):
         request,
         _on_form_fail,
         _on_form_success,
+        session
     ):
+        session['convent_id'] = '12345'
         form = GameBorrowReturnForm.return_value
         form.success = form.validate.return_value = False
 
@@ -350,7 +360,7 @@ class TestGameBorrowListController(LocalFixtures):
         GameBorrowReturnForm.assert_called_once_with(
             request)
         form.set_value.assert_called_once_with(
-            'convent_id', self.session['convent_id'])
+            'convent_id', session['convent_id'])
         form.validate.assert_called_once_with()
 
         assert not _on_form_success.called

@@ -8,6 +8,4 @@ class RoomController(Controller):
         self.data['room_id'] = self.get_room_id()
 
     def get_room_id(self):
-        return self.matchdict['room_id']
-
-    # def get_room_object(self):
+        return int(self.matchdict['room_id'])

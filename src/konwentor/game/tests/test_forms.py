@@ -1,5 +1,5 @@
 from mock import patch
-from pytest import raises, yield_fixture
+from pytest import raises, yield_fixture, mark
 from sqlalchemy.orm.exc import NoResultFound
 
 from ..forms import GameAddForm, GameDeleteForm, GameEditForm
@@ -107,6 +107,7 @@ class TestGameEditForm(LocalFixtures, GameFactoryMixin):
     def _get_form_class(self):
         return GameEditForm
 
+    @mark.usefixtures('CsrfMustMatch')
     def test_submit(self, db, driver, form, postdata):
         self.create_game(db)
         try:

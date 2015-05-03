@@ -337,7 +337,7 @@ class TestChooseConventController(LocalFixtures):
         controller.make()
 
         verify_convent_id.assert_called_once_with()
-        redirect.assert_called_once_with('gamecopy:list')
+        redirect.assert_called_once_with('gamecopy:list', room_id=0)
         controller.session['convent_id'] == 10
 
 

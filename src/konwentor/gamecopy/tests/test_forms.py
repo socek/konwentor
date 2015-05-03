@@ -1,4 +1,4 @@
-from pytest import yield_fixture
+from pytest import yield_fixture, mark
 from mock import MagicMock, create_autospec, patch
 
 from ..forms import GameCopyAddForm
@@ -147,6 +147,7 @@ class TestGameCopyAddForm(FormFixture):
         mdriver.Game.get_or_create.assert_called_once_with(
             name='myname', is_active=True)
 
+    @mark.usefixtures('CsrfMustMatch')
     def test_success(self, form, fixtures, postdata, db, query):
         """GameCopyAddForm is creating data."""
         game = fixtures['Game']['dynamic1']

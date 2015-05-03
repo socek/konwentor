@@ -18,11 +18,6 @@ class LocalFixtures(ControllerFixture):
     def add_flashmsg(self, request):
         return request.add_flashmsg
 
-    @fixture
-    def session(self, request):
-        request.session = {}
-        return request.session
-
     @yield_fixture
     def verify_convent(self, controller):
         with patch.object(controller, 'verify_convent') as mock:
@@ -137,9 +132,11 @@ class TestGameCopyAddController(LocalFixtures):
         add_form,
         controller,
         add_flashmsg,
-        verify_convent
+        verify_convent,
+        session,
     ):
         """Controller should create form after verify_convent check."""
+        session['convent_id'] = 10
         form = add_form.return_value
         form.validate.return_value = None
 
@@ -150,11 +147,19 @@ class TestGameCopyAddController(LocalFixtures):
         form.parse_dict({
             'count': 1,
             'user_id': self.user.id,
-            'convent_id': self.session['convent_id'],
+            'convent_id': session['convent_id'],
         })
         assert not add_flashmsg.called
 
-    def test_form_submitted(self, controller, session, add_form, add_flashmsg):
+    def test_form_submitted(
+        self,
+        controller,
+        session,
+        add_form,
+        add_flashmsg,
+        matchdict
+    ):
+        matchdict['room_id'] = 1
         session['last_convent_id'] = 1
         session['last_user_id'] = -1
         session['convent_id'] = 2

@@ -7,7 +7,6 @@ from ..helpers import GameEntityWidget
 
 
 class TestGameEntityWidget(RequestFixture):
-    prefix_from = GameEntityWidget
 
     @fixture
     def obj(self):
@@ -63,7 +62,16 @@ class TestGameEntityWidget(RequestFixture):
         obj.GameEntity.active_borrows_len.return_value = 1
         assert widget.get_list_class() == 'info'
 
-    def test_borrow_when_is_avalible(self, widget, obj, render_for, route):
+    def test_borrow_when_is_avalible(
+        self,
+        widget,
+        obj,
+        render_for,
+        route,
+        matchdict
+    ):
+        matchdict['room_id'] = '12345'
+
         obj.GameEntity.is_avalible.return_value = True
         assert widget.borrow(), render_for.return_value
 
@@ -74,7 +82,9 @@ class TestGameEntityWidget(RequestFixture):
             })
         route.assert_called_once_with(
             'gameborrow:add',
-            obj_id=obj.GameEntity.id)
+            obj_id=obj.GameEntity.id,
+            room_id=matchdict['room_id'],
+        )
 
     def test_borrow_when_not_avalible(self, widget, obj):
         obj.GameEntity.is_avalible.return_value = False
@@ -90,8 +100,10 @@ class TestGameEntityWidget(RequestFixture):
         widget,
         obj,
         render_for,
-        route
+        route,
+        matchdict
     ):
+        matchdict['room_id'] = '1234'
         obj.GameEntity.is_in_box = False
 
         assert widget.move_to_box() == render_for.return_value
@@ -104,7 +116,9 @@ class TestGameEntityWidget(RequestFixture):
             })
         route.assert_called_once_with(
             'gamecopy:movetobox',
-            obj_id=obj.GameEntity.id,)
+            obj_id=obj.GameEntity.id,
+            room_id=matchdict['room_id']
+        )
 
     def test_move_to_box_when_is_in_box(self, widget, obj):
         obj.GameEntity.is_in_box = True

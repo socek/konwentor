@@ -95,4 +95,9 @@ class TestOnConventMenuObject(object):
 
         OnConventMenuObject(widget)
 
-        add_child.assert_called_once_with('room name', 'gamecopy:add', 'magic')
+        add_child.assert_called_once_with(
+            'room name',
+            'gamecopy:add',
+            'magic',
+            room_id=room.id,
+        )
