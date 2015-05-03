@@ -14,7 +14,12 @@ class OnConventMenuObject(MenuObject):
                 self.request
             )
             for room in convent.rooms:
-                self.add_child(room.name, 'gamecopy:add', 'magic')
+                self.add_child(
+                    room.name,
+                    'gamecopy:add',
+                    'magic',
+                    room_id=room.id
+                )
         except NoResultFound:
             # do nothing if there is no convent_id set
             pass

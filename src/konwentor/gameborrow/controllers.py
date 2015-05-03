@@ -4,16 +4,17 @@ from collections import namedtuple
 from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy.orm.exc import NoResultFound
 
-from hatak.controller import Controller, JsonController
+from hatak.controller import JsonController
 from haplugin.formskit.helpers import FormWidget
 
 from .forms import GameBorrowAddForm, GameBorrowReturnForm
 from .models import make_hash_document
 from konwentor.gamecopy.controllers import GameCopyControllerBase
 from konwentor.gameborrow.sidemenu import SideMenuWidget
+from konwentor.room.controller import RoomController
 
 
-class GameBorrowAddController(Controller):
+class GameBorrowAddController(RoomController):
 
     template = 'gameborrow:add.jinja2'
     permissions = [('gameborrow', 'add'), ]
@@ -108,7 +109,7 @@ class GameBorrowListController(GameCopyControllerBase):
             borrow.form = FormWidget(self.request, form)
 
 
-class GameBorrowReturnController(Controller):
+class GameBorrowReturnController(RoomController):
 
     permissions = [('gameborrow', 'add'), ]
 

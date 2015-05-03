@@ -54,34 +54,34 @@ gamecopy:
         -
             controller: GameCopyAddController
             route: gamecopy:add
-            url: /gamecopy/add
+            url: /gamecopy/{room_id:\d+}/add
         -
             controller: GameCopyListController
             route: gamecopy:list
-            url: /gamecopy
+            url: /gamecopy/{room_id:\d+}
         -
             controller: GameCopyToBoxController
             route: gamecopy:movetobox
-            url: /gamecopy/movetobox/{obj_id:\d+}
+            url: /gamecopy/{room_id:\d+}/movetobox/{obj_id:\d+}
 
 gameborrow:
     controllers:
         -
             controller: GameBorrowListController
             route: gameborrow:list
-            url: /game/borrows
+            url: /game/{room_id:\d+}/borrows
         -
             controller: GameBorrowAddController
             route: gameborrow:add
-            url: /game/borrows/add/{obj_id:\d+}
+            url: /game/{room_id:\d+}/borrows/add/{obj_id:\d+}
         -
             controller: GameBorrowReturnController
             route: gameborrow:return
-            url: /game/borrows/return/{obj_id:\d+}
+            url: /game/{room_id:\d+}/borrows/return/{obj_id:\d+}
         -
             controller: ShowPersonHint
             route: gameborrow:hint
-            url: /game/borrows/hint
+            url: /game/{room_id:\d+}/borrows/hint
 
 statistics:
     controllers:

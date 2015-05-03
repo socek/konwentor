@@ -24,7 +24,26 @@ class SideMenuWidget(Jinja2HelperSingle):
 
         for room in self.convent.rooms:
             submenu = self.add_menu(room.name, None, 'star')
-            submenu.add_child('Dodaj grę', 'gamecopy:add', 'magic')
-            submenu.add_child('Lista gier', 'gamecopy:list', 'magic')
-            submenu.add_child('Lista wypożyczeń', 'gameborrow:list', 'magic')
-            submenu.add_child('Statystyki', 'statistics:all', 'magic')
+            submenu.add_child(
+                'Dodaj grę',
+                'gamecopy:add',
+                'magic',
+                room_id=room.id
+            )
+            submenu.add_child(
+                'Lista gier',
+                'gamecopy:list',
+                'magic',
+                room_id=room.id
+            )
+            submenu.add_child(
+                'Lista wypożyczeń',
+                'gameborrow:list',
+                'magic',
+                room_id=room.id
+            )
+            submenu.add_child(
+                'Statystyki',
+                'statistics:all',
+                'magic'
+            )

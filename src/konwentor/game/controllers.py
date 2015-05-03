@@ -2,7 +2,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from pyramid.httpexceptions import HTTPNotFound
 from hatak.controller import Controller
 
-from .models import Game
 from .forms import GameAddForm, GameDeleteForm, GameEditForm
 
 

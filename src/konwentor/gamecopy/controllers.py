@@ -1,4 +1,4 @@
-from hatak.controller import Controller, EndController
+from hatak.controller import EndController
 from sqlalchemy.orm.exc import NoResultFound
 
 from konwentor.convent.helpers import ConventWidget
@@ -6,9 +6,10 @@ from konwentor.gameborrow.sidemenu import SideMenuWidget
 
 from .forms import GameCopyAddForm
 from .helpers import GameEntityWidget
+from konwentor.room.controller import RoomController
 
 
-class GameCopyControllerBase(Controller):
+class GameCopyControllerBase(RoomController):
 
     def verify_convent(self):
         if 'convent_id' not in self.session:
@@ -49,7 +50,7 @@ class GameCopyAddController(GameCopyControllerBase):
             self.add_flashmsg('Dodano grę.', 'info')
             self.session['last_convent_id'] = form.get_value('convent_id')
             self.session['last_user_id'] = form.get_value('user_id')
-            self.redirect('gamecopy:add')
+            self.redirect('gamecopy:add', room_id=self.get_room_id())
 
     def prepere_form(self):
         form = self.add_form(GameCopyAddForm)
