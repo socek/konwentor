@@ -3,7 +3,6 @@ from setuptools import setup, find_packages
 
 install_requires = [
     'hatak==0.2.7.10',
-    'coverage',
     'hatak_logging',
     'hatak_jinja2==0.2',
     'hatak_haml',
@@ -18,7 +17,6 @@ install_requires = [
     'uwsgi',
     'pytest',
     'pytest-cov',
-    'coverage==3.7.1',
     'hatak_auth>=0.2.4',
     'ipdb',
     'psycopg2',

@@ -9,3 +9,6 @@ class RoomController(Controller):
 
     def get_room_id(self):
         return int(self.matchdict['room_id'])
+
+    def get_room(self):
+        return self.driver.Room.get_by_id(self.get_room_id())

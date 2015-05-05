@@ -21,3 +21,12 @@ class TestRoomController(ControllerFixture):
         """
         controller.second_filter()
         assert data['room_id'] == int(matchdict['room_id'])
+
+    def test_get_room(self, controller, mdriver, matchdict):
+        """
+        .get_room should get room object wich id was in matchdict
+        """
+        matchdict['room_id'] = '10'
+
+        assert controller.get_room() == mdriver.Room.get_by_id.return_value
+        mdriver.Room.get_by_id.assert_called_once_with(10)
