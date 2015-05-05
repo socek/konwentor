@@ -1,7 +1,7 @@
-from konwentor.gamecopy.controllers import GameCopyControllerBase
+from konwentor.gamecopy.controllers import ConventController
 
 
-class StatisticsController(GameCopyControllerBase):
+class StatisticsController(ConventController):
 
     template = 'statistics:all.jinja2'
     permissions = [('base', 'view'), ]

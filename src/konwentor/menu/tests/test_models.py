@@ -119,3 +119,37 @@ class TestMenuObject(RequestFixture):
         highlighted
         """
         assert model.get_css_class() == ''
+
+    def test_is_child_highlited_false(self, model):
+        """
+        .is_child_highlited should return False if all of it's children are not
+        highlighted
+        """
+        first = MagicMock()
+        first.is_highlited.return_value = False
+        model.add_child_object(first)
+        second = MagicMock()
+        second.is_highlited.return_value = False
+        model.add_child_object(second)
+        third = MagicMock()
+        third.is_highlited.return_value = False
+        model.add_child_object(third)
+
+        assert model.is_child_highlited() is False
+
+    def test_is_child_highlited_true(self, model):
+        """
+        .is_child_highlited should return False if all of it's children are not
+        highlighted
+        """
+        first = MagicMock()
+        first.is_highlited.return_value = False
+        model.add_child_object(first)
+        second = MagicMock()
+        second.is_highlited.return_value = True
+        model.add_child_object(second)
+        third = MagicMock()
+        third.is_highlited.return_value = False
+        model.add_child_object(third)
+
+        assert model.is_child_highlited() is True

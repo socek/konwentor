@@ -27,6 +27,12 @@ class MenuObject(object):
     def is_highlited(self):
         return self.highlighted == self.route
 
+    def is_child_highlited(self):
+        highlighted = False
+        for child in self.childs:
+            highlighted = highlighted or child.is_highlited()
+        return highlighted
+
     def get_icon(self):
         return 'fa-' + self.icon if self.icon else ''
 

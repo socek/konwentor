@@ -3,13 +3,13 @@
         <ul class="nav" id="side-menu">
             {% for object in menu %}
                 {% if object.is_visible() -%}
-                    <li class="active">
+                    <li {% if object.is_child_highlited() %} class="active" {% endif %}>
                         <a {%- if object.is_highlited() %} class="active"{% endif %} href="{{object.get_url()}}">
                             <i class="fa {{object.get_icon()}} fa-fw"></i> {{object.name}}
                             {%- if object.childs %}<span class="fa arrow"></span>{% endif -%}
                         </a>
                         {% if object.childs -%}
-                            <ul class="nav nav-second-level collapse in">
+                            <ul class="nav nav-second-level collapse">
                                 {% for child in object.childs %}
                                     {% if child.is_visible() -%}
                                         <li>

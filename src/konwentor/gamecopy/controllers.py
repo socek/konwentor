@@ -1,4 +1,4 @@
-from hatak.controller import EndController
+from hatak.controller import EndController, Controller
 from sqlalchemy.orm.exc import NoResultFound
 
 from konwentor.convent.helpers import ConventWidget
@@ -9,7 +9,8 @@ from .helpers import GameEntityWidget
 from konwentor.room.controller import RoomController
 
 
-class GameCopyControllerBase(RoomController):
+class ConventController(Controller):
+    menu_highlighted = None
 
     def verify_convent(self):
         if 'convent_id' not in self.session:
@@ -29,7 +30,11 @@ class GameCopyControllerBase(RoomController):
     def make_helpers(self):
         super().make_helpers()
         self.add_helper('convent', ConventWidget, self.get_convent())
-        self.add_helper('sidemenu', SideMenuWidget, None)
+        self.add_helper('sidemenu', SideMenuWidget, self.menu_highlighted)
+
+
+class GameCopyControllerBase(ConventController, RoomController):
+    pass
 
 
 class GameCopyAddController(GameCopyControllerBase):
