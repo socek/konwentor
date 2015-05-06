@@ -94,11 +94,11 @@ class GameCopyListController(GameCopyControllerBase):
         self.data['convent'] = self.get_convent()
         self.data['games'] = [
             GameEntityWidget(self.request, obj) for obj
-            in self.get_games(self.data['convent'])
+            in self.get_games(self.get_room())
         ]
 
-    def get_games(self, convent):
-        return self.driver.Game.get_game_list_view(convent)
+    def get_games(self, room):
+        return self.driver.Game.get_game_list_view(room)
 
 
 class GameCopyToBoxController(GameCopyControllerBase):

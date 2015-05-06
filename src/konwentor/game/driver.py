@@ -25,7 +25,7 @@ class GameDriver(KonwentorDriver):
     def get_by_name(self, name):
         return self.query(self.model).filter_by(name=name).one()
 
-    def get_game_list_view(self, convent):
+    def get_game_list_view(self, room):
         return (
             self.query(
                 GameEntity,
@@ -34,7 +34,7 @@ class GameDriver(KonwentorDriver):
                 User.name.label('author_name'))
             .join(GameCopy).join(Game).join(User)
             .filter(
-                GameEntity.convent_id == convent.id,
+                GameEntity.room_id == room.id,
                 Game.is_active.is_(True),
             )
             .all()

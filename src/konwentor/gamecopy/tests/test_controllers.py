@@ -200,6 +200,12 @@ class TestGameCopyListController(LocalFixtures):
             yield mock
 
     @yield_fixture
+    def get_room(self, controller, game):
+        patcher = patch.object(controller, 'get_room', return_value=[game])
+        with patcher as mock:
+            yield mock
+
+    @yield_fixture
     def GameEntityWidget(self):
         with patch('konwentor.gamecopy.controllers.GameEntityWidget') as mock:
             yield mock
@@ -209,12 +215,12 @@ class TestGameCopyListController(LocalFixtures):
 
     def test_get_games(self, fixtures, controller):
         """get_games should return list of games avalible on convent"""
-        convent = fixtures['Convent']['first']
-        result = controller.get_games(convent)
+        room = fixtures['Convent']['first'].rooms[0]
+        result = controller.get_games(room)
 
         assert len(result) == 3
         for element in result:
-            assert element.GameEntity.convent == convent
+            assert element.GameEntity.room == room
 
     def test_verify_convent(self, verify_convent, controller, data):
         """Controller should do nothing if verify_convent fails"""
@@ -234,7 +240,8 @@ class TestGameCopyListController(LocalFixtures):
         data,
         request,
         game,
-        get_games
+        get_games,
+        get_room,
     ):
         controller.make()
 
@@ -243,7 +250,7 @@ class TestGameCopyListController(LocalFixtures):
             'convent': get_convent.return_value,
             'games': [GameEntityWidget.return_value],
         }
-        get_games.assert_called_once_with(get_convent.return_value)
+        get_games.assert_called_once_with(get_room.return_value)
         GameEntityWidget.assert_called_once_with(request, game)
 
 
