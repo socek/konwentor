@@ -12,6 +12,11 @@ from konwentor.room.controller import RoomController
 class ConventController(Controller):
     menu_highlighted = None
 
+    def second_filter(self):
+        super().second_filter()
+        self.verify_convent()
+        self.convent = self.get_convent()
+
     def verify_convent(self):
         if 'convent_id' not in self.session:
             self.add_flashmsg('Proszę wybrać konwent.', 'danger')
@@ -33,7 +38,7 @@ class ConventController(Controller):
         self.add_helper('sidemenu', SideMenuWidget, self.menu_highlighted)
 
 
-class GameCopyControllerBase(ConventController, RoomController):
+class GameCopyControllerBase(RoomController, ConventController):
     pass
 
 

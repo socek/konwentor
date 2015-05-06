@@ -1,9 +1,9 @@
+import builtins
 from pytest import fixture, yield_fixture, raises
 from mock import MagicMock, call, patch
 from sqlalchemy.orm.exc import NoResultFound
 
-
-from ..controllers import EndController
+from ..controllers import EndController, ConventController
 from ..controllers import GameCopyAddController, GameCopyToBoxController
 from ..controllers import GameCopyControllerBase, GameCopyListController
 from konwentor.gameborrow.sidemenu import SideMenuWidget
@@ -346,3 +346,32 @@ class TestGameCopyToBoxController(LocalFixtures):
 
         with raises(NoResultFound):
             controller.get_game_entity(convent)
+
+
+class TestConventController(LocalFixtures):
+
+    def _get_controller_class(self):
+        return ConventController
+
+    @yield_fixture
+    def supermock(self):
+        patcher = patch.object(builtins, 'super')
+        with patcher as mock:
+            yield mock.return_value
+
+    def test_second_filter(
+        self,
+        controller,
+        verify_convent,
+        get_convent,
+        supermock
+    ):
+        """
+        .second_filter should verify convent id and find this convent
+        """
+        controller.second_filter()
+
+        supermock.second_filter.assert_called_once_with()
+        verify_convent.assert_called_once_with()
+        get_convent.assert_called_once_with()
+        assert controller.convent == get_convent.return_value
