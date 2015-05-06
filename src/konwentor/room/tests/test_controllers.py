@@ -51,4 +51,4 @@ class TestRoomController(ControllerFixture):
         with raises(EndController):
             controller.second_filter()
 
-        redirect.assert_called_once_with('gamecopy:list', room_id=room_id)
+        redirect.assert_called_once_with('gamecopy:list', room_id=10)

@@ -4,6 +4,7 @@ from konwentor.convent.models import Convent
 from konwentor.game.models import Game
 from konwentor.gamecopy.models import GameCopy, GameEntity
 from konwentor.gameborrow.models import GameBorrow
+from konwentor.room.models import Room
 
 
 class Fixtures(FixtureGenerator):
@@ -44,6 +45,7 @@ class Fixtures(FixtureGenerator):
     def make_all(self):
         self.create_users()
         self.create_convents()
+        self.create_rooms()
         self.create_games()
         self.create_copies()
         self.create_entities()
@@ -60,6 +62,19 @@ class Fixtures(FixtureGenerator):
 
         self._create(Convent, name='dynamic1')
         self._create(Convent, name='inactive', is_active=False)
+
+    def create_rooms(self):
+        self._create(
+            Room, name='bordgames', convent=self.fixtures['Convent']['first'])
+        self._create(
+            Room, name='bordgames', convent=self.fixtures['Convent']['second'])
+        self._create(
+            Room, name='bordgames', convent=self.fixtures['Convent']['third'])
+
+        self._create(
+            Room, name='bordgames', convent=self.fixtures['Convent']['dynamic1'])
+        self._create(
+            Room, name='bordgames', convent=self.fixtures['Convent']['inactive'])
 
     def create_games(self):
         self._create(Game, name='first')
@@ -96,6 +111,7 @@ class Fixtures(FixtureGenerator):
             gamecopy=self.fixtures['GameCopy'][0],
             convent=self.fixtures['Convent']['first'],
             count=1,
+            room=self.fixtures['Convent']['first'].rooms[0],
         )
 
         self._create_nameless(
@@ -103,6 +119,7 @@ class Fixtures(FixtureGenerator):
             gamecopy=self.fixtures['GameCopy'][1],
             convent=self.fixtures['Convent']['first'],
             count=2,
+            room=self.fixtures['Convent']['first'].rooms[0],
         )
 
         self._create_nameless(
@@ -110,6 +127,7 @@ class Fixtures(FixtureGenerator):
             gamecopy=self.fixtures['GameCopy'][2],
             convent=self.fixtures['Convent']['first'],
             count=4,
+            room=self.fixtures['Convent']['first'].rooms[0],
         )
 
         self._create_nameless(
@@ -117,6 +135,7 @@ class Fixtures(FixtureGenerator):
             gamecopy=self.fixtures['GameCopy'][2],
             convent=self.fixtures['Convent']['second'],
             count=4,
+            room=self.fixtures['Convent']['second'].rooms[0],
         )
 
     def create_borrows(self):

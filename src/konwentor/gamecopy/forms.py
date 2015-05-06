@@ -85,5 +85,6 @@ class GameCopyAddForm(KonwentorForm):
         gameentity = self.driver.GameEntity.get_or_create(
             convent=convent,
             gamecopy=gamecopy,
+            room=convent.rooms[0],
         )
         return gameentity

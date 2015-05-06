@@ -23,9 +23,11 @@ class GameEntity(Base):
 
     gamecopy_id = Column(Integer, ForeignKey('game_copies.id'), nullable=False)
     convent_id = Column(Integer, ForeignKey('convents.id'), nullable=False)
+    room_id = Column(Integer, ForeignKey('rooms.id'), nullable=False)
 
     gamecopy = relationship("GameCopy", backref='entities')
     convent = relationship("Convent", backref='entities')
+    room = relationship("Room", backref='entities')
 
     def active_borrows(self):
         for borrow in self.borrows:

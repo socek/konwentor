@@ -134,7 +134,9 @@ class TestGameCopyAddForm(FormFixture):
         assert gameentity == mdriver.GameEntity.get_or_create.return_value
         mdriver.GameEntity.get_or_create.assert_called_once_with(
             convent=convent,
-            gamecopy=gamecopy)
+            gamecopy=gamecopy,
+            room=convent.rooms[0],
+        )
 
     def test_get_or_create_game(self, form, mdb, mdriver):
         """
