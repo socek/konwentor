@@ -134,8 +134,10 @@ class TestGameCopyAddController(LocalFixtures):
         add_flashmsg,
         verify_convent,
         session,
+        matchdict
     ):
         """Controller should create form after verify_convent check."""
+        matchdict['room_id'] = 15
         session['convent_id'] = 10
         form = add_form.return_value
         form.validate.return_value = None
@@ -144,10 +146,11 @@ class TestGameCopyAddController(LocalFixtures):
 
         add_form.assert_called_once_with(GameCopyAddForm)
         form.validate.assert_called_once_with()
-        form.parse_dict({
+        form.parse_dict.assert_called_once_with({
             'count': 1,
             'user_id': self.user.id,
             'convent_id': session['convent_id'],
+            'room_id': matchdict['room_id'],
         })
         assert not add_flashmsg.called
 
@@ -159,7 +162,7 @@ class TestGameCopyAddController(LocalFixtures):
         add_flashmsg,
         matchdict
     ):
-        matchdict['room_id'] = 1
+        matchdict['room_id'] = 3
         session['last_convent_id'] = 1
         session['last_user_id'] = -1
         session['convent_id'] = 2
@@ -174,6 +177,7 @@ class TestGameCopyAddController(LocalFixtures):
             'count': 1,
             'user_id': -1,
             'convent_id': 1,
+            'room_id': 3,
         })
 
         add_flashmsg.assert_called_once_with(

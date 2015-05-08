@@ -7,6 +7,7 @@ from konwentor.auth.models import User
 from konwentor.convent.models import Convent
 from konwentor.game.models import Game
 from konwentor.application.testing import FormFixture
+from konwentor.room.models import Room
 
 
 class TestGameCopyAddForm(FormFixture):
@@ -88,7 +89,7 @@ class TestGameCopyAddForm(FormFixture):
         form.parse_dict({
             'game_name': '1',
             'user_id': 4,
-            'convent_id': 5,
+            'room_id': 5,
             'count': 2,
         })
         form.on_success()
@@ -96,7 +97,7 @@ class TestGameCopyAddForm(FormFixture):
         mdriver.Game.get_or_create.assert_called_once_with(
             name='1', is_active=True)
         mdriver.User.get_by_id.assert_called_once_with(4)
-        mdriver.Convent.get_by_id.assert_called_once_with(5)
+        mdriver.Room.get_by_id.assert_called_once_with(5)
 
         create_gamecopy.assert_called_once_with(
             mdriver.Game.get_or_create.return_value,
@@ -104,7 +105,7 @@ class TestGameCopyAddForm(FormFixture):
         )
 
         create_gameentity.assert_called_once_with(
-            mdriver.Convent.get_by_id.return_value,
+            mdriver.Room.get_by_id.return_value,
             create_gamecopy.return_value,
         )
         gameentity = create_gameentity.return_value
@@ -127,15 +128,15 @@ class TestGameCopyAddForm(FormFixture):
 
     def test_create_gameentity(self, form, mdriver):
         """create_gameentity should create GameEntity."""
-        convent = create_autospec(Convent())
+        room = create_autospec(Room())
         gamecopy = create_autospec(GameCopy())
 
-        gameentity = form.create_gameentity(convent, gamecopy)
+        gameentity = form.create_gameentity(room, gamecopy)
         assert gameentity == mdriver.GameEntity.get_or_create.return_value
         mdriver.GameEntity.get_or_create.assert_called_once_with(
-            convent=convent,
+            convent=room.convent,
             gamecopy=gamecopy,
-            room=convent.rooms[0],
+            room=room,
         )
 
     def test_get_or_create_game(self, form, mdb, mdriver):
@@ -154,11 +155,11 @@ class TestGameCopyAddForm(FormFixture):
         """GameCopyAddForm is creating data."""
         game = fixtures['Game']['dynamic1']
         user = fixtures['User']['dynamic1']
-        convent = fixtures['Convent']['dynamic1']
+        room = fixtures['Convent']['dynamic1'].rooms[0]
 
         postdata[form.fields['game_name'].get_name()] = [game.name, ]
         postdata[form.fields['user_id'].get_name()] = [str(user.id), ]
-        postdata[form.fields['convent_id'].get_name()] = [str(convent.id), ]
+        postdata[form.fields['room_id'].get_name()] = [str(room.id), ]
         postdata[form.fields['count'].get_name()] = ['5', ]
 
         form.validate()
@@ -166,7 +167,7 @@ class TestGameCopyAddForm(FormFixture):
 
         entity = (
             query(GameEntity)
-            .filter(GameEntity.convent == convent)
+            .filter(GameEntity.room == room)
             .one()
         )
         copy = entity.gamecopy

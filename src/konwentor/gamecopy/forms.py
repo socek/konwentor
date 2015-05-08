@@ -25,11 +25,10 @@ class GameCopyAddForm(KonwentorForm):
         field.set_avalible_values(self.get_objects('User'))
 
         field = self.add_field(
-            'convent_id',
-            label='Konwent',
+            'room_id',
+            label='Pokój',
             validators=[NotEmpty(), IsDigit()],
             convert=ToInt())
-        field.set_avalible_values(self.get_objects('Convent', is_active=True))
 
         self.add_field(
             'count',
@@ -60,10 +59,10 @@ class GameCopyAddForm(KonwentorForm):
         data = self.get_data_dict(True)
         game = self.get_or_create_game(data['game_name'])
         user = self.driver.User.get_by_id(data['user_id'])
-        convent = self.driver.Convent.get_by_id(data['convent_id'])
+        room = self.driver.Room.get_by_id(data['room_id'])
 
         gamecopy = self.create_gamecopy(game, user)
-        gameentity = self.create_gameentity(convent, gamecopy)
+        gameentity = self.create_gameentity(room, gamecopy)
         self.db.flush()
         gameentity.count += data['count']
 
@@ -81,10 +80,9 @@ class GameCopyAddForm(KonwentorForm):
             owner=user)
         return gamecopy
 
-    def create_gameentity(self, convent, gamecopy):
-        gameentity = self.driver.GameEntity.get_or_create(
-            convent=convent,
+    def create_gameentity(self, room, gamecopy):
+        return self.driver.GameEntity.get_or_create(
+            convent=room.convent,
             gamecopy=gamecopy,
-            room=convent.rooms[0],
+            room=room,
         )
-        return gameentity

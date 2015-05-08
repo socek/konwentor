@@ -67,7 +67,8 @@ class GameCopyAddController(GameCopyControllerBase):
         initial_data = {
             'count': 1,
             'user_id': self.user.id,
-            'convent_id': self.session['convent_id']
+            'convent_id': self.session['convent_id'],
+            'room_id': self.get_room_id(),
         }
 
         if 'last_convent_id' in self.session:
