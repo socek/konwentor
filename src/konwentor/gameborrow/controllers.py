@@ -27,7 +27,7 @@ class GameBorrowAddController(RoomController):
 
         if form.validate():
             self.add_flashmsg('Gra została wypożyczona.', 'success')
-            self.redirect('gamecopy:list')
+            self.redirect('gamecopy:list', room_id=self.get_room_id())
 
     def get_game_entity(self):
         try:
@@ -53,10 +53,10 @@ class GameBorrowListController(GameCopyControllerBase):
         self.prepere_template()
 
     def get_borrows(self, convent):
-        return self.driver.GameBorrow.get_borrowed_for_convent(convent)
+        return self.driver.GameBorrow.get_borrowed_for_room(self.get_room())
 
     def generate_log(self, convent):
-        return self.driver.GameBorrow.get_returned_for_convent(convent)
+        return self.driver.GameBorrow.get_returned_for_room(self.get_room())
 
     def process_form(self):
         form = GameBorrowReturnForm(self.request)

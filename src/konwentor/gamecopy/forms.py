@@ -60,6 +60,7 @@ class GameCopyAddForm(KonwentorForm):
         game = self.get_or_create_game(data['game_name'])
         user = self.driver.User.get_by_id(data['user_id'])
         room = self.driver.Room.get_by_id(data['room_id'])
+        self.convent = room.convent
 
         gamecopy = self.create_gamecopy(game, user)
         gameentity = self.create_gameentity(room, gamecopy)
