@@ -107,7 +107,7 @@ class GameCopyToBoxController(GameCopyControllerBase):
 
         self.move_to_box()
         self.add_flashmsg('Gra została schowana.', 'success')
-        self.redirect('gamecopy:list')
+        self.redirect('gamecopy:list', room_id=self.get_room_id())
 
     def move_to_box(self):
         convent = self.get_convent()

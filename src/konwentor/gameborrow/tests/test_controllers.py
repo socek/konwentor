@@ -235,9 +235,9 @@ class TestGameBorrowListController(LocalFixtures):
         get_borrows,
         generate_log,
         data,
-        session,
+        matchdict,
     ):
-        session['convent_id'] = 123
+        matchdict['room_id'] = '10'
         verify_convent.return_value = True
 
         controller.make()
@@ -261,9 +261,9 @@ class TestGameBorrowListController(LocalFixtures):
         generate_log,
         data,
         request,
-        session,
+        matchdict,
     ):
-        session['convent_id'] = 123
+        matchdict['room_id'] = '10'
         form = GameBorrowReturnForm.return_value
         borrow = MagicMock()
         get_borrows.return_value = [borrow]
@@ -281,7 +281,7 @@ class TestGameBorrowListController(LocalFixtures):
         GameBorrowReturnForm.assert_called_once_with(request)
         form.set_value.assert_has_calls([
             call('game_borrow_id', borrow.id),
-            call('convent_id', session['convent_id']),
+            call('room_id', 10),
         ])
 
     def test_process_form_on_empty(
@@ -295,9 +295,9 @@ class TestGameBorrowListController(LocalFixtures):
         request,
         _on_form_fail,
         _on_form_success,
-        session,
+        matchdict,
     ):
-        session['convent_id'] = 1234
+        matchdict['room_id'] = '10'
         form = GameBorrowReturnForm.return_value
         form.success = form.validate.return_value = None
 
@@ -306,7 +306,9 @@ class TestGameBorrowListController(LocalFixtures):
         GameBorrowReturnForm.assert_called_once_with(
             request)
         form.set_value.assert_called_once_with(
-            'convent_id', session['convent_id'])
+            'room_id',
+            10,
+        )
         form.validate.assert_called_once_with()
 
         assert not _on_form_success.called
@@ -323,9 +325,9 @@ class TestGameBorrowListController(LocalFixtures):
         request,
         _on_form_fail,
         _on_form_success,
-        session,
+        matchdict,
     ):
-        session['convent_id'] = 1234
+        matchdict['room_id'] = '10'
         form = GameBorrowReturnForm.return_value
         form.success = form.validate.return_value = True
 
@@ -334,7 +336,9 @@ class TestGameBorrowListController(LocalFixtures):
         GameBorrowReturnForm.assert_called_once_with(
             request)
         form.set_value.assert_called_once_with(
-            'convent_id', session['convent_id'])
+            'room_id',
+            10,
+        )
         form.validate.assert_called_once_with()
 
         _on_form_success.assert_called_once_with(form)
@@ -351,9 +355,9 @@ class TestGameBorrowListController(LocalFixtures):
         request,
         _on_form_fail,
         _on_form_success,
-        session
+        matchdict,
     ):
-        session['convent_id'] = '12345'
+        matchdict['room_id'] = '10'
         form = GameBorrowReturnForm.return_value
         form.success = form.validate.return_value = False
 
@@ -362,7 +366,9 @@ class TestGameBorrowListController(LocalFixtures):
         GameBorrowReturnForm.assert_called_once_with(
             request)
         form.set_value.assert_called_once_with(
-            'convent_id', session['convent_id'])
+            'room_id',
+            10,
+        )
         form.validate.assert_called_once_with()
 
         assert not _on_form_success.called
@@ -425,13 +431,17 @@ class TestGameBorrowListController(LocalFixtures):
 
         message = 'Gra "first" została zwrócona.'
         add_flashmsg.assert_called_once_with(message, 'info')
-        redirect.assert_called_once_with('gameborrow:list', True)
+        redirect.assert_called_once_with(
+            'gameborrow:list',
+            room_id=form.get_value.return_value,
+        )
 
     def test_on_form_success_with_game_entity_id(
         self,
         controller,
         add_flashmsg,
         redirect,
+        matchdict
     ):
         game_entity_id = MagicMock()
         form = MagicMock()
@@ -449,7 +459,10 @@ class TestGameBorrowListController(LocalFixtures):
         message = ('Gra "first" została zwrócona, a "second" została'
                    ' pożyczona.')
         add_flashmsg.assert_called_once_with(message, 'info')
-        redirect.assert_called_once_with('gameborrow:list', True)
+        redirect.assert_called_once_with(
+            'gameborrow:list',
+            room_id=form.get_value.return_value
+        )
 
     def test_get_borrows(
         self,

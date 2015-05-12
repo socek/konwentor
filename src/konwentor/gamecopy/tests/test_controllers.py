@@ -290,12 +290,14 @@ class TestGameCopyToBoxController(LocalFixtures):
         verify_convent,
         add_flashmsg,
         redirect,
-        move_to_box
+        move_to_box,
+        matchdict
     ):
         """
         GameCopyToBoxController should verify convent, move game copy to box
         and redirect to gamecopy:list
         """
+        matchdict['room_id'] = '10'
         verify_convent.return_value = True
 
         controller.make()
@@ -305,7 +307,7 @@ class TestGameCopyToBoxController(LocalFixtures):
         move_to_box.assert_called_once_with()
         add_flashmsg.assert_called_once_with(
             'Gra została schowana.', 'success')
-        redirect.assert_called_once_with('gamecopy:list')
+        redirect.assert_called_once_with('gamecopy:list', room_id=10)
 
     def test_move_to_box(
         self,

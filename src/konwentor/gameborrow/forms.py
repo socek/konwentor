@@ -102,11 +102,11 @@ class GameBorrowReturnForm(KonwentorForm):
         field = self.add_field(
             'game_entity_id',
             label='Wypożycza',
-            validators=[IsValueInAvalibleValues()],
+            validators=[IsValueInAvalibleValues(allow_empty=True)],
             convert=ToInt())
         field.set_avalible_values(self.get_entity_ids)
         self.add_field(
-            'convent_id',
+            'room_id',
             validators=[NotEmpty(), IsDigit()],
             convert=ToInt())
 
@@ -114,7 +114,7 @@ class GameBorrowReturnForm(KonwentorForm):
 
     def get_avalible_games(self):
         query = self.driver.Game.get_avalible_games_view(
-            self.get_value('convent_id'))
+            self.get_value('room_id'))
         for game in query:
             if game.GameEntity.is_avalible():
                 yield game

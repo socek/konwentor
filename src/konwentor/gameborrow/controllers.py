@@ -60,7 +60,7 @@ class GameBorrowListController(GameCopyControllerBase):
 
     def process_form(self):
         form = GameBorrowReturnForm(self.request)
-        form.set_value('convent_id', self.session['convent_id'])
+        form.set_value('room_id', self.get_room_id())
 
         if form.validate():
             self._on_form_success(form)
@@ -86,7 +86,7 @@ class GameBorrowListController(GameCopyControllerBase):
             )
 
         self.add_flashmsg(message, 'info')
-        self.redirect('gameborrow:list', True)
+        self.redirect('gameborrow:list', room_id=form.get_value('room_id'))
 
     def _on_form_fail(self, form):
         game_entity_id = form.fields['game_entity_id']
@@ -105,7 +105,7 @@ class GameBorrowListController(GameCopyControllerBase):
         for borrow in self.data['borrows']:
             form = GameBorrowReturnForm(self.request)
             form.set_value('game_borrow_id', borrow.id)
-            form.set_value('convent_id', self.session['convent_id'])
+            form.set_value('room_id', self.get_room_id())
             borrow.form = FormWidget(self.request, form)
 
 

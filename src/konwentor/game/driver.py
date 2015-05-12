@@ -48,13 +48,13 @@ class GameDriver(KonwentorDriver):
             ).one()
         )
 
-    def get_avalible_games_view(self, convent_id):
+    def get_avalible_games_view(self, room_id):
         return (
             self.query(Game.name, GameEntity, User)
             .join(GameCopy)
             .join(GameEntity)
             .join(User)
-            .filter(GameEntity.convent_id == convent_id)
+            .filter(GameEntity.room_id == room_id)
             .order_by(User.name, Game.name)
         )
 

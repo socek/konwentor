@@ -87,7 +87,7 @@ class TestGameBorrowReturnForm(LocalFixtures):
         return GameBorrowReturnForm
 
     def test_get_avalible_games(self, form, fixtures):
-        form.set_value('convent_id', fixtures['Convent']['first'].id)
+        form.set_value('room_id', fixtures['Convent']['first'].rooms[0].id)
 
         result = list(form.get_avalible_games())
 
