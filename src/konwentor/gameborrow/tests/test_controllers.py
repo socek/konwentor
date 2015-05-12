@@ -161,9 +161,11 @@ class TestGameBorrowAddController(LocalFixtures):
         data,
         add_flashmsg,
         redirect,
-        get_game_entity
+        get_game_entity,
+        matchdict,
     ):
         form.validate.return_value = True
+        matchdict['room_id'] = '10'
 
         controller.make()
 
@@ -174,7 +176,7 @@ class TestGameBorrowAddController(LocalFixtures):
         form.validate.assert_called_once_with()
         add_flashmsg.assert_called_once_with(
             'Gra została wypożyczona.', 'success')
-        redirect.assert_called_once_with('gamecopy:list')
+        redirect.assert_called_once_with('gamecopy:list', room_id=10)
 
     def test_get_game_entity(self, controller, matchdict, fixtures):
         """get_game_entity should return GameEntity with id get from
@@ -453,8 +455,10 @@ class TestGameBorrowListController(LocalFixtures):
         self,
         controller,
         fixtures,
+        matchdict,
     ):
         """get_borrows should return all active borrows"""
+        matchdict['room_id'] = fixtures['Convent']['first'].rooms[0].id
         entities = controller.get_borrows(fixtures['Convent']['first'])
         assert entities == [
             fixtures['GameBorrow'][0],
@@ -465,8 +469,10 @@ class TestGameBorrowListController(LocalFixtures):
         self,
         controller,
         fixtures,
+        matchdict,
     ):
         """generate_log should return all non active borrows"""
+        matchdict['room_id'] = fixtures['Convent']['first'].rooms[0].id
         entities = controller.generate_log(fixtures['Convent']['first'])
         assert entities == [fixtures['GameBorrow'][2]]
 

@@ -101,3 +101,20 @@ class TestConventEditForm(LocalFixtures):
         assert form.model.rooms[0].name == 'room0'
         assert form.model.rooms[1].name == 'room1'
         mdb.commit.assert_called_once_with()
+
+    def test_on_success_when_created_new_room(self, form, mdb, mdriver):
+        form.model = MagicMock()
+        form.model.rooms = []
+        form._parse_raw_data({
+            'name': ['myname'],
+            'room': ['room0']
+        })
+
+        form.on_success()
+
+        assert form.model.name == 'myname'
+        mdriver.Room.create.assert_called_once_with(
+            name='room0',
+            convent=form.model,
+        )
+        mdb.commit.assert_called_once_with()

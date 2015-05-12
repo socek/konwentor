@@ -10,30 +10,12 @@ class GameBorrowDriver(KonwentorDriver):
     name = 'GameBorrow'
     model = GameBorrow
 
-    def get_borrowed_for_convent(self, convent):
-        return (
-            self.query(GameBorrow)
-            .join(GameEntity)
-            .filter(GameEntity.convent == convent)
-            .filter(GameBorrow.is_borrowed.is_(True))
-            .all()
-        )
-
     def get_borrowed_for_room(self, room):
         return (
             self.query(GameBorrow)
             .join(GameEntity)
             .filter(GameEntity.room == room)
             .filter(GameBorrow.is_borrowed.is_(True))
-            .all()
-        )
-
-    def get_returned_for_convent(self, convent):
-        return (
-            self.query(GameBorrow)
-            .join(GameEntity)
-            .filter(GameEntity.convent == convent)
-            .filter(GameBorrow.is_borrowed.is_(False))
             .all()
         )
 
