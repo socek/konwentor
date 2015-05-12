@@ -36,8 +36,11 @@ class ConventEditForm(ConventAddForm):
         self.model.name = self.get_value('name')
         for index, name in enumerate(self.get_values('room')):
             if name.strip():
-                room = self.model.rooms[index]
-                room.name = name
+                try:
+                    room = self.model.rooms[index]
+                    room.name = name
+                except IndexError:
+                    self.driver.Room.create(name=name, convent=self.model)
         self.db.commit()
 
 
