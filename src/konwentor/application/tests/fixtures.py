@@ -50,6 +50,7 @@ class Fixtures(FixtureGenerator):
         self.create_copies()
         self.create_entities()
         self.create_borrows()
+        self.db.commit()
 
     def create_users(self):
         for userdata in self.users:
