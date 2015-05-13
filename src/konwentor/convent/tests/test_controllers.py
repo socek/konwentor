@@ -373,7 +373,7 @@ class TestStartConventController(LocalFixtures):
         switch_convent.assert_called_once_with()
         assert data['convent'].state == 'running'
         mdb.commit.assert_called_once_with()
-        redirect.assert_called_once_with('gamecopy:add')
+        redirect.assert_called_once_with('gamecopy:add', room_id=0)
 
 
 class TestEndConventController(LocalFixtures):

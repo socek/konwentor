@@ -114,7 +114,7 @@ class StartConventController(ChooseConventController):
         self.verify_convent_id()
         self.switch_convent()
         self.start_convent()
-        self.redirect('gamecopy:add')
+        self.redirect('gamecopy:add', room_id=0)
 
     def start_convent(self):
         self.data['convent'].state = 'running'
