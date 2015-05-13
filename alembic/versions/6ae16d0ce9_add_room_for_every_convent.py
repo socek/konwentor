@@ -1,14 +1,14 @@
 """add_room_for_every_convent
 
 Revision ID: 6ae16d0ce9
-Revises: 3a469619f9b
+Revises: 4753da55c25
 Create Date: 2015-05-03 16:35:29.124111
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '6ae16d0ce9'
-down_revision = '3a469619f9b'
+down_revision = '4753da55c25'
 
 from alembic import op
 
