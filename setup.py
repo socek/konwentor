@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'hatak==0.2.7.10',
+    'hatak==0.2.7.11',
     'hatak_logging',
     'hatak_jinja2==0.2',
     'hatak_haml',
@@ -23,10 +23,10 @@ install_requires = [
 ]
 dependency_links = [
     # unhash this if you want lates version
+    'https://github.com/socek/hatak/tarball/master#egg=hatak-0.2.7.11',
     # 'https://github.com/socek/hatak_auth/tarball/master#egg=hatak_auth-0.2.5',
     # 'https://github.com/socek/hatak_jinja2/tarball/master#egg=hatak_jinja2-0.2',
     # 'https://github.com/socek/hatak_formskit/tarball/master#egg=hatak_formskit-0.2.3.6',
-    # 'https://github.com/socek/hatak/tarball/master#egg=hatak-0.2.7.10',
 ]
 
 if __name__ == '__main__':
