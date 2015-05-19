@@ -58,7 +58,7 @@ class GameCopyAddForm(KonwentorForm):
     def on_success(self):
         data = self.get_data_dict(True)
         game = self.upsert_game(data['game_name'])
-        user = self.driver.User.get_by_id(data['user_id'])
+        user = self.driver.Auth.get_by_id(data['user_id'])
         room = self.driver.Room.get_by_id(data['room_id'])
         self.convent = room.convent
 

@@ -96,12 +96,12 @@ class TestGameCopyAddForm(FormFixture):
 
         mdriver.Game.upsert.assert_called_once_with(
             name='1', is_active=True)
-        mdriver.User.get_by_id.assert_called_once_with(4)
+        mdriver.Auth.get_by_id.assert_called_once_with(4)
         mdriver.Room.get_by_id.assert_called_once_with(5)
 
         create_gamecopy.assert_called_once_with(
             mdriver.Game.upsert.return_value,
-            mdriver.User.get_by_id.return_value,
+            mdriver.Auth.get_by_id.return_value,
         )
 
         create_gameentity.assert_called_once_with(
