@@ -8,7 +8,7 @@ class TestKonwentorDriver(DriverFixture):
     def _get_driver_class(self):
         return KonwentorDriver
 
-    def test_get_objects(self, fdriver, fixtures):
+    def test_find_by(self, fdriver, fixtures):
         fdriver.model = Game
-        games = fdriver.get_objects(id=fixtures['Game']['first'].id).all()
+        games = fdriver.find_by(id=fixtures['Game']['first'].id).all()
         assert games == [fixtures['Game']['first']]

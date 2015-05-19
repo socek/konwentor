@@ -27,9 +27,9 @@ class TestGameCopyAddForm(FormFixture):
 
     def test_get_objects(self, form, mdriver):
         """get_objects should return list of dicts"""
-        mdriver.self.get_objects.call_count = 0
+        mdriver.self.find_by.call_count = 0
         example_model = MagicMock()
-        mdriver.self.get_objects.return_value.all.return_value = [
+        mdriver.self.find_by.return_value.all.return_value = [
             example_model
         ]
 
@@ -45,13 +45,13 @@ class TestGameCopyAddForm(FormFixture):
             'value': example_model.id,
         }
 
-        mdriver.self.get_objects.assert_called_with()
+        mdriver.self.find_by.assert_called_with()
 
     def test_get_objects_with_other(self, form, mdriver):
         """get_objects should return list of dicts"""
-        mdriver.self.get_objects.call_count = 0
+        mdriver.self.find_by.call_count = 0
         example_model = MagicMock()
-        mdriver.self.get_objects.return_value.all.return_value = [
+        mdriver.self.find_by.return_value.all.return_value = [
             example_model
         ]
 
@@ -72,7 +72,7 @@ class TestGameCopyAddForm(FormFixture):
             'value': '-1',
         }
 
-        mdriver.self.get_objects.assert_called_with(something=True)
+        mdriver.self.find_by.assert_called_with(something=True)
 
     def test_submit(
         self,
@@ -94,13 +94,13 @@ class TestGameCopyAddForm(FormFixture):
         })
         form.on_success()
 
-        mdriver.Game.get_or_create.assert_called_once_with(
+        mdriver.Game.upsert.assert_called_once_with(
             name='1', is_active=True)
         mdriver.User.get_by_id.assert_called_once_with(4)
         mdriver.Room.get_by_id.assert_called_once_with(5)
 
         create_gamecopy.assert_called_once_with(
-            mdriver.Game.get_or_create.return_value,
+            mdriver.Game.upsert.return_value,
             mdriver.User.get_by_id.return_value,
         )
 
@@ -121,8 +121,8 @@ class TestGameCopyAddForm(FormFixture):
         user = create_autospec(User())
 
         result = form.create_gamecopy(game, user)
-        assert result == mdriver.GameCopy.get_or_create.return_value
-        mdriver.GameCopy.get_or_create.assert_called_once_with(
+        assert result == mdriver.GameCopy.upsert.return_value
+        mdriver.GameCopy.upsert.assert_called_once_with(
             game=game,
             owner=user)
 
@@ -132,22 +132,22 @@ class TestGameCopyAddForm(FormFixture):
         gamecopy = create_autospec(GameCopy())
 
         gameentity = form.create_gameentity(room, gamecopy)
-        assert gameentity == mdriver.GameEntity.get_or_create.return_value
-        mdriver.GameEntity.get_or_create.assert_called_once_with(
+        assert gameentity == mdriver.GameEntity.upsert.return_value
+        mdriver.GameEntity.upsert.assert_called_once_with(
             convent=room.convent,
             gamecopy=gamecopy,
             room=room,
         )
 
-    def test_get_or_create_game(self, form, mdb, mdriver):
+    def test_upsert_game(self, form, mdb, mdriver):
         """
-        get_or_create_game should get game from mdb or create it if not found
+        upsert_game should get game from mdb or create it if not found
         """
-        result = form.get_or_create_game('myname')
+        result = form.upsert_game('myname')
 
-        game = mdriver.Game.get_or_create.return_value
+        game = mdriver.Game.upsert.return_value
         assert result == game
-        mdriver.Game.get_or_create.assert_called_once_with(
+        mdriver.Game.upsert.assert_called_once_with(
             name='myname', is_active=True)
 
     @mark.usefixtures('CsrfMustMatch')

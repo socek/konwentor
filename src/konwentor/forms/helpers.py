@@ -12,7 +12,13 @@ class FormWidget(BaseFormWidget):
                 });''' % (self.get_id(name)))
         return self._input('combobox', name, disabled, autofocus)
 
-    def text_with_add(self, name, disabled=False, autofocus=False):
+    def text_with_add(
+        self,
+        name,
+        disabled=False,
+        autofocus=False,
+        button_label='Add',
+    ):
         self.request.add_js_link('/js/add_button.js')
         self.request.add_js('''
             $(document).ready(function() {
@@ -24,5 +30,6 @@ class FormWidget(BaseFormWidget):
             name,
             disabled,
             autofocus,
-            prefix=self.konwentor_prefix
+            prefix=self.konwentor_prefix,
+            button_label=button_label,
         )

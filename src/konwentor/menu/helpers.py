@@ -8,7 +8,7 @@ from .models import MenuObject
 class OnConventMenuObject(MenuObject):
 
     def __init__(self, widget):
-        super().__init__(widget, 'Na konwencie', None, 'star')
+        super().__init__(widget, 'Na konwencie', None, 'arrow-circle-down')
         try:
             convent = self.request.driver.Convent.get_convent_from_session(
                 self.request

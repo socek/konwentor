@@ -29,6 +29,7 @@ class TestFormWidget(FormWidgetFixture):
             form,
             'text_with_add',
             prefix=FormWidget.konwentor_prefix,
+            external={'button_label': 'Add'},
         )
 
         request.add_js_link.assert_called_once_with('/js/add_button.js')

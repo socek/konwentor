@@ -43,7 +43,7 @@ class GameCopyAddForm(KonwentorForm):
                 'value': '',
             }
             driver = getattr(self.driver, driver_name)
-            for obj in driver.get_objects(**kwargs).all():
+            for obj in driver.find_by(**kwargs).all():
                 yield {
                     'label': obj.name,
                     'value': obj.id,
@@ -57,7 +57,7 @@ class GameCopyAddForm(KonwentorForm):
 
     def on_success(self):
         data = self.get_data_dict(True)
-        game = self.get_or_create_game(data['game_name'])
+        game = self.upsert_game(data['game_name'])
         user = self.driver.User.get_by_id(data['user_id'])
         room = self.driver.Room.get_by_id(data['room_id'])
         self.convent = room.convent
@@ -72,17 +72,17 @@ class GameCopyAddForm(KonwentorForm):
         finally:
             self.db.rollback()
 
-    def get_or_create_game(self, name):
-        return self.driver.Game.get_or_create(name=name, is_active=True)
+    def upsert_game(self, name):
+        return self.driver.Game.upsert(name=name, is_active=True)
 
     def create_gamecopy(self, game, user):
-        gamecopy = self.driver.GameCopy.get_or_create(
+        gamecopy = self.driver.GameCopy.upsert(
             game=game,
             owner=user)
         return gamecopy
 
     def create_gameentity(self, room, gamecopy):
-        return self.driver.GameEntity.get_or_create(
+        return self.driver.GameEntity.upsert(
             convent=room.convent,
             gamecopy=gamecopy,
             room=room,

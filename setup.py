@@ -6,27 +6,28 @@ install_requires = [
     'hatak_logging',
     'hatak_jinja2==0.2',
     'hatak_haml',
-    'hatak_sql>=0.1.15',
+    'hatak_sql>=0.1.16',
     'hatak_alembic>=0.1.3',
     'hatak_beaker',
     'hatak_debugtoolbar',
     'hatak_statics',
-    'hatak_formskit==0.2.3.6',
+    'hatak_formskit==0.2.3.7',
     'hatak_flashmsg',
     'waitress',
     'uwsgi',
     'pytest',
     'pytest-cov',
-    'hatak_auth>=0.2.5',
+    'hatak_auth>=0.2.6',
     'ipdb',
     'psycopg2',
 ]
 dependency_links = [
     # unhash this if you want lates version
     'https://github.com/socek/hatak/tarball/master#egg=hatak-0.2.7.11',
-    # 'https://github.com/socek/hatak_auth/tarball/master#egg=hatak_auth-0.2.5',
+    'https://github.com/socek/hatak_auth/tarball/master#egg=hatak_auth-0.2.6',
     # 'https://github.com/socek/hatak_jinja2/tarball/master#egg=hatak_jinja2-0.2',
-    # 'https://github.com/socek/hatak_formskit/tarball/master#egg=hatak_formskit-0.2.3.6',
+    'https://github.com/socek/hatak_formskit/tarball/master#egg=hatak_formskit-0.2.3.7',
+    'https://github.com/socek/hatak_sql/tarball/master#egg=hatak_sql-0.1.16',
 ]
 
 if __name__ == '__main__':
