@@ -90,3 +90,13 @@ statistics:
             route: statistics:all
             url: /statistics
 
+auth:
+    controllers:
+        -
+            controller: AuthListController
+            route: auth:list
+            url: /auth
+        -
+            controller: AuthEditController
+            route: auth:edit
+            url: /auth/edit/{obj_id:\d+}

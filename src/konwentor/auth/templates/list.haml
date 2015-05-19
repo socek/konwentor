@@ -1,0 +1,30 @@
+-extends "main.jinja2"
+-from "table.jinja2" import table with context
+
+-block page_head
+  Ludzie
+
+-macro header()
+  %tr
+      %th << Login
+      %th << Email
+      %th << Permissions
+      %th << Actions
+
+-block content
+  -call(user, index) table(False, header, users, "users_table")
+    %tr
+      %td -> =user.name
+      %td -> =user.email
+      %td -> =user.permission_widget()
+      %td
+        = user.edit()
+
+-block js
+  %script type="text/javascript"
+    $(document).ready(function() {
+      $('#users_table').dataTable({
+        "paging":   false,
+        'bFilter': false
+      });
+    });

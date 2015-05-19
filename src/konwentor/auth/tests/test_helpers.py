@@ -2,7 +2,7 @@ from pytest import fixture, yield_fixture
 from mock import MagicMock, patch
 
 from hatak.testing import RequestFixture
-from ..helpers import LinkWidget, render_when_has_access
+from ..helpers import LinkWidget, render_when_has_access, UserWidget
 
 
 class TestRenderWhenhasAccess(object):
@@ -37,11 +37,7 @@ class TestRenderWhenhasAccess(object):
         assert not method.called
 
 
-class TestLinkWidget(RequestFixture):
-
-    @fixture
-    def widget(self, request):
-        return LinkWidget(request)
+class WidgetFixture(RequestFixture):
 
     @yield_fixture
     def render_for(self, widget):
@@ -52,6 +48,13 @@ class TestLinkWidget(RequestFixture):
     @fixture
     def route(self, request):
         return request.route_path
+
+
+class TestLinkWidget(WidgetFixture):
+
+    @fixture
+    def widget(self, request):
+        return LinkWidget(request)
 
     def test_button(self, widget, render_for, route):
         """
@@ -72,3 +75,46 @@ class TestLinkWidget(RequestFixture):
             'url': route.return_value,
             'name': 'name',
         })
+
+
+class TestUserWidget(WidgetFixture):
+
+    @fixture
+    def user(self):
+        return MagicMock()
+
+    @fixture
+    def widget(self, request, user):
+        return UserWidget(request, user)
+
+    def test_properties(self, widget, user):
+        assert widget.id == user.id
+        assert widget.name == user.name
+        assert widget.email == user.email
+
+    def test_permissions(self, widget, user):
+        permission = MagicMock()
+        permission.group = 'mygroup'
+        permission.name = 'myname'
+        user.permissions = [permission]
+
+        assert list(widget.permissions) == ['mygroup:myname']
+
+    def test_permission_widget(self, widget, render_for):
+        result = widget.permission_widget()
+        assert result == render_for.return_value
+        render_for.assert_called_once_with(
+            'permissions.haml',
+            {'model': widget}
+        )
+
+    def test_edit(self, widget, render_for, route, user):
+        result = widget.edit()
+        assert result == render_for.return_value
+        render_for.assert_called_once_with(
+            'edit.haml',
+            {
+                'url': route.return_value,
+            }
+        )
+        route.assert_called_once_with('auth:edit', obj_id=user.id)

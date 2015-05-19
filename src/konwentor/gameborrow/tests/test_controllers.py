@@ -19,12 +19,6 @@ class LocalFixtures(ControllerFixture):
             yield mock
 
     @yield_fixture
-    def add_flashmsg(self, request):
-        patcher = patch.object(request, 'add_flashmsg', autospec=True)
-        with patcher as mock:
-            yield mock
-
-    @yield_fixture
     def verify_convent(self, controller):
         patcher = patch.object(controller, 'verify_convent', autospec=True)
         with patcher as mock:

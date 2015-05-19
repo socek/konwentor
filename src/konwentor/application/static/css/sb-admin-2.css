@@ -395,3 +395,10 @@ div.custom-combobox ul {
 a.disabled {
     color: grey;
 }
+ul.permissions {
+    overflow: auto;
+    display: block;
+    max-height: 70px;
+    width: 200px;
+    background-color: #efefb0;
+}

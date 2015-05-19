@@ -47,5 +47,6 @@ class TopMenuWidget(Jinja2HelperSingle):
         self.data['menu'] = []
         self.add_menu('Konwenty', 'convent:list', 'calendar')
         self.add_menu('Gry', 'game:list', 'gamepad')
+        self.add_menu('Użytkownicy', 'auth:list', 'users')
 
         self.add_menu_object(OnConventMenuObject(self))

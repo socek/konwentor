@@ -13,8 +13,9 @@ class ControllerFixture(
     FormControllerFixture,
 ):
     @yield_fixture
-    def add_helper(self, controller):
-        with patch.object(controller, 'add_helper') as mock:
+    def add_flashmsg(self, request):
+        patcher = patch.object(request, 'add_flashmsg', autospec=True)
+        with patcher as mock:
             yield mock
 
 

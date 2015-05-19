@@ -4,7 +4,6 @@ from mock import MagicMock, create_autospec, patch
 from ..forms import GameCopyAddForm
 from ..models import GameCopy, GameEntity
 from konwentor.auth.models import User
-from konwentor.convent.models import Convent
 from konwentor.game.models import Game
 from konwentor.application.testing import FormFixture
 from konwentor.room.models import Room
