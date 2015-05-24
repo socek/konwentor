@@ -24,7 +24,10 @@ class IsUniqe(FieldValidator):
             kwargs = {
                 field_name: self.value,
             }
-            model_id = self.field.form.get_value('id', default=None)
+            try:
+                model_id = self.field.form.get_value('id', default=None)
+            except KeyError:
+                model_id = None
             items = (
                 driver.find_by(**kwargs)
                 .filter(self.cls.id != model_id)
@@ -33,11 +36,10 @@ class IsUniqe(FieldValidator):
             return items == 0
 
 
-class AuthEditForm(PostForm):
+class AuthAddForm(PostForm):
 
     def create_form(self):
         super().create_form()
-        self.add_field('id', validators=[NotEmpty(), IsDigit()])
         self.add_field('name', label='Imię', validators=[NotEmpty()])
         self.add_field(
             'email',
@@ -49,24 +51,14 @@ class AuthEditForm(PostForm):
         )
         self.add_field('permission', label='Prawa')
 
-        self.add_form_validator(IdExists('User'))
-
-    def on_success(self):
-        self.model.name = self.get_value('name')
-        self.model.email = self.get_value('email')
-        permissions = list(self._get_permissions_from_forms())
-        self._add_missing_permissions(permissions)
-        self._delete_removed_permissions(permissions)
-
     def _add_missing_permissions(self, permissions):
         for group, name in permissions:
             self.driver.Auth.add_permission(self.model, group, name)
 
-    def _get_permissions_to_delete(self, permissions):
-        for permission in self.model.permissions:
-            permission_name = [permission.group, permission.name]
-            if permission_name not in permissions:
-                yield permission
+    def _get_permissions_from_forms(self):
+        for permission in self.get_values('permission'):
+            if permission:
+                yield permission.split(':')
 
     def _delete_removed_permissions(self, permissions):
         for permission in self._get_permissions_to_delete(permissions):
@@ -76,10 +68,39 @@ class AuthEditForm(PostForm):
                 permission.name
             )
 
-    def _get_permissions_from_forms(self):
-        for permission in self.get_values('permission'):
-            if permission:
-                yield permission.split(':')
+    def _get_permissions_to_delete(self, permissions):
+        for permission in self.model.permissions:
+            permission_name = [permission.group, permission.name]
+            if permission_name not in permissions:
+                yield permission
+
+    def on_success(self):
+        self._create_model()
+        self._set_model_values()
+
+    def _create_model(self):
+        self.model = self.driver.Auth.create()
+
+    def _set_model_values(self):
+        self.model.name = self.get_value('name')
+        self.model.email = self.get_value('email')
+        permissions = list(self._get_permissions_from_forms())
+        self._add_missing_permissions(permissions)
+        self._delete_removed_permissions(permissions)
+
+
+class AuthEditForm(AuthAddForm):
+
+    def create_form(self):
+        super().create_form()
+        self.add_field('id', validators=[NotEmpty(), IsDigit()])
+
+        self.add_form_validator(IdExists('Auth'))
+
+    def _create_model(self):
+        """
+        model is created by .fill
+        """
 
     def fill(self, user):
         self.set_value('id', user.id)

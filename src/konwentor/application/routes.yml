@@ -100,3 +100,7 @@ auth:
             controller: AuthEditController
             route: auth:edit
             url: /auth/edit/{obj_id:\d+}
+        -
+            controller: AuthAddController
+            route: auth:add
+            url: /auth/add

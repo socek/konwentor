@@ -4,7 +4,7 @@ from pytest import fixture, yield_fixture
 from haplugin.sql.testing import DatabaseFixture
 
 from konwentor.application.testing import FormFixture
-from ..forms import IsUniqe, AuthEditForm
+from ..forms import IsUniqe, AuthEditForm, AuthAddForm
 from ..models import User
 
 
@@ -53,6 +53,14 @@ class TestIsUniqe(DatabaseFixture):
         field.form.get_value.return_value = fixtures['User']['first'].id
         validator.value = fixtures['User']['first'].email
         assert validator.validate_value() is True
+
+    def test_no_id_field(self, validator, fixtures, field):
+        '''
+        IsUniqe should use id=None when no id field in form.
+        '''
+        field.form.get_value.side_effect = KeyError
+        validator.value = fixtures['User']['first'].email
+        assert validator.validate_value() is False
 
 
 class TestAuthEditForm(FormFixture):
@@ -130,3 +138,24 @@ class TestAuthEditForm(FormFixture):
             'mygroup3',
             'myname3',
         )
+
+
+class TestAuthAddForm(FormFixture):
+
+    def _get_form_class(self):
+        return AuthAddForm
+
+    @yield_fixture
+    def set_model_values(self, form):
+        patcher = patch.object(form, '_set_model_values')
+        with patcher as mock:
+            yield mock
+
+    def test_on_success(self, form, mdriver, set_model_values):
+        '''
+        .on_success should create new User object.
+        '''
+        form.on_success()
+
+        mdriver.Auth.create.assert_called_once_with()
+        set_model_values.assert_called_once_with()

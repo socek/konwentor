@@ -3,7 +3,8 @@ from mock import patch, MagicMock
 
 from konwentor.application.testing import ControllerFixture
 from ..controllers import AuthListController, AuthEditController
-from ..forms import AuthEditForm
+from ..controllers import AuthAddController
+from ..forms import AuthEditForm, AuthAddForm
 
 
 class TestAuthListController(ControllerFixture):
@@ -96,3 +97,42 @@ class TestAuthEditController(ControllerFixture):
         assert controller.get_user() == mdriver.Auth.get_by_id.return_value
 
         mdriver.Auth.get_by_id.assert_called_once_with('123')
+
+
+class TestAuthAddController(ControllerFixture):
+
+    def _get_controller_class(self):
+        return AuthAddController
+
+    def test_form_not_validated(self, controller, add_form, form):
+        '''
+        AuthAddController should create AuthAddForm
+        '''
+        form.validate.return_value = None
+
+        controller.make()
+
+        add_form.assert_called_once_with(AuthAddForm)
+        form.validate.assert_called_once_with()
+
+    def test_form_validated(
+        self,
+        controller,
+        add_form,
+        form,
+        mdb,
+        add_flashmsg,
+        redirect
+    ):
+        form.validate.return_value = True
+
+        controller.make()
+
+        add_form.assert_called_once_with(AuthAddForm)
+        form.validate.assert_called_once_with()
+        mdb.commit.assert_called_once_with()
+        add_flashmsg.assert_called_once_with(
+            'Użytkownik został zapisany!',
+            'info',
+        )
+        redirect.assert_called_once_with('auth:list')

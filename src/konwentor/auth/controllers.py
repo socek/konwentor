@@ -1,6 +1,6 @@
 from hatak.controller import Controller
 from .helpers import UserWidget
-from .forms import AuthEditForm
+from .forms import AuthEditForm, AuthAddForm
 
 
 class AuthController(Controller):
@@ -18,6 +18,20 @@ class AuthListController(AuthController):
     def get_users(self):
         for user in self.driver.Auth.find_all():
             yield UserWidget(self.request, user)
+
+
+class AuthAddController(AuthController):
+
+    template = 'auth:add.haml'
+    menu_highlighted = 'auth:list'
+
+    def make(self):
+        form = self.add_form(AuthAddForm)
+
+        if form.validate():
+            self.db.commit()
+            self.add_flashmsg('Użytkownik został zapisany!', 'info')
+            self.redirect('auth:list')
 
 
 class AuthEditController(AuthController):
