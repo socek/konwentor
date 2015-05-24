@@ -1,0 +1,30 @@
+<div class="form-group">
+    <label>{{label}}:</label>
+    {% include '_error.jinja2' %}
+
+    {% for value in values %}
+        <div style="clear: both;" id="loop_{{loop.index}}">
+            <input
+                class="form-control"
+                style="float: left; width: 90%;"
+                value="{{value}}"
+                name="{{name}}"
+                readonly
+                {%- if disabled %} disabled=disabled {% endif -%}
+                >
+            <button class="btn btn-danger remove_button" for="loop_{{loop.index}}" select_for="{{id}}">
+                <i class="fa fa-minus-circle" style="display: block;"></i>
+            </button>
+        </div>
+    {% endfor %}
+    <div style="clear: both;">
+        <select id="{{id}}" class="add_from_list_holder">
+            {% for element in elements %}
+                <option name="{{element}}">{{element}}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-warning add_from_list" {%- if elements == [] %} disabled=disabled {% endif -%} for="{{id}}" for_name="{{name}}">
+            <i class="fa fa-plus-circle"></i>
+        </button>
+    </div>
+</div>

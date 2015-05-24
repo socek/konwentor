@@ -1,4 +1,4 @@
-from pytest import yield_fixture
+from pytest import yield_fixture, fixture
 from mock import patch, MagicMock
 
 from konwentor.application.testing import ControllerFixture
@@ -7,7 +7,14 @@ from ..controllers import AuthAddController
 from ..forms import AuthEditForm, AuthAddForm
 
 
-class TestAuthListController(ControllerFixture):
+class LocalFixtures(ControllerFixture):
+
+    @fixture
+    def route(self, request):
+        request.registry = {'route': MagicMock()}
+
+
+class TestAuthListController(LocalFixtures):
 
     def _get_controller_class(self):
         return AuthListController
@@ -31,7 +38,7 @@ class TestAuthListController(ControllerFixture):
         UserWidget.assert_called_once_with(request, user)
 
 
-class TestAuthEditController(ControllerFixture):
+class TestAuthEditController(LocalFixtures):
 
     def _get_controller_class(self):
         return AuthEditController
@@ -47,7 +54,8 @@ class TestAuthEditController(ControllerFixture):
         controller,
         add_form,
         form,
-        get_user
+        get_user,
+        route,
     ):
         """
         .make should fill form with user data
@@ -69,6 +77,7 @@ class TestAuthEditController(ControllerFixture):
         mdb,
         add_flashmsg,
         redirect,
+        route,
     ):
         """
         .make should commit, add flash message and redirect when forms is
@@ -99,12 +108,12 @@ class TestAuthEditController(ControllerFixture):
         mdriver.Auth.get_by_id.assert_called_once_with('123')
 
 
-class TestAuthAddController(ControllerFixture):
+class TestAuthAddController(LocalFixtures):
 
     def _get_controller_class(self):
         return AuthAddController
 
-    def test_form_not_validated(self, controller, add_form, form):
+    def test_form_not_validated(self, controller, add_form, form, route):
         '''
         AuthAddController should create AuthAddForm
         '''
@@ -122,7 +131,8 @@ class TestAuthAddController(ControllerFixture):
         form,
         mdb,
         add_flashmsg,
-        redirect
+        redirect,
+        route,
     ):
         form.validate.return_value = True
 

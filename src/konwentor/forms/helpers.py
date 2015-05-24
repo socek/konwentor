@@ -33,3 +33,28 @@ class FormWidget(BaseFormWidget):
             prefix=self.konwentor_prefix,
             button_label=button_label,
         )
+
+    def text_with_add_from_list(
+        self,
+        name,
+        disabled=False,
+        autofocus=False,
+        button_label='Add',
+        elements=[],
+    ):
+        self.request.add_js_link('/js/add_button.js')
+        self.request.add_js('''
+            $(document).ready(function() {
+                $(".add_from_list").add_from_list();
+                $(".remove_button").remove_button();
+            });
+        ''')
+        return self._input(
+            'text_with_add_from_list',
+            name,
+            disabled,
+            autofocus,
+            prefix=self.konwentor_prefix,
+            button_label=button_label,
+            elements=elements,
+        )

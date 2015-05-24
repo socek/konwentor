@@ -1,10 +1,14 @@
 from hatak.controller import Controller
 from .helpers import UserWidget
 from .forms import AuthEditForm, AuthAddForm
+from .permissions import ListAvaliblePermissions
 
 
 class AuthController(Controller):
     permissions = [('auth', 'edit'), ]
+
+    def get_all_permissions_avalible(self, user=None):
+        return ListAvaliblePermissions(self.request, user).get_all()
 
 
 class AuthListController(AuthController):
@@ -21,11 +25,13 @@ class AuthListController(AuthController):
 
 
 class AuthAddController(AuthController):
+    permissions = [('auth', 'edit'), ]
 
     template = 'auth:add.haml'
     menu_highlighted = 'auth:list'
 
     def make(self):
+        self.data['all_permissions'] = self.get_all_permissions_avalible()
         form = self.add_form(AuthAddForm)
 
         if form.validate():
@@ -41,6 +47,7 @@ class AuthEditController(AuthController):
 
     def make(self):
         user = self.get_user()
+        self.data['all_permissions'] = self.get_all_permissions_avalible(user)
         form = self.add_form(AuthEditForm)
 
         if form.validate():

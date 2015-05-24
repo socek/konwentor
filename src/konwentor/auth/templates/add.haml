@@ -16,6 +16,6 @@
               =form.error()
               =form.text('name')
               =form.text('email')
-              =form.text_with_add('permission', button_label='Dodaj prawa')
+              =form.text_with_add_from_list('permission', button_label='Dodaj prawa', elements=all_permissions)
               =form.submit('Zapisz')
               =form.end()
