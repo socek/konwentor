@@ -13,6 +13,7 @@ class KonwentorMessage(Translation):
         'GameNameInList': 'Nie znaleziono wybranej gry "{value.value}".',
         'IsValueInAvalibleValues': 'Nie znaleziono podanej gry.',
         'IsUniqe': 'Wartość tego pola już istnieje w bazie.',
+        'input must be the same!': 'Hasła muszą się zgadzać!',
     }
 
     def translate(self):

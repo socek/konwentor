@@ -111,7 +111,9 @@ class TestAuthEditForm(FormFixture):
         form.parse_dict({
             'name': 'myname',
             'email': 'myemail',
-            'permission': ['mygroup1:myname1', 'mygroup2:myname2']
+            'permission': ['mygroup1:myname1', 'mygroup2:myname2'],
+            'password1': 'mypass',
+            'password2': 'mypass',
         })
         form.model = MagicMock()
         form.model.permissions = [
@@ -125,8 +127,10 @@ class TestAuthEditForm(FormFixture):
 
         form.on_success()
 
-        form.model.name == 'myname'
-        form.model.email == 'email'
+        assert form.model.name == 'myname'
+        assert form.model.email == 'myemail'
+
+        form.model.set_password.assert_called_once_with('mypass')
 
         mdriver.Auth.add_permission.assert_has_calls([
             call(form.model, 'mygroup1', 'myname1'),
@@ -138,6 +142,16 @@ class TestAuthEditForm(FormFixture):
             'mygroup3',
             'myname3',
         )
+
+    def test_update_password_when_no_password_specified(self, form):
+        form.parse_dict({
+            'password1': '',
+        })
+        form.model = MagicMock()
+
+        form._update_password()
+
+        assert form.model.set_password.called is False
 
 
 class TestAuthAddForm(FormFixture):

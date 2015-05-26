@@ -17,6 +17,8 @@
               =form.hidden('id')
               =form.text('name')
               =form.text('email')
+              =form.password('password1')
+              =form.password('password2')
               =form.text_with_add_from_list('permission', button_label='Dodaj prawa', elements=all_permissions)
               =form.submit('Zapisz')
               =form.end()

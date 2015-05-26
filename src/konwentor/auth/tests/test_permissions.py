@@ -88,7 +88,7 @@ class TestListAvaliblePermissions(RequestFixture):
         '''
         is_permission_avalible.return_value = True
         myroute = MagicMock()
-        myroute.permissions = ['one:one', 'two:two']
+        myroute.permissions = [('one', 'one'), ('two', 'two')]
         route.routes = {'myroute': myroute, 'second': None}
 
         assert list(model.get_all_permissions()) == ['one:one', 'two:two']
@@ -105,7 +105,7 @@ class TestListAvaliblePermissions(RequestFixture):
         '''
         is_permission_avalible.return_value = False
         myroute = MagicMock()
-        myroute.permissions = ['one:one', 'two:two']
+        myroute.permissions = [('one', 'one'), ('two', 'two')]
         route.routes = {'myroute': myroute, 'second': None}
 
         assert list(model.get_all_permissions()) == []
@@ -141,7 +141,7 @@ class TestListAvaliblePermissions(RequestFixture):
         gather_user_permissions,
         get_all_permissions,
     ):
-        get_all_permissions.return_value = [Permission(group='g1', name='n2')]
+        get_all_permissions.return_value = ['g1:n2']
 
         assert list(model.get_all()) == ['g1:n2']
         assert model.avalible_permissions == set(['g1:n2'])

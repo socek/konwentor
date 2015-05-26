@@ -1,4 +1,5 @@
 from formskit.validators import NotEmpty, FieldValidator, IsDigit
+from formskit.formvalidators import MustMatch
 
 from konwentor.convent.forms import IdExists
 from haplugin.formskit import PostForm
@@ -49,7 +50,26 @@ class AuthAddForm(PostForm):
                 IsUniqe(self.driver.Auth, User)
             ]
         )
+        self._create_password_fields()
         self.add_field('permission', label='Prawa')
+
+    def _create_password_fields(self):
+        self.add_field(
+            'password1',
+            label='Hasło',
+            validators=[
+                NotEmpty(),
+            ]
+        )
+
+        self.add_field(
+            'password2',
+            label='Hasło (powtórzone)',
+            validators=[
+                NotEmpty(),
+            ]
+        )
+        self.add_form_validator(MustMatch(['password1', 'password2']))
 
     def _add_missing_permissions(self, permissions):
         for group, name in permissions:
@@ -84,9 +104,15 @@ class AuthAddForm(PostForm):
     def _set_model_values(self):
         self.model.name = self.get_value('name')
         self.model.email = self.get_value('email')
+        self._update_password()
         permissions = list(self._get_permissions_from_forms())
         self._add_missing_permissions(permissions)
         self._delete_removed_permissions(permissions)
+
+    def _update_password(self):
+        password = self.get_value('password1', default=None)
+        if password:
+            self.model.set_password(password)
 
 
 class AuthEditForm(AuthAddForm):
@@ -96,6 +122,22 @@ class AuthEditForm(AuthAddForm):
         self.add_field('id', validators=[NotEmpty(), IsDigit()])
 
         self.add_form_validator(IdExists('Auth'))
+
+    def _create_password_fields(self):
+        self.add_field(
+            'password1',
+            label='Hasło',
+            validators=[
+            ]
+        )
+
+        self.add_field(
+            'password2',
+            label='Hasło (powtórzone)',
+            validators=[
+            ]
+        )
+        self.add_form_validator(MustMatch(['password1', 'password2']))
 
     def _create_model(self):
         """

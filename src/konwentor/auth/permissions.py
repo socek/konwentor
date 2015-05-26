@@ -9,8 +9,8 @@ class ListAvaliblePermissions(object):
         self.gather_user_permissions()
         self.avalible_permissions = set()
         for permission in self.get_all_permissions():
-            yield permission.to_str()
-            self.avalible_permissions.add(permission.to_str())
+            yield permission
+            self.avalible_permissions.add(permission)
 
     def gather_user_permissions(self):
         self.user_permissions = set()
@@ -22,8 +22,9 @@ class ListAvaliblePermissions(object):
         for route in self.route.routes.values():
             try:
                 for permission in route.permissions:
-                    if self.is_permission_avalible(permission):
-                        yield permission
+                    permission_str = '%s:%s' % permission
+                    if self.is_permission_avalible(permission_str):
+                        yield permission_str
             except AttributeError:
                 pass
 
