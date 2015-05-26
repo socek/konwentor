@@ -21,18 +21,19 @@ install_requires = [
     'ipdb',
     'psycopg2',
 ]
+prefix = 'https://github.com/socek/'
 dependency_links = [
     # unhash this if you want lates version
-    'https://github.com/socek/hatak/tarball/master#egg=hatak-0.2.7.11',
-    'https://github.com/socek/hatak_auth/tarball/master#egg=hatak_auth-0.2.6',
-    # 'https://github.com/socek/hatak_jinja2/tarball/master#egg=hatak_jinja2-0.2',
-    'https://github.com/socek/hatak_formskit/tarball/master#egg=hatak_formskit-0.2.3.7',
-    'https://github.com/socek/hatak_sql/tarball/master#egg=hatak_sql-0.1.16',
+    # prefix + 'hatak/tarball/master#egg=hatak-0.2.7.11',
+    # prefix + 'hatak_auth/tarball/master#egg=hatak_auth-0.2.6',
+    # prefix + 'hatak_jinja2/tarball/master#egg=hatak_jinja2-0.2',
+    # prefix + 'hatak_formskit/tarball/master#egg=hatak_formskit-0.2.3.7',
+    # prefix + 'hatak_sql/tarball/master#egg=hatak_sql-0.1.16',
 ]
 
 if __name__ == '__main__':
     setup(name='Konwentor',
-          version='0.2.3',
+          version='0.2.4',
           packages=find_packages('src'),
           package_dir={'': 'src'},
           install_requires=install_requires,
