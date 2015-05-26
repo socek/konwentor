@@ -51,7 +51,7 @@ class ConventDeleteForm(PostForm):
 
     def on_success(self):
         data = self.get_data_dict(True)
-        convent = Convent.get_by_id(self.db, int(data['obj_id']))
+        convent = self.driver.Convent.get_by_id(int(data['obj_id']))
         convent.is_active = False
         self.db.commit()
 

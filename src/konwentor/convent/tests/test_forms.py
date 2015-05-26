@@ -59,15 +59,14 @@ class TestConventDeleteForm(LocalFixtures):
     def _get_form_class(self):
         return ConventDeleteForm
 
-    def test_submit(self, form, Convent, mdb):
+    def test_submit(self, form, Convent, mdb, mdriver):
         form._parse_raw_data({
             form.fields['obj_id'].get_name(): ['123'],
         })
         form.on_success()
 
-        Convent.get_by_id.assert_called_once_with(
-            mdb, 123)
-        convent = Convent.get_by_id.return_value
+        mdriver.Convent.get_by_id.assert_called_once_with(123)
+        convent = mdriver.Convent.get_by_id.return_value
         assert convent.is_active is False
         mdb.commit.assert_called_once_with()
 
