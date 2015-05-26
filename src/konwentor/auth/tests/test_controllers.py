@@ -3,8 +3,8 @@ from mock import patch, MagicMock
 
 from konwentor.application.testing import ControllerFixture
 from ..controllers import AuthListController, AuthEditController
-from ..controllers import AuthAddController
-from ..forms import AuthEditForm, AuthAddForm
+from ..controllers import AuthAddController, AuthEditSelfController
+from ..forms import AuthEditForm, AuthAddForm, AuthEditSelfForm
 
 
 class LocalFixtures(ControllerFixture):
@@ -146,3 +146,53 @@ class TestAuthAddController(LocalFixtures):
             'info',
         )
         redirect.assert_called_once_with('auth:list')
+
+
+class TestAuthEditSelfController(LocalFixtures):
+
+    def _get_controller_class(self):
+        return AuthEditSelfController
+
+    def test_when_form_is_not_validated(
+        self,
+        controller,
+        add_form,
+        form,
+        route,
+    ):
+        """
+        .make should fill form with user data
+        """
+        form.validate.return_value = False
+
+        controller.make()
+
+        add_form.assert_called_once_with(AuthEditSelfForm)
+        form.fill.assert_called_once_with(controller.user)
+
+    def test_when_form_is_validated(
+        self,
+        controller,
+        add_form,
+        form,
+        mdb,
+        add_flashmsg,
+        redirect,
+        route,
+    ):
+        """
+        .make should commit, add flash message and redirect when forms is
+        validated successfully
+        """
+        form.validate.return_value = True
+
+        controller.make()
+
+        add_form.assert_called_once_with(AuthEditSelfForm)
+        assert form.fill.called is False
+        mdb.commit.assert_called_once_with()
+        add_flashmsg.assert_called_once_with(
+            'Użytkownik został zapisany!',
+            'info'
+        )
+        redirect.assert_called_once_with('convent:list')

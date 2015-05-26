@@ -1,0 +1,23 @@
+-extends "main.jinja2"
+
+-block page_head
+  Profil - Edytuj
+
+-block content
+  %div.row
+    %div.col-lg-12
+      %div.panel.panel-default
+        %div.panel-heading
+          Edytuj Użytkownika
+        %div.panel-body
+          %div.row
+            %div.col-lg-6
+              =form.begin()
+              =form.error()
+              =form.hidden('id')
+              =form.text('name')
+              =form.text('email')
+              =form.password('password1')
+              =form.password('password2')
+              =form.submit('Zapisz')
+              =form.end()

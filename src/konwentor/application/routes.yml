@@ -104,3 +104,7 @@ auth:
             controller: AuthAddController
             route: auth:add
             url: /auth/add
+        -
+            controller: AuthEditSelfController
+            route: auth:editself
+            url: /profile/edit

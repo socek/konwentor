@@ -4,7 +4,7 @@ from pytest import fixture, yield_fixture
 from haplugin.sql.testing import DatabaseFixture
 
 from konwentor.application.testing import FormFixture
-from ..forms import IsUniqe, AuthEditForm, AuthAddForm
+from ..forms import IsUniqe, AuthEditForm, AuthAddForm, AuthEditSelfForm
 from ..models import User
 
 
@@ -173,3 +173,23 @@ class TestAuthAddForm(FormFixture):
 
         mdriver.Auth.create.assert_called_once_with()
         set_model_values.assert_called_once_with()
+
+
+class TestAuthEditSelfForm(FormFixture):
+
+    '''
+    This form is only partly disabled form of AuthEditForm, so this test will
+    only test if everything is disabled
+    '''
+
+    def _get_form_class(self):
+        return AuthEditSelfForm
+
+    def test_create_permission_fields(self, form):
+        assert form._create_permission_fields() is None
+
+    def test_sync_permissions(self, form):
+        assert form._sync_permissions() is None
+
+    def test_fill_permissions(self, form):
+        assert form._fill_permissions() is None

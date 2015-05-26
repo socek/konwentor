@@ -1,6 +1,6 @@
 from hatak.controller import Controller
 from .helpers import UserWidget
-from .forms import AuthEditForm, AuthAddForm
+from .forms import AuthEditForm, AuthAddForm, AuthEditSelfForm
 from .permissions import ListAvaliblePermissions
 
 
@@ -60,3 +60,20 @@ class AuthEditController(AuthController):
 
     def get_user(self):
         return self.driver.Auth.get_by_id(self.matchdict['obj_id'])
+
+
+class AuthEditSelfController(Controller):
+    permissions = [('base', 'view'), ]
+    template = 'auth:editself.haml'
+    menu_highlighted = None
+
+    def make(self):
+        form = self.add_form(AuthEditSelfForm)
+
+        if form.validate():
+            self.db.commit()
+            self.add_flashmsg('Twoje dane zostały zapisane!', 'info')
+            self.redirect('convent:list')
+            return
+
+        form.fill(self.user)

@@ -51,6 +51,9 @@ class AuthAddForm(PostForm):
             ]
         )
         self._create_password_fields()
+        self._create_permission_fields()
+
+    def _create_permission_fields(self):
         self.add_field('permission', label='Prawa')
 
     def _create_password_fields(self):
@@ -105,6 +108,9 @@ class AuthAddForm(PostForm):
         self.model.name = self.get_value('name')
         self.model.email = self.get_value('email')
         self._update_password()
+        self._sync_permissions()
+
+    def _sync_permissions(self):
         permissions = list(self._get_permissions_from_forms())
         self._add_missing_permissions(permissions)
         self._delete_removed_permissions(permissions)
@@ -148,8 +154,28 @@ class AuthEditForm(AuthAddForm):
         self.set_value('id', user.id)
         self.set_value('name', user.name)
         self.set_value('email', user.email)
-        for index, permission in enumerate(user.permissions):
+        self.model = user
+        self._fill_permissions()
+
+    def _fill_permissions(self):
+        for index, permission in enumerate(self.model.permissions):
             name = '%s:%s' % (permission.group, permission.name)
             self.set_value('permission', name, index)
 
-        self.model = user
+
+class AuthEditSelfForm(AuthEditForm):
+
+    def _create_permission_fields(self):
+        '''
+        Editing permission is disabled!
+        '''
+
+    def _sync_permissions(self):
+        '''
+        Editing permission is disabled!
+        '''
+
+    def _fill_permissions(self):
+        '''
+        Editing permission is disabled!
+        '''
