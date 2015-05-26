@@ -22,7 +22,7 @@ class GameCopyAddForm(KonwentorForm):
             label='Właściciel',
             validators=[NotEmpty(), IsDigit()],
             convert=ToInt())
-        field.set_avalible_values(self.get_objects('User'))
+        field.set_avalible_values(self.get_objects('Auth'))
 
         field = self.add_field(
             'room_id',
