@@ -20,6 +20,7 @@ install_requires = [
     'hatak_auth>=0.2.6',
     'ipdb',
     'psycopg2',
+    'raven',
 ]
 prefix = 'https://github.com/socek/'
 dependency_links = [

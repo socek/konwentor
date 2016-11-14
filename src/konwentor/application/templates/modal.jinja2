@@ -1,4 +1,4 @@
-{% macro modal(id, btn_class="btn-default", btn_label, title, success_btn) -%}
+{% macro modal(id, btn_class="btn-default", btn_label='', title='', success_btn='') -%}
     {% if btn_label != "" -%}
         <button data-target="#{{id}}" data-toggle="modal" class="btn {{btn_class}}">{{btn_label}}</button>
     {%- endif %}
@@ -21,7 +21,7 @@
     </div>
 {%- endmacro %}
 
-{% macro modal_form(id, btn_class="btn-default", btn_label, title, success_btn, form) -%}
+{% macro modal_form(id, btn_class="btn-default", btn_label='', title='', success_btn='', form='') -%}
     {% if btn_label != "" -%}
         <button data-target="#{{id}}" data-toggle="modal" class="btn {{btn_class}}">{{btn_label}}</button>
     {%- endif %}
