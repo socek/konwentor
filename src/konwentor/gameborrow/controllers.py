@@ -1,14 +1,11 @@
 from datetime import datetime
-from collections import namedtuple
 
 from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy.orm.exc import NoResultFound
 
-from hatak.controller import JsonController
 from haplugin.formskit.helpers import FormWidget
 
 from .forms import GameBorrowAddForm, GameBorrowReturnForm
-from .models import make_hash_document
 from konwentor.gamecopy.controllers import GameCopyControllerBase
 from konwentor.gameborrow.sidemenu import SideMenuWidget
 from konwentor.room.controller import RoomController
@@ -134,41 +131,3 @@ class GameBorrowReturnController(RoomController):
             return self.driver.GameBorrow.get_by_id(self.matchdict['obj_id'])
         except NoResultFound:
             raise HTTPNotFound()
-
-
-class ShowPersonHint(JsonController):
-    permissions = [('gameborrow', 'add'), ]
-    document_types = [
-        'dowód',
-        'legitymacja',
-        'prawo jazdy',
-        'paszport',
-        'inne',
-    ]
-
-    def make(self):
-        number = self.POST['number']
-        obj = self.get_hint(number)
-        self.data['name'] = obj.name
-        self.data['surname'] = obj.surname
-        self.data['document'] = obj.document
-
-    def get_hint(self, number):
-        for document in self.document_types:
-            try:
-                return self.get_values_by_document_and_number(document, number)
-            except AttributeError:
-                # obj is a None, so we need to search further
-                pass
-
-        obj = namedtuple('Result', ['name', 'surname', 'document'])('', '', '')
-        return obj
-
-    def get_values_by_document_and_number(self, document, number):
-        hashed = make_hash_document(self.request, document, number)
-        obj = self.get_game_borrow_by_stat_hash(hashed)
-        obj.document = document
-        return obj
-
-    def get_game_borrow_by_stat_hash(self, hashed):
-        return self.driver.GameBorrow.get_by_hash_view(hashed)

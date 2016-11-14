@@ -84,8 +84,8 @@ class TestStatisticsSqls(ControllerFixture):
         controller.add_top_people()
 
         assert data['peoples'] == [
-            ('Franek', 'Kimono', 2),
-            ('Ten', 'Drugi', 1),
+            ('Franek Kimono', 2),
+            ('Ten Drugi', 1),
         ]
 
     @yield_fixture

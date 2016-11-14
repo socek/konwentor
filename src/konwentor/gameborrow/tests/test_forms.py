@@ -57,9 +57,6 @@ class TestGameBorrowAddForm(LocalFixtures):
         form.parse_dict({
             'game_entity_id': [12],
             'name': ['sds'],
-            'surname': ['zxc'],
-            'document_type': ['ccs'],
-            'document_number': ['wer'],
         })
         form.on_success()
 
@@ -67,9 +64,7 @@ class TestGameBorrowAddForm(LocalFixtures):
 
         assert element.game_entity_id == 12
         assert element.name == 'sds'
-        assert element.surname == 'zxc'
         assert element.is_borrowed is True
-        element.set_document.assert_called_once_with('ccs', 'wer')
 
         mdb.add.assert_called_once_with(element)
         mdb.commit.assert_called_once_with()

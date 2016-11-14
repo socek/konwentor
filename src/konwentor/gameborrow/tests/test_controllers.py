@@ -1,12 +1,15 @@
-from mock import MagicMock, call, patch
+from mock import MagicMock
+from mock import call
+from mock import patch
 from pyramid.httpexceptions import HTTPNotFound
-from pytest import fixture, yield_fixture, raises
+from pytest import fixture
+from pytest import raises
+from pytest import yield_fixture
 
-from ..controllers import GameBorrowAddController, GameBorrowListController
-from ..controllers import GameBorrowReturnController, ShowPersonHint
-from konwentor.application.init import main
+from ..controllers import GameBorrowAddController
+from ..controllers import GameBorrowListController
+from ..controllers import GameBorrowReturnController
 from konwentor.application.testing import ControllerFixture
-from konwentor.gameborrow.models import make_hash_document
 from konwentor.gameborrow.sidemenu import SideMenuWidget
 
 
@@ -73,13 +76,6 @@ class LocalFixtures(ControllerFixture):
             yield mock
 
     @yield_fixture
-    def get_values_by_document_and_number(self, controller):
-        patcher = patch.object(
-            controller, 'get_values_by_document_and_number', autospec=True)
-        with patcher as mock:
-            yield mock
-
-    @yield_fixture
     def get_game_borrow_by_stat_hash(self, controller):
         patcher = patch.object(
             controller, 'get_game_borrow_by_stat_hash', autospec=True)
@@ -108,12 +104,6 @@ class LocalFixtures(ControllerFixture):
     @yield_fixture
     def datetime(self):
         patcher = patch('konwentor.gameborrow.controllers.datetime')
-        with patcher as mock:
-            yield mock
-
-    @yield_fixture
-    def make_hash_document(self):
-        patcher = patch('konwentor.gameborrow.controllers.make_hash_document')
         with patcher as mock:
             yield mock
 
@@ -578,111 +568,3 @@ class TestGameBorrowReturnController(LocalFixtures):
 
         with raises(HTTPNotFound):
             controller.get_borrow()
-
-
-class TestsShowPersonHint(LocalFixtures):
-
-    def _get_controller_class(self):
-        return ShowPersonHint
-
-    def test_make(
-        self,
-        controller,
-        data,
-        get_hint,
-        request,
-    ):
-        request.POST = {'number': 'something'}
-
-        controller.make()
-
-        get_hint.assert_called_once_with('something')
-        obj = get_hint.return_value
-        assert data == {
-            'name': obj.name,
-            'surname': obj.surname,
-            'document': obj.document,
-        }
-
-    def test_get_hint_found(
-        self,
-        controller,
-        get_values_by_document_and_number,
-    ):
-        controller.document_types = ['one']
-
-        result = controller.get_hint('something')
-
-        mocked = get_values_by_document_and_number
-        assert result == mocked.return_value
-        mocked.assert_called_once_with('one', 'something')
-
-    def test_get_hint_not_found(
-        self,
-        controller,
-        get_values_by_document_and_number,
-    ):
-        controller.document_types = ['one']
-        get_values_by_document_and_number.side_effect = AttributeError
-
-        result = controller.get_hint('something')
-
-        assert result.name == ''
-        assert result.surname == ''
-        assert result.document == ''
-        get_values_by_document_and_number.assert_called_once_with(
-            'one', 'something')
-
-    def test_get_values_by_document_and_number(
-        self,
-        controller,
-        get_game_borrow_by_stat_hash,
-        fixtures,
-        make_hash_document,
-    ):
-        controller.request = MagicMock()
-        controller.request = MagicMock()
-
-        result = controller.get_values_by_document_and_number(
-            'doc',
-            'num')
-
-        assert result == get_game_borrow_by_stat_hash.return_value
-
-        assert result.document == 'doc'
-
-        make_hash_document.assert_called_once_with(
-            controller.request,
-            'doc',
-            'num')
-
-    def test_get_values_by_document_and_number_raise_attribute_error(
-        self,
-        controller,
-        get_game_borrow_by_stat_hash,
-        make_hash_document,
-    ):
-        controller.request = MagicMock()
-        get_game_borrow_by_stat_hash.return_value = None
-
-        with raises(AttributeError):
-            controller.get_values_by_document_and_number('doc', 'num')
-
-        make_hash_document.assert_called_once_with(
-            controller.request,
-            'doc',
-            'num')
-
-    def test_get_game_borrow_by_stat_hash(
-        self,
-        controller,
-        request,
-        fixtures,
-    ):
-        request.registry['settings'] = main.settings
-        hashed = make_hash_document(controller.request, 'paszport', '123')
-
-        result = controller.get_game_borrow_by_stat_hash(hashed)
-
-        assert result.name == 'FranekLast'
-        assert result.surname == 'KimonoLast'

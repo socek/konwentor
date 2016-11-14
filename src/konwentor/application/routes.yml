@@ -78,10 +78,6 @@ gameborrow:
             controller: GameBorrowReturnController
             route: gameborrow:return
             url: /game/{room_id:\d+}/borrows/return/{obj_id:\d+}
-        -
-            controller: ShowPersonHint
-            route: gameborrow:hint
-            url: /game/{room_id:\d+}/borrows/hint
 
 statistics:
     controllers:

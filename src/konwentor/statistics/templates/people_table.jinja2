@@ -2,8 +2,7 @@
 
 {% macro header() -%}
     <tr>
-        <th>Imię</th>
-        <th>Nazwisko</th>
+        <th>Wypożyczający</th>
         <th>Ilość</th>
     </tr>
 {%- endmacro %}
@@ -14,7 +13,6 @@
     {% call(stat, index) table(title, header, statistics, id) %}
         <tr>
             <td>{{stat.name}}</td>
-            <td>{{stat.surname}}</td>
             <td>{{stat.borrows}}</td>
         </tr>
     {% endcall %}

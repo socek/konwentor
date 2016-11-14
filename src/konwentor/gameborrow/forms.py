@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from formskit import Field
 from formskit.field import AvalibleValue
 from formskit.converters import ToInt
 from formskit.formvalidators import FormValidator
@@ -20,21 +19,7 @@ class GameBorrowAddForm(KonwentorForm):
             validators=[NotEmpty()])
         self.add_field(
             'name',
-            label='Imię',
-            validators=[NotEmpty()])
-        self.add_field(
-            'surname',
-            label='Nazwisko',
-            validators=[NotEmpty()])
-        field = Field(
-            'document_type',
-            label='Dokument',
-            validators=[NotEmpty()])
-        field.set_avalible_values(self.get_avalible_documents)
-        self.add_field_object(field)
-        self.add_field(
-            'document_number',
-            label='Numer dokumentu',
+            label='Nazwa',
             validators=[NotEmpty()])
 
     def get_avalible_documents(self):
@@ -79,8 +64,6 @@ class GameBorrowAddForm(KonwentorForm):
         element.assign_request(self.request)
         element.game_entity_id = data['game_entity_id']
         element.name = data['name']
-        element.surname = data['surname']
-        element.set_document(data['document_type'], data['document_number'])
         element.borrowed_timestamp = datetime.utcnow()
 
         element.is_borrowed = True

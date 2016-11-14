@@ -5,8 +5,7 @@
     <tr>
         <th>Nazwa</th>
         <th>Właściciel</th>
-        <th>Imię</th>
-        <th>Nazwisko</th>
+        <th>Wypożyczający</th>
         <th>Kiedy</th>
         <th>Akcje</th>
     </tr>
@@ -22,7 +21,6 @@
             <td>{{borrow.gameentity.gamecopy.game.name}}</td>
             <td>{{borrow.gameentity.gamecopy.owner.name}}</td>
             <td>{{borrow.name}}</td>
-            <td>{{borrow.surname}}</td>
             <td>{{borrow.borrowed_timestamp.strftime ("%Y-%m-%d %H:%M:%S")}}</td>
             <td>
                 {% if user.has_access_to_route('gameborrow:return') -%}

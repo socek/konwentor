@@ -140,57 +140,42 @@ class Fixtures(FixtureGenerator):
         )
 
     def create_borrows(self):
-        obj = self._create_nameless(
+        self._create_nameless(
             GameBorrow,
             gameentity=self.fixtures['GameEntity'][0],
-            name='Franek',
-            surname='Kimono',
+            name='Franek Kimono',
             stats_hash='x',
             is_borrowed=True,
         )
-        obj.settings = self.application.settings
-        obj.set_document('paszport', '123')
 
-        obj = self._create_nameless(
+        self._create_nameless(
             GameBorrow,
             gameentity=self.fixtures['GameEntity'][1],
-            name='Franek',
-            surname='Kimono',
+            name='Franek Kimono',
             stats_hash='x',
             is_borrowed=True
         )
-        obj.settings = self.application.settings
-        obj.set_document('paszport', '123')
 
-        obj = self._create_nameless(
+        self._create_nameless(
             GameBorrow,
             gameentity=self.fixtures['GameEntity'][0],
-            name='Ten',
-            surname='Drugi',
+            name='Ten Drugi',
             stats_hash='x',
             is_borrowed=False
         )
-        obj.settings = self.application.settings
-        obj.set_document('paszport', '1234')
 
-        obj = self._create_nameless(
+        self._create_nameless(
             GameBorrow,
             gameentity=self.fixtures['GameEntity'][3],
-            name='Franek',
-            surname='Kimono',
+            name='Franek Kimono',
             stats_hash='x',
             is_borrowed=True
         )
-        obj.settings = self.application.settings
-        obj.set_document('paszport', '123')
 
-        obj = self._create_nameless(
+        self._create_nameless(
             GameBorrow,
             gameentity=self.fixtures['GameEntity'][3],
-            name='FranekLast',
-            surname='KimonoLast',
+            name='FranekLast KimonoLast',
             stats_hash='x',
             is_borrowed=False
         )
-        obj.settings = self.application.settings
-        obj.set_document('paszport', '123')

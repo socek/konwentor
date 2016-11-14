@@ -46,6 +46,7 @@ def upgrade():
 
     op.drop_column('game_borrows', 'document_type')
     op.drop_column('game_borrows', 'document_number')
+    op.alter_column('game_borrows', 'game_borrows', new_column_name='name')
 
 
 def downgrade():
