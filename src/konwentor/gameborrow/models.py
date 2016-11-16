@@ -1,7 +1,12 @@
 from datetime import datetime
 
 from haplugin.sql import Base
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean, String
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
 from sqlalchemy.orm import relationship
 
 
@@ -24,6 +29,7 @@ class GameBorrow(Base):
     is_borrowed = Column(Boolean)
 
     name = Column(String)
+    document = Column(String)
 
     gameentity = relationship("GameEntity", backref='borrows')
 

@@ -1,9 +1,11 @@
 from datetime import datetime
 
-from formskit.field import AvalibleValue
 from formskit.converters import ToInt
+from formskit.field import AvalibleValue
 from formskit.formvalidators import FormValidator
-from formskit.validators import NotEmpty, IsDigit, IsValueInAvalibleValues
+from formskit.validators import IsDigit
+from formskit.validators import IsValueInAvalibleValues
+from formskit.validators import NotEmpty
 from sqlalchemy.orm.exc import NoResultFound
 
 from konwentor.application.translations import KonwentorForm
@@ -21,33 +23,30 @@ class GameBorrowAddForm(KonwentorForm):
             'name',
             label='Nazwa',
             validators=[NotEmpty()])
+        field = self.add_field(
+            'document',
+            label='Dokument',
+            validators=[NotEmpty()])
+
+        field.set_avalible_values(self.get_avalible_documents)
 
     def get_avalible_documents(self):
         return [
             {
-                'label': '(Wybierz)',
-                'value': '',
-            },
+                'label': 'Inne',
+                'value': 'inne', },
             {
                 'label': 'Dowód',
-                'value': 'dowód',
-            },
+                'value': 'dowód', },
             {
                 'label': 'Legitymacja',
-                'value': 'legitymacja',
-            },
+                'value': 'legitymacja', },
             {
                 'label': 'Prawo Jazdy',
-                'value': 'prawo jazdy',
-            },
+                'value': 'prawo jazdy', },
             {
                 'label': 'Paszport',
-                'value': 'paszport',
-            },
-            {
-                'label': 'Inne',
-                'value': 'inne',
-            }
+                'value': 'paszport', },
         ]
 
     def overal_validation(self, data):
@@ -64,6 +63,7 @@ class GameBorrowAddForm(KonwentorForm):
         element.assign_request(self.request)
         element.game_entity_id = data['game_entity_id']
         element.name = data['name']
+        element.document = data['document']
         element.borrowed_timestamp = datetime.utcnow()
 
         element.is_borrowed = True

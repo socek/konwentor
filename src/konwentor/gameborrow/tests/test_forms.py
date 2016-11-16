@@ -33,8 +33,8 @@ class TestGameBorrowAddForm(LocalFixtures):
     def test_get_avalible_documents(self, form):
         elements = form.get_avalible_documents()
         assert elements[0] == {
-            'label': '(Wybierz)',
-            'value': '',
+            'label': 'Inne',
+            'value': 'inne',
         }
 
     def test_overal_validation(self, form, entity, get_entity):
@@ -57,6 +57,7 @@ class TestGameBorrowAddForm(LocalFixtures):
         form.parse_dict({
             'game_entity_id': [12],
             'name': ['sds'],
+            'document': ['inne'],
         })
         form.on_success()
 
@@ -64,6 +65,7 @@ class TestGameBorrowAddForm(LocalFixtures):
 
         assert element.game_entity_id == 12
         assert element.name == 'sds'
+        assert element.document == 'inne'
         assert element.is_borrowed is True
 
         mdb.add.assert_called_once_with(element)
