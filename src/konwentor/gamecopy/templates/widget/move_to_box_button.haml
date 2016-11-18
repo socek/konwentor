@@ -4,7 +4,7 @@
   Jesteś pewien, że chcesz odłożyć tą grę do pudełka?
 
 -macro  btn()
-  %a.btn.btn-danger href="{{url}}"
+  %a.btn.btn-danger.movetobox href="{{url}}"
     Akceptuj
 
 -call modal("return_modal_" ~ game.id, "btn-xs btn-warning", "Odłóż do pudełka", title, btn)

@@ -1,3 +1,4 @@
+{{static.add_js_link('/js/listbox.js')}}
 -extends "main.jinja2"
 -from "table.jinja2" import table with context
 
@@ -31,7 +32,7 @@
       %td -> =game.author_name
       %td -> =game.count
 
-      %td
+      %td.movetobox
         =game.move_to_box()
 
   -call(game, index) table(False, header_in_box, games_in_box, "games_in_box")
@@ -40,13 +41,3 @@
       %td -> =game.author_name
       %td -> =game.count
 
--block js
-  %script type="text/javascript"
-    $(document).ready(function() {
-        $('#games_outside_box').dataTable({
-            "paging":   false,
-        });
-        $('#games_in_box').dataTable({
-            "paging":   false,
-        });
-    });

@@ -58,8 +58,8 @@ class SideMenuWidget(Jinja2HelperSingle):
             submenu.add_child_object(
                 RoomMenuObject(
                     submenu.widget,
-                    'Odkładanie Gier',
-                    'gamecopy:listbox',
+                    'Lista wypożyczeń',
+                    'gameborrow:list',
                     'magic',
                     room_id=room.id,
                     convent_id=room.convent_id,
@@ -68,8 +68,8 @@ class SideMenuWidget(Jinja2HelperSingle):
             submenu.add_child_object(
                 RoomMenuObject(
                     submenu.widget,
-                    'Lista wypożyczeń',
-                    'gameborrow:list',
+                    'Odkładanie Gier',
+                    'gamecopy:listbox',
                     'magic',
                     room_id=room.id,
                     convent_id=room.convent_id,

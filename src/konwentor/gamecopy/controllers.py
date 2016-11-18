@@ -1,4 +1,6 @@
-from hatak.controller import EndController, Controller
+from hatak.controller import Controller
+from hatak.controller import EndController
+from pyramid.httpexceptions import HTTPOk
 from sqlalchemy.orm.exc import NoResultFound
 
 from konwentor.convent.helpers import ConventWidget
@@ -133,11 +135,7 @@ class GameCopyToBoxController(GameCopyControllerBase):
             return
 
         self.move_to_box()
-        self.add_flashmsg('Gra została schowana.', 'success')
-        self.redirect(
-            'gamecopy:listbox',
-            room_id=self.get_room_id(),
-            convent_id=self.get_convent_id())
+        self.response = HTTPOk()
 
     def move_to_box(self):
         convent = self.get_convent()
