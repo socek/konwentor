@@ -59,7 +59,10 @@ class GameCopyAddController(GameCopyControllerBase):
         if form.validate():
             self.add_flashmsg('Dodano grę.', 'info')
             self.session['last_user_id'] = form.get_value('user_id')
-            self.redirect('gamecopy:add', room_id=self.get_room_id())
+            self.redirect(
+                'gamecopy:add',
+                room_id=self.get_room_id(),
+                convent_id=self.get_convent_id())
 
     def prepere_form(self):
         form = self.add_form(GameCopyAddForm)
@@ -107,7 +110,10 @@ class GameCopyToBoxController(GameCopyControllerBase):
 
         self.move_to_box()
         self.add_flashmsg('Gra została schowana.', 'success')
-        self.redirect('gamecopy:list', room_id=self.get_room_id())
+        self.redirect(
+            'gamecopy:list',
+            room_id=self.get_room_id(),
+            convent_id=self.get_convent_id())
 
     def move_to_box(self):
         convent = self.get_convent()

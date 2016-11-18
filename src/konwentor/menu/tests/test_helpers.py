@@ -100,4 +100,5 @@ class TestOnConventMenuObject(object):
             'gamecopy:add',
             'magic',
             room_id=room.id,
+            convent_id=room.convent_id,
         )

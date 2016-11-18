@@ -96,7 +96,10 @@ class ChooseConventController(ConventDelete):
     def make(self):
         self.verify_convent_id()
         self.switch_convent()
-        self.redirect('gamecopy:list', room_id=0)
+        self.redirect(
+            'gamecopy:list',
+            room_id=0,
+            convent_id=self.matchdict['obj_id'])
 
     def switch_convent(self):
         self.session['convent_id'] = int(self.matchdict['obj_id'])
@@ -114,7 +117,10 @@ class StartConventController(ChooseConventController):
         self.verify_convent_id()
         self.switch_convent()
         self.start_convent()
-        self.redirect('gamecopy:add', room_id=0)
+        self.redirect(
+            'gamecopy:add',
+            room_id=0,
+            convent_id=self.matchdict['obj_id'])
 
     def start_convent(self):
         self.data['convent'].state = 'running'

@@ -54,37 +54,37 @@ gamecopy:
         -
             controller: GameCopyAddController
             route: gamecopy:add
-            url: /gamecopy/{room_id:\d+}/add
+            url: /{convent_id:\d+}/gamecopy/{room_id:\d+}/add
         -
             controller: GameCopyListController
             route: gamecopy:list
-            url: /gamecopy/{room_id:\d+}
+            url: /{convent_id:\d+}/gamecopy/{room_id:\d+}
         -
             controller: GameCopyToBoxController
             route: gamecopy:movetobox
-            url: /gamecopy/{room_id:\d+}/movetobox/{obj_id:\d+}
+            url: /{convent_id:\d+}/gamecopy/{room_id:\d+}/movetobox/{obj_id:\d+}
 
 gameborrow:
     controllers:
         -
             controller: GameBorrowListController
             route: gameborrow:list
-            url: /game/{room_id:\d+}/borrows
+            url: /{convent_id:\d+}/game/{room_id:\d+}/borrows
         -
             controller: GameBorrowAddController
             route: gameborrow:add
-            url: /game/{room_id:\d+}/borrows/add/{obj_id:\d+}
+            url: /{convent_id:\d+}/game/{room_id:\d+}/borrows/add/{obj_id:\d+}
         -
             controller: GameBorrowReturnController
             route: gameborrow:return
-            url: /game/{room_id:\d+}/borrows/return/{obj_id:\d+}
+            url: /{convent_id:\d+}/game/{room_id:\d+}/borrows/return/{obj_id:\d+}
 
 statistics:
     controllers:
         -
             controller: StatisticsController
             route: statistics:all
-            url: /statistics
+            url: /{convent_id:\d+}/statistics
 
 auth:
     controllers:

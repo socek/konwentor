@@ -24,7 +24,10 @@ class GameBorrowAddController(RoomController):
 
         if form.validate():
             self.add_flashmsg('Gra została wypożyczona.', 'success')
-            self.redirect('gamecopy:list', room_id=self.get_room_id())
+            self.redirect(
+                'gamecopy:list',
+                room_id=self.get_room_id(),
+                convent_id=self.get_convent_id())
 
     def get_game_entity(self):
         try:
@@ -83,7 +86,10 @@ class GameBorrowListController(GameCopyControllerBase):
             )
 
         self.add_flashmsg(message, 'info')
-        self.redirect('gameborrow:list', room_id=form.get_value('room_id'))
+        self.redirect(
+            'gameborrow:list',
+            room_id=form.get_value('room_id'),
+            convent_id=self.matchdict['convent_id'])
 
     def _on_form_fail(self, form):
         game_entity_id = form.fields['game_entity_id']

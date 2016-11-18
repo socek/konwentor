@@ -37,6 +37,7 @@ class GameEntityWidget(Jinja2HelperMany):
             return self.render_for('borrow_button.haml', {
                 'url': self.route(
                     'gameborrow:add',
+                    convent_id=self.request.matchdict['convent_id'],
                     room_id=self.request.matchdict['room_id'],
                     obj_id=self.obj.GameEntity.id),
             })
@@ -49,6 +50,7 @@ class GameEntityWidget(Jinja2HelperMany):
             return self.render_for('move_to_box_button.haml', {
                 'url': self.route(
                     'gamecopy:movetobox',
+                    convent_id=self.request.matchdict['convent_id'],
                     room_id=self.request.matchdict['room_id'],
                     obj_id=self.obj.GameEntity.id,
                 ),

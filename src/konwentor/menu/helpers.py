@@ -18,7 +18,8 @@ class OnConventMenuObject(MenuObject):
                     room.name,
                     'gamecopy:add',
                     'magic',
-                    room_id=room.id
+                    room_id=room.id,
+                    convent_id=room.convent_id,
                 )
         except NoResultFound:
             # do nothing if there is no convent_id set

@@ -41,7 +41,8 @@ class SideMenuWidget(Jinja2HelperSingle):
                     'Dodaj grę',
                     'gamecopy:add',
                     'magic',
-                    room_id=room.id
+                    room_id=room.id,
+                    convent_id=room.convent_id,
                 )
             )
             submenu.add_child_object(
@@ -50,7 +51,8 @@ class SideMenuWidget(Jinja2HelperSingle):
                     'Lista gier',
                     'gamecopy:list',
                     'magic',
-                    room_id=room.id
+                    room_id=room.id,
+                    convent_id=room.convent_id,
                 )
             )
             submenu.add_child_object(
@@ -59,12 +61,14 @@ class SideMenuWidget(Jinja2HelperSingle):
                     'Lista wypożyczeń',
                     'gameborrow:list',
                     'magic',
-                    room_id=room.id
+                    room_id=room.id,
+                    convent_id=room.convent_id,
                 )
             )
         submenu = self.add_menu('Misc', None, 'star')
         submenu.add_child(
             'Statystyki',
             'statistics:all',
-            'magic'
+            'magic',
+            convent_id=self.request.matchdict['convent_id'],
         )

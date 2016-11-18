@@ -18,5 +18,5 @@ class ConventDriver(KonwentorDriver):
         )
 
     def get_convent_from_session(self, request):
-        id_ = request.session.get('convent_id', None)
+        id_ = request.matchdict.get('convent_id', None)
         return self.get_by_id(id_)
