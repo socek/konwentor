@@ -100,6 +100,30 @@ class GameCopyListController(GameCopyControllerBase):
         return self.driver.Game.get_game_list_view(room)
 
 
+class GameCopyListBoxController(GameCopyControllerBase):
+
+    template = 'gamecopy:listbox.haml'
+    permissions = [('base', 'view'), ]
+    menu_highlighted = 'gamecopy:listbox'
+
+    def make(self):
+        if not self.verify_convent():
+            return
+
+        room = self.get_room()
+        self.data['convent'] = self.get_convent()
+        self.data['games_in_box'] = self.get_games_in_box(room)
+        self.data['games_outside_box'] = self.get_games_outside_box(room)
+
+    def get_games_in_box(self, room):
+        for game in self.driver.Game.get_game_listbox_view(room, True):
+            yield GameEntityWidget(self.request, game)
+
+    def get_games_outside_box(self, room):
+        for game in self.driver.Game.get_game_listbox_view(room, False):
+            yield GameEntityWidget(self.request, game)
+
+
 class GameCopyToBoxController(GameCopyControllerBase):
 
     permissions = [('gamecopy', 'add'), ]
@@ -111,7 +135,7 @@ class GameCopyToBoxController(GameCopyControllerBase):
         self.move_to_box()
         self.add_flashmsg('Gra została schowana.', 'success')
         self.redirect(
-            'gamecopy:list',
+            'gamecopy:listbox',
             room_id=self.get_room_id(),
             convent_id=self.get_convent_id())
 

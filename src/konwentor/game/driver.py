@@ -40,6 +40,21 @@ class GameDriver(KonwentorDriver):
             .all()
         )
 
+    def get_game_listbox_view(self, room, state):
+        return (
+            self.query(
+                GameEntity,
+                Game,
+                Game.name,
+                User.name.label('author_name'))
+            .join(GameCopy).join(Game).join(User)
+            .filter(
+                GameEntity.room_id == room.id,
+                GameEntity.is_in_box == state,
+                Game.is_active.is_(True),
+            )
+        )
+
     def get_by_name_and_not_id(self, id_, name):
         return (
             self.query(self.model).filter(

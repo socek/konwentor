@@ -9,10 +9,13 @@
     %th << Nazwa
     %th << Właściciel
     %th << Ilość kopii
-    %th << Wypożyczono
-    %th << Info
     %th << Akcje
 
+-macro header_in_box()
+  %tr
+    %th << Nazwa
+    %th << Właściciel
+    %th << Ilość kopii
 
 -macro color_tr(entity)
   -if not entity.is_avalible()
@@ -22,21 +25,28 @@
 
 -block content
   =convent.ended_warning()
-  -call(game, index) table(False, header, games, "games_on_convent_table")
+  -call(game, index) table(False, header, games_outside_box, "games_outside_box")
     %tr class="{{game.get_list_class()}}"
       %td -> =game.name
       %td -> =game.author_name
       %td -> =game.count
-      %td -> =game.active_borrows_len
-      %td -> =game.info()
 
       %td
-        =game.borrow()
+        =game.move_to_box()
+
+  -call(game, index) table(False, header_in_box, games_in_box, "games_in_box")
+    %tr class="{{game.get_list_class()}}"
+      %td -> =game.name
+      %td -> =game.author_name
+      %td -> =game.count
 
 -block js
   %script type="text/javascript"
     $(document).ready(function() {
-        $('#games_on_convent_table').dataTable({
+        $('#games_outside_box').dataTable({
+            "paging":   false,
+        });
+        $('#games_in_box').dataTable({
             "paging":   false,
         });
     });

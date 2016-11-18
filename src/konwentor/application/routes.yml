@@ -60,6 +60,10 @@ gamecopy:
             route: gamecopy:list
             url: /{convent_id:\d+}/gamecopy/{room_id:\d+}
         -
+            controller: GameCopyListBoxController
+            route: gamecopy:listbox
+            url: /{convent_id:\d+}/gamecopy/{room_id:\d+}/listbox
+        -
             controller: GameCopyToBoxController
             route: gamecopy:movetobox
             url: /{convent_id:\d+}/gamecopy/{room_id:\d+}/movetobox/{obj_id:\d+}
