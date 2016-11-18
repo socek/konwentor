@@ -54,6 +54,7 @@ def make_settings(settings, paths):
         '/css/jquery-ui.min.css',
         '/css/jquery-ui.structure.min.css',
         '/css/jquery-ui.theme.min.css',
+        '/css/select2.min.css',
     ]
 
     settings['js'] = [
@@ -62,6 +63,8 @@ def make_settings(settings, paths):
         '/js/plugins/metisMenu/metisMenu.min.js',
         '/js/jquery-ui.min.js',
         '/js/sb-admin-2.js',
+        '/js/select2.min.js',
+        '/js/i18n/pl.js',
     ]
 
     from konwentor.application.translations import KonwentorMessage

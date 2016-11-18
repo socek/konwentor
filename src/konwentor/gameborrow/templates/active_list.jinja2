@@ -34,7 +34,7 @@
                             <li><strong>Gra</strong>: {{borrow.gameentity.gamecopy.game.name}}</li>
                             <li><strong>Właściciel</strong>: {{borrow.gameentity.gamecopy.owner.name}}</li>
                             <li><strong>Wypożyczający</strong>: {{borrow.name}} {{borrow.surname}}</li>
-                            <li>{{borrow.form.select('game_entity_id')}}</li>
+                            <li class="select2">{{borrow.form.select('game_entity_id')}}</li>
                         </ul>
                     {% endcall %}
                 {%- endif %}

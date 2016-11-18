@@ -181,8 +181,6 @@ class TestGameBorrowReturnForm(LocalFixtures):
         obj.assign_request.assert_called_once_with(self.request)
         assert obj.game_entity_id == 123
         assert borrow.name == obj.name
-        assert obj.surname == borrow.surname
-        assert obj.stats_hash == borrow.stats_hash
         assert obj.is_borrowed is True
         assert obj.borrowed_timestamp == datetime.utcnow.return_value
         form.db.add.assert_called_once_with(obj)

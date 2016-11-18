@@ -1,3 +1,4 @@
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 $(function() {
 
     $('#side-menu').metisMenu({
@@ -6,7 +7,7 @@ $(function() {
     $('#top-menu').metisMenu({
         toggle: false
     });
-
+    $('.select2 select').select2({ width: '400px' });
 });
 
 //Loads the correct sidebar on window load,

@@ -130,8 +130,6 @@ class GameBorrowReturnForm(KonwentorForm):
             self.new_borrow.assign_request(self.request)
             self.new_borrow.game_entity_id = self.get_value('game_entity_id')
             self.new_borrow.name = self.borrow.name
-            self.new_borrow.surname = self.borrow.surname
-            self.new_borrow.stats_hash = self.borrow.stats_hash
             self.new_borrow.is_borrowed = True
             self.new_borrow.borrowed_timestamp = datetime.utcnow()
 
