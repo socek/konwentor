@@ -129,6 +129,7 @@ class Fixtures(FixtureGenerator):
             convent=self.fixtures['Convent']['first'],
             count=4,
             room=self.fixtures['Convent']['first'].rooms[0],
+            is_in_box=True,
         )
 
         self._create_nameless(

@@ -12,6 +12,7 @@ from ..controllers import ConventController
 from ..controllers import EndController
 from ..controllers import GameCopyAddController
 from ..controllers import GameCopyControllerBase
+from ..controllers import GameCopyListBoxController
 from ..controllers import GameCopyListController
 from ..controllers import GameCopyToBoxController
 from konwentor.application.testing import ControllerFixture
@@ -35,6 +36,21 @@ class LocalFixtures(ControllerFixture):
     @yield_fixture
     def get_convent(self, controller):
         with patch.object(controller, 'get_convent', autospec=True) as mock:
+            yield mock
+
+    @yield_fixture
+    def GameEntityWidget(self):
+        with patch('konwentor.gamecopy.controllers.GameEntityWidget') as mock:
+            yield mock
+
+    @fixture
+    def game(self):
+        return MagicMock()
+
+    @yield_fixture
+    def get_room(self, controller, game):
+        patcher = patch.object(controller, 'get_room', return_value=[game])
+        with patcher as mock:
             yield mock
 
 
@@ -194,25 +210,10 @@ class TestGameCopyAddController(LocalFixtures):
 
 class TestGameCopyListController(LocalFixtures):
 
-    @fixture
-    def game(self):
-        return MagicMock()
-
     @yield_fixture
     def get_games(self, controller, game):
         patcher = patch.object(controller, 'get_games', return_value=[game])
         with patcher as mock:
-            yield mock
-
-    @yield_fixture
-    def get_room(self, controller, game):
-        patcher = patch.object(controller, 'get_room', return_value=[game])
-        with patcher as mock:
-            yield mock
-
-    @yield_fixture
-    def GameEntityWidget(self):
-        with patch('konwentor.gamecopy.controllers.GameEntityWidget') as mock:
             yield mock
 
     def _get_controller_class(self):
@@ -386,3 +387,89 @@ class TestConventController(LocalFixtures):
         verify_convent.assert_called_once_with()
         get_convent.assert_called_once_with()
         assert controller.convent == get_convent.return_value
+
+
+class TestGameCopyListBoxController(LocalFixtures):
+
+    def _get_controller_class(self):
+        return GameCopyListBoxController
+
+    @yield_fixture
+    def get_games_in_box(self, controller):
+        with patch.object(controller, 'get_games_in_box') as mock:
+            yield mock
+
+    @yield_fixture
+    def get_games_outside_box(self, controller):
+        with patch.object(controller, 'get_games_outside_box') as mock:
+            yield mock
+
+    def test_get_games_in_box(
+        self,
+        controller,
+        mdriver,
+        GameEntityWidget,
+        request,
+    ):
+        game = MagicMock()
+        room = MagicMock()
+        mdriver.Game.get_game_listbox_view.return_value = [game]
+
+        elements = list(controller.get_games_in_box(room))
+
+        assert elements == [GameEntityWidget.return_value]
+        GameEntityWidget.assert_called_once_with(request, game)
+        mdriver.Game.get_game_listbox_view.assert_called_once_with(room, True)
+
+    def test_get_games_outside_box(
+        self,
+        controller,
+        mdriver,
+        GameEntityWidget,
+        request,
+    ):
+        game = MagicMock()
+        room = MagicMock()
+        mdriver.Game.get_game_listbox_view.return_value = [game]
+
+        elements = list(controller.get_games_outside_box(room))
+
+        assert elements == [GameEntityWidget.return_value]
+        GameEntityWidget.assert_called_once_with(request, game)
+        mdriver.Game.get_game_listbox_view.assert_called_once_with(room, False)
+
+    def test_not_verify_convent(
+        self,
+        controller,
+        verify_convent,
+        get_room,
+    ):
+        verify_convent.return_value = False
+
+        assert controller.make() is None
+
+        assert not get_room.called
+
+    def test_normal(
+        self,
+        controller,
+        verify_convent,
+        get_room,
+        get_convent,
+        get_games_in_box,
+        get_games_outside_box,
+        data,
+    ):
+        assert controller.make() is None
+
+        assert data['convent'] == get_convent.return_value
+        assert data['games_in_box'] == get_games_in_box.return_value
+        assert data['games_outside_box'] == get_games_outside_box.return_value
+
+        get_room.assert_called_once_with()
+        room = get_room.return_value
+
+        get_convent.assert_called_once_with()
+
+        get_games_in_box.assert_called_once_with(room)
+        get_games_outside_box.assert_called_once_with(room)
