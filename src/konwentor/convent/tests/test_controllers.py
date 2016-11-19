@@ -337,7 +337,10 @@ class TestChooseConventController(LocalFixtures):
         controller.make()
 
         verify_convent_id.assert_called_once_with()
-        redirect.assert_called_once_with('gamecopy:list', room_id=0)
+        redirect.assert_called_once_with(
+            'gamecopy:list',
+            room_id=0,
+            convent_id='10')
         controller.session['convent_id'] == 10
 
 
@@ -359,12 +362,14 @@ class TestStartConventController(LocalFixtures):
         verify_convent_id,
         switch_convent,
         redirect,
-        mdb
+        mdb,
+        matchdict,
     ):
         """
         StartConventController should verify convent_id, switch_convent,
         start it and redirect to gamecopy:add
         """
+        matchdict['obj_id'] = '125'
         data['convent'] = MagicMock()
 
         controller.make()
@@ -373,7 +378,10 @@ class TestStartConventController(LocalFixtures):
         switch_convent.assert_called_once_with()
         assert data['convent'].state == 'running'
         mdb.commit.assert_called_once_with()
-        redirect.assert_called_once_with('gamecopy:add', room_id=0)
+        redirect.assert_called_once_with(
+            'gamecopy:add',
+            room_id=0,
+            convent_id='125')
 
 
 class TestEndConventController(LocalFixtures):

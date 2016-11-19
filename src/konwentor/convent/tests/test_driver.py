@@ -15,19 +15,20 @@ class TestDriverConvent(DriverFixture):
         self,
         fdriver,
         fixtures,
-        request
+        request,
+        matchdict,
     ):
         """
         .get_convent_from_session shoulre return convent which id was set in
         the session
         """
-        request.session = {
-            'convent_id': fixtures['Convent']['first'].id
-        }
+        matchdict['convent_id'] = (
+            fixtures['Convent']['first'].id
+        )
 
         assert (
-            fdriver.get_convent_from_session(request)
-            == fixtures['Convent']['first']
+            fdriver.get_convent_from_session(request) ==
+            fixtures['Convent']['first']
         )
 
     def test_get_convent_from_sesson_when_no_id_set(

@@ -71,6 +71,7 @@ class TestGameEntityWidget(RequestFixture):
         matchdict
     ):
         matchdict['room_id'] = '12345'
+        matchdict['convent_id'] = '123'
 
         obj.GameEntity.is_avalible.return_value = True
         assert widget.borrow(), render_for.return_value
@@ -84,6 +85,7 @@ class TestGameEntityWidget(RequestFixture):
             'gameborrow:add',
             obj_id=obj.GameEntity.id,
             room_id=matchdict['room_id'],
+            convent_id=matchdict['convent_id'],
         )
 
     def test_borrow_when_not_avalible(self, widget, obj):
@@ -104,6 +106,7 @@ class TestGameEntityWidget(RequestFixture):
         matchdict
     ):
         matchdict['room_id'] = '1234'
+        matchdict['convent_id'] = '12'
         obj.GameEntity.is_in_box = False
 
         assert widget.move_to_box() == render_for.return_value
@@ -117,7 +120,8 @@ class TestGameEntityWidget(RequestFixture):
         route.assert_called_once_with(
             'gamecopy:movetobox',
             obj_id=obj.GameEntity.id,
-            room_id=matchdict['room_id']
+            room_id=matchdict['room_id'],
+            convent_id=matchdict['convent_id'],
         )
 
     def test_move_to_box_when_is_in_box(self, widget, obj):

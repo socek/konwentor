@@ -44,6 +44,7 @@ class TestRoomController(ControllerFixture):
         .second_filter should redirect to first room of a convent
         """
         matchdict['room_id'] = '0'
+        matchdict['convent_id'] = '1'
         controller.convent = MagicMock()
         controller.convent.rooms = [MagicMock()]
         controller.convent.rooms[0].id = 10
@@ -51,4 +52,7 @@ class TestRoomController(ControllerFixture):
         with raises(EndController):
             controller.second_filter()
 
-        redirect.assert_called_once_with('gamecopy:list', room_id=10)
+        redirect.assert_called_once_with(
+            'gamecopy:list',
+            room_id=10,
+            convent_id=1)

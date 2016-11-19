@@ -1,15 +1,23 @@
 import builtins
-from pytest import fixture, yield_fixture, raises
-from mock import MagicMock, call, patch
+
+from mock import MagicMock
+from mock import call
+from mock import patch
+from pytest import fixture
+from pytest import raises
+from pytest import yield_fixture
 from sqlalchemy.orm.exc import NoResultFound
 
-from ..controllers import EndController, ConventController
-from ..controllers import GameCopyAddController, GameCopyToBoxController
-from ..controllers import GameCopyControllerBase, GameCopyListController
-from konwentor.gameborrow.sidemenu import SideMenuWidget
-from konwentor.convent.helpers import ConventWidget
-from konwentor.gamecopy.forms import GameCopyAddForm
+from ..controllers import ConventController
+from ..controllers import EndController
+from ..controllers import GameCopyAddController
+from ..controllers import GameCopyControllerBase
+from ..controllers import GameCopyListController
+from ..controllers import GameCopyToBoxController
 from konwentor.application.testing import ControllerFixture
+from konwentor.convent.helpers import ConventWidget
+from konwentor.gameborrow.sidemenu import SideMenuWidget
+from konwentor.gamecopy.forms import GameCopyAddForm
 
 
 class LocalFixtures(ControllerFixture):
@@ -161,6 +169,7 @@ class TestGameCopyAddController(LocalFixtures):
         matchdict
     ):
         matchdict['room_id'] = 3
+        matchdict['convent_id'] = 4
         session['last_user_id'] = -1
         session['convent_id'] = 2
         form = add_form.return_value
@@ -305,9 +314,6 @@ class TestGameCopyToBoxController(LocalFixtures):
         verify_convent.assert_called_once_with()
 
         move_to_box.assert_called_once_with()
-        add_flashmsg.assert_called_once_with(
-            'Gra została schowana.', 'success')
-        redirect.assert_called_once_with('gamecopy:list', room_id=10)
 
     def test_move_to_box(
         self,

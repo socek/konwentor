@@ -47,6 +47,7 @@ class TestSideMenuWidget(DatabaseFixture):
         convent = mdriver.Convent.get_convent_from_session.return_value
         convent.rooms = [MagicMock()]
         convent.rooms[0].name = 'My Room'
+        request.matchdict['convent_id'] = '123'
 
         widget.make()
 
@@ -54,7 +55,6 @@ class TestSideMenuWidget(DatabaseFixture):
             request
         )
         add_menu.assert_has_calls([
-            #call('My Room', None, 'star'),
             call('Misc', None, 'star'),
         ])
 

@@ -150,6 +150,7 @@ class TestGameBorrowAddController(LocalFixtures):
     ):
         form.validate.return_value = True
         matchdict['room_id'] = '10'
+        matchdict['convent_id'] = '15'
 
         controller.make()
 
@@ -160,7 +161,10 @@ class TestGameBorrowAddController(LocalFixtures):
         form.validate.assert_called_once_with()
         add_flashmsg.assert_called_once_with(
             'Gra została wypożyczona.', 'success')
-        redirect.assert_called_once_with('gamecopy:list', room_id=10)
+        redirect.assert_called_once_with(
+            'gamecopy:list',
+            room_id=10,
+            convent_id=15)
 
     def test_get_game_entity(self, controller, matchdict, fixtures):
         """get_game_entity should return GameEntity with id get from
@@ -400,7 +404,9 @@ class TestGameBorrowListController(LocalFixtures):
         controller,
         add_flashmsg,
         redirect,
+        matchdict,
     ):
+        matchdict['convent_id'] = '123'
         game_entity_id = MagicMock()
         form = MagicMock()
         form.fields = {
@@ -418,6 +424,7 @@ class TestGameBorrowListController(LocalFixtures):
         redirect.assert_called_once_with(
             'gameborrow:list',
             room_id=form.get_value.return_value,
+            convent_id=matchdict['convent_id'],
         )
 
     def test_on_form_success_with_game_entity_id(
@@ -427,6 +434,7 @@ class TestGameBorrowListController(LocalFixtures):
         redirect,
         matchdict
     ):
+        matchdict['convent_id'] = '123'
         game_entity_id = MagicMock()
         form = MagicMock()
         form.fields = {
@@ -445,7 +453,8 @@ class TestGameBorrowListController(LocalFixtures):
         add_flashmsg.assert_called_once_with(message, 'info')
         redirect.assert_called_once_with(
             'gameborrow:list',
-            room_id=form.get_value.return_value
+            room_id=form.get_value.return_value,
+            convent_id=matchdict['convent_id'],
         )
 
     def test_get_borrows(
