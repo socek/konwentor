@@ -14,6 +14,8 @@ RUN pip install -r requrietments.txt
 COPY code .
 RUN python setup.py develop
 
+RUN ln -s /code/uptemplates/auth /usr/local/lib/python3.6/site-packages/haplugin/auth/templates
+
 EXPOSE 8000
 
 CMD ["backend", "dev"]
