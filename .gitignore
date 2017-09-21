@@ -47,3 +47,4 @@ flags
 TODO
 .cache
 data/*
+.env
