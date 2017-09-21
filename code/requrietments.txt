@@ -26,7 +26,6 @@ ipdb==0.8.3
 ipython==4.1.1
 ipython-genutils==0.1.0
 Jinja2==2.8
--e git+git@github.com:socek/konwentor.git@367a98883b7f12d0b7d3a19918b6aefdf11572d9#egg=Konwentor
 Mako==1.0.3
 MarkupSafe==0.23
 mock==2.0.0
