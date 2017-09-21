@@ -29,6 +29,8 @@ def upgrade():
     op.drop_column('game_borrows', 'surname')
     op.drop_column('game_borrows', 'stats_hash')
 
+    op.alter_column('game_borrows', 'borrow_name', new_column_name='name')
+
 
 def downgrade():
     pass
