@@ -13,7 +13,7 @@ services:
       - "${BACKEND_POR:-5001}:8000"
 
   postgres:
-    image: postgres:9.4
+    image: postgres:9.5
     env_file: .env
     labels:
       - "traefik.enable=false"
