@@ -40,11 +40,10 @@ tmpdata/*
 *.sublime-*
 htmlcov
 .ropeproject
-local.py
 .idea
 .baelfire.*
 *.flag
 flags
-data/*
 TODO
 .cache
+data/*
