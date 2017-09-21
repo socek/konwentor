@@ -1,0 +1,1 @@
+/lib/python3.6/site-packages/Hatak_Statics-0.2.5-py3.5.egg/haplugin/statics/templates

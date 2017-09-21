@@ -1,0 +1,24 @@
+<div class="form-group">
+    {% if error %}
+        {% for message in messages %}
+            <div class="label label-danger">
+                {{message}}
+            </div>
+        {% endfor %}
+        {% for message in value_messages %}
+            <div class="label label-danger">
+                {{message}}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <input
+        class="form-control"
+        value="{{value}}"
+        placeholder="{{label}}"
+        name="{{name}}"
+        id="{{id}}"
+        type="text"
+        {%- if disabled %} disabled=disabled {% endif -%}
+        {%- if autofocus %} autofocus{% endif -%}
+        >
+</div>

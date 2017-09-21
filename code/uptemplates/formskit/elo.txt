@@ -1,0 +1,1 @@
+/lib/python3.6/site-packages/Hatak_Formskit-0.2.3.7-py3.5.egg/haplugin/formskit/templates

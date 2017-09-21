@@ -1,0 +1,1 @@
+/lib/python3.6/site-packages/hatak-0.2.7.11-py3.5.egg/bael/hatak/templates
