@@ -11,7 +11,7 @@ def make_settings(settings, paths):
     settings['db:type'] = 'postgresql'
     settings['db:login'] = 'konwentor'
     settings['db:password'] = 'iamsuperkonwent'
-    settings['db:host'] = 'localhost'
+    settings['db:host'] = 'postgres'
     settings['db:port'] = '5432'
     settings['db:name'] = 'konwentor_live'
 

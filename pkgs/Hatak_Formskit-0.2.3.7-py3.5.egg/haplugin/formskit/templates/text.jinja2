@@ -1,0 +1,12 @@
+<div class="form-group">
+    <label>{{label}}:</label>
+    {% include '_error.jinja2' %}
+
+    <input
+        class="form-control"
+        value="{{value}}"
+        name="{{name}}"
+        id="{{id}}"
+        {%- if disabled %} disabled=disabled {% endif -%}
+        >
+</div>

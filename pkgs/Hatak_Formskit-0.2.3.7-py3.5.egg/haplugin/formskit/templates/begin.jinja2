@@ -1,0 +1,10 @@
+<form method="post" enctype="multipart/form-data" role="form" {% if action != None -%}
+        action="{{action}}"
+    {%- endif -%}
+    {%- if style != None %}
+        style="{{style}}"
+    {%- endif -%}
+    {%- if id %} id="{{id}}"{% endif -%}
+    >
+    <input type="hidden" name="form_name" value="{{name}}" />
+    {{widget.csrf_token()}}

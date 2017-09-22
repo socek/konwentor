@@ -1,0 +1,17 @@
+setup.cfg
+setup.py
+src/Hatak_Statics.egg-info/PKG-INFO
+src/Hatak_Statics.egg-info/SOURCES.txt
+src/Hatak_Statics.egg-info/dependency_links.txt
+src/Hatak_Statics.egg-info/namespace_packages.txt
+src/Hatak_Statics.egg-info/not-zip-safe
+src/Hatak_Statics.egg-info/requires.txt
+src/Hatak_Statics.egg-info/top_level.txt
+src/haplugin/__init__.py
+src/haplugin/statics/__init__.py
+src/haplugin/statics/helper.py
+src/haplugin/statics/plugin.py
+src/haplugin/statics/request_plugins.py
+src/haplugin/statics/templates/css_links.jinja2
+src/haplugin/statics/templates/js_codes.jinja2
+src/haplugin/statics/templates/js_links.jinja2

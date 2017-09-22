@@ -1,0 +1,3 @@
+hatak>=0.2.1
+Hatak_Jinja2
+Hatak_Beaker

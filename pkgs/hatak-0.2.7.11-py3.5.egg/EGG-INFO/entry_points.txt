@@ -1,0 +1,3 @@
+          [console_scripts]
+              hatak = bael.hatak.recipe:run
+        

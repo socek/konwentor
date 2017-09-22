@@ -1,0 +1,12 @@
+<div class="form-group">
+    <label>{{label}}:</label>
+    {% include '_error.jinja2' %}
+
+    <select class="form-control" name="{{name}}" id="{{id}}" {%- if disabled %} disabled=disabled {% endif -%}>
+        {% for element in field.avalible_values %}
+            <option value="{{element.value}}"
+                {%- if element.value == value%} selected{% endif -%}
+            >{{element.label}}</option>
+        {% endfor %}
+    </select>
+</div>

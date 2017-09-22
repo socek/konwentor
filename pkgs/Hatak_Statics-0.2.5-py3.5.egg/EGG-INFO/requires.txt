@@ -1,0 +1,2 @@
+hatak>=0.2.1
+hatak_jinja2
