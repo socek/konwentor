@@ -18,4 +18,4 @@ RUN python setup.py develop
 
 EXPOSE 8000
 
-CMD ["backend", "dev"]
+CMD uwsgi --ini-paste data/frontend.ini
