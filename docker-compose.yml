@@ -1,28 +1,22 @@
-version: '3.1'
+version: '3.3'
 
 services:
   backend:
     build: .
-    env_file: .env
-    tty: true
-    stdin_open: true
+    image: registry.socek.org/konwentor:$VERSION
+    env_file: env
     volumes:
       - ./code:/code
     ports:
-      - "${BACKEND_POR:-5001}:8000"
+      - 5001:8000"
 
   postgres:
     image: postgres:9.5
-    env_file: .env
-    labels:
-      - "traefik.enable=false"
+    env_file: env
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./postgres:/docker-entrypoint-initdb.d
-    environment:
-      - POSTGRES_PASSWORD=iamsuperkonwent
-      - POSTGRES_USER=konwentor
-      - POSTGRES_DB=konwentor_live
+      - ./dumps:/dumps
+
 
 volumes:
   postgres-data:

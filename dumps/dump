@@ -1,0 +1,4 @@
+#!/bin/bash
+export $(cat ../env | grep -v ^# | grep -v "KEY" | grep -v "SALT" | xargs)
+NOW=`date +%Y-%m-%d-%H%M`
+docker-compose exec postgres pg_dump -U$POSTGRES_DB $POSTGRES_DB > ${NOW}.sql

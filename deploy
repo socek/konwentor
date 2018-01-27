@@ -1,0 +1,27 @@
+#!/bin/bash
+if [ ! -e "version" ] ; then
+    echo "0" > version
+fi
+VERSION=$((`cat version`+1))
+VERSION=`printf "%.6d\n" $VERSION`
+
+echo "Building for :$VERSION and :latest"
+read -r -p "Are you sure? [y/N] " response
+case "$response" in
+    [yY][eE][sS]|[yY])
+        echo "Build is starting..."
+        echo $VERSION > version
+        ;;
+    *)
+        echo "Canceled..."
+        exit 0
+        ;;
+esac
+
+export VERSION="$VERSION"
+docker-compose build
+docker-compose push
+
+export VERSION='latest'
+docker-compose build
+docker-compose push

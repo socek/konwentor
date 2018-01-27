@@ -48,3 +48,4 @@ TODO
 .cache
 data/*
 .env
+env
