@@ -3,12 +3,12 @@ version: '3.3'
 services:
   backend:
     build: .
-    image: registry.socek.org/konwentor:$VERSION
+    image: "registry.socek.org/konwentor:${VERSION:-dev}"
     env_file: env
     volumes:
       - ./code:/code
     ports:
-      - 5001:8000"
+      - 5001:8000
 
   postgres:
     image: postgres:9.5

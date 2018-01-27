@@ -1,3 +1,6 @@
+from os import environ
+
+
 def make_settings(settings, paths):
     settings['debug'] = False
     settings['pyramid.reload_templates'] = False
@@ -9,11 +12,11 @@ def make_settings(settings, paths):
         '%(db:type)s://%(db:login)s:%(db:password)s@%(db:host)s:%(db:port)s'
         '/%(db:db)s')
     settings['db:type'] = 'postgresql'
-    settings['db:login'] = 'konwentor'
-    settings['db:password'] = 'iamsuperkonwent'
+    settings['db:login'] = environ['POSTGRES_USER']
+    settings['db:password'] = environ['POSTGRES_PASSWORD']
     settings['db:host'] = 'postgres'
     settings['db:port'] = '5432'
-    settings['db:name'] = 'konwentor_live'
+    settings['db:name'] = environ['POSTGRES_DB']
 
-    settings['session.key'] = 'this899312beprivet'
-    settings['session.secret'] = 'priva1e11322185oryeah'
+    settings['session.key'] = environ['APP_SESSION_KEY']
+    settings['session.secret'] = environ['APP_SESSION_SECRET']
