@@ -22,6 +22,12 @@ export VERSION="$VERSION"
 docker-compose build
 docker-compose push
 
+git add version
+git commit -m "Tag: ${VERSION}"
+git push
+git tag "${VERSION}"
+git push --tags
+
 export VERSION='latest'
 docker-compose build
 docker-compose push
